@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="LoginPage.css">
+<header>
+    <img class="logo" src="xlnLogo.png" alt="XLN Logo">
+    <nav>
+        <ul>
+            <li><a href="#">MyAccount</a></li>
+            <li><a href="#">XLN Home</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+                <select name="languages" id="languages">
+                    <option value="english">English</option>
+                    <option value="spanish">Spanish</option>
+                    <option value="french">French</option>
+                    <option value="chineese">Chineese</option>
+                </select>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <form action="login.php" method="post">
+        <h2>Welcome to the login page</h2>
+        <label for="email"><b>Email</b></label>
+        <input type="text" id="email" name="email" required>
+        <label for="password"><b>Password</b></label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Login</button>
+        <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+        <div class="links">
+            <span class="psw"><a href="#">Forgot password?</a></span>
+            <span class="psw"> <b> | </b></span>
+            <span class="psw">Don't have an account? <a href="register.php">Register</a></span>
+        </div>
+    </form>
+</main>
+<footer>
+    <p>&copy; <span id="year"></span> XLN</p>
+</footer>
+<script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+</script>

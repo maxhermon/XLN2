@@ -1,0 +1,86 @@
+header {
+    background-color: #001438;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 50px;
+}
+img.logo {
+    width: 75px; /* Adjust the width as needed */
+    margin-right: 20px; /* Space between logo and text */
+}
+header h1 {
+    margin: 0;
+    flex-grow: 1;
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+nav ul li {
+    margin-left: 20px;
+}
+nav ul li a {
+    color: white; /* Ensure the link text is white */
+    text-decoration: none; /* Remove the underline */
+}
+nav ul li select {
+    margin-left: 10px;
+}
+main {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px); /* Adjust height to center the form */
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+form h2 {
+    margin-bottom: 20px; /* Add some space below the welcome message */
+}
+form label, form input, form button {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 10px;
+}
+.links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+.links .psw {
+    margin-right: 10px;
+}
+.links .psw a {
+    text-decoration: none; /* Remove the underline */
+    color: #001438; /* Optional: Change the link color */
+}
+.button {
+    background-color: #C0C0C0;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+footer {
+    background-color: #001438;
+    color: white;
+    text-align: center;
+    padding: 5px;
+}
