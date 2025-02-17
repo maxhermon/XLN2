@@ -6,8 +6,8 @@ header {
     padding: 50px;
 }
 img.logo {
-    width: 100px; /* Adjust the width as needed */
-    margin-right: 20px; /* Space between logo and text */
+    width: 100px;
+    margin-right: 20px;
 }
 header h1 {
     margin: 0;
@@ -24,8 +24,8 @@ nav ul li {
     margin-left: 20px;
 }
 nav ul li a {
-    color: white; /* Ensure the link text is white */
-    text-decoration: none; /* Remove the underline */
+    color: white;
+    text-decoration: none;
 }
 nav ul li select {
     margin-left: 10px;
@@ -38,7 +38,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a slight shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 form {
     display: flex;
@@ -57,7 +57,7 @@ form input, form select {
     outline: none;
 }
 form input:focus, form select:focus {
-    border-color: #001438; /* Highlight border on focus */
+    border-color: #001438;
 }
 form button {
     background-color: #001438;
@@ -69,7 +69,7 @@ form button {
     cursor: pointer;
 }
 form button:hover {
-    background-color: #00275d; /* Darken button on hover */
+    background-color: #00275d;
 }
 table {
     width: 100%;
