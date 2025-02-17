@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Case</title>
+    <link rel="stylesheet" href="EditCase.css">
+</head>
+<body>
+    <header>
+        <img class="logo" src="xlnLogo.png" alt="XLN Logo">
+        <nav>
+            <ul>
+                <li><a href="#">MyAccount</a></li>
+                <li><a href="#">XLN Home</a></li>
+                <li><a href="#">Contact</a></li>
+                <li>
+                    <select name="languages" id="languages">
+                        <option value="english">English</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="french">French</option>
+                        <option value="chineese">Chineese</option>
+                    </select>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Edit Case</h1>
+        <form id="editCaseForm">
+            <label for="department">Department:</label>
+            <select id="department" name="department" required>
+                <option value="">Select Department</option>
+                <option value="Account Management">Account Management</option>
+                <option value="Billing">Billing</option>
+                <option value="Cancellations">Cancellations</option>
+                <option value="Faults">Faults</option>
+                <option value="Products & Orders">Products & Orders</option>
+            </select>
+
+            <label for="reason">Reason:</label>
+            <select id="reason" name="reason" required>
+                <option value="">Select Reason</option>
+                <option value="General Enquiry">General Enquiry</option>
+                <option value="Soft Cancellation">Soft Cancellation</option>
+                <option value="Credits">Credits</option>
+                <option value="Cease Request">Cease Request</option>
+            </select>
+
+            <label for="caseStatus">Open Case:</label>
+            <label class="switch">
+                <input type="checkbox" id="caseStatus" name="caseStatus">
+                <span class="slider round"></span>
+            </label>
+
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
+
+            <label for="caseNotes">Case Notes:</label>
+            <textarea id="caseNotes" name="caseNotes" rows="4" required></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <footer>
+        <p>&copy; <span id="year"></span> XLN</p>
+    </footer>
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+    </script>
+</body>
+</html></div>
