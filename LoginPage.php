@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../css/LoginPage.css">
+    <link rel="stylesheet" href="css/LoginPage.css">
 </head>
 <body>
     <header>
@@ -29,14 +29,19 @@
     <main>
         <form action="login.php" method="post">
             <h2>Welcome to the login page</h2>
+
+            <div>
+                <?php
+                    if (isset($_GET["Login_Error"])) {
+                        include_once("LoginError.php");
+                }?>
+            </div>
+
             <label for="email"><b>Email</b></label>
             <input type="text" id="email" name="email" required>
             <label for="password"><b>Password</b></label>
             <input type="password" id="password" name="password" required>
             <button type="submit">Login</button>
-            <label>
-                <input type="checkbox" checked="checked" name="remember"> Remember me
-            </label>
             <div class="links">
                 <span class="psw"><a href="#">Forgot password?</a></span>
                 <span class="psw"> <b> | </b></span>
