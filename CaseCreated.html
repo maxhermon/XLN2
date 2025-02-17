@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Created</title>
+    <link rel = "stylesheet" href = "CaseCreated.css">
+</head>
+<body>
+    <header>
+            <img class="logo" src="xlnLogo.png" alt="XLN Logo">
+            <nav>
+                <ul>
+                    <li><a href="#">MyAccount</a></li>
+                    <li><a href="#">XLN Home</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li>
+                        <select name="languages" id="languages">
+                            <option value="english">English</option>
+                            <option value="spanish">Spanish</option>
+                            <option value="french">French</option>
+                            <option value="chineese">Chineese</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+    </header>
+    <div class="container">
+        <div class="message">No similar cases exist. Case successfully created.</div>
+        <div class="buttons">
+            <button onclick="editCase()">Edit Case</button>
+            <button onclick="createAnotherCase()">Create Another Case</button>
+        </div>
+    </div>
+    <script>
+        function editCase() {
+            // Add your edit case logic here
+            alert('Edit Case button clicked');
+        }
+
+        function createAnotherCase() {
+            // Add your create another case logic here
+            alert('Create Another Case button clicked');
+        }
+    </script>
+    <footer>
+        <p>&copy; <span id="year"></span> XLN</p>
+        <script>
+            document.getElementById("year").innerHTML = new Date().getFullYear();
+        </script>
+    </footer>
+</body>
+</html></html>
