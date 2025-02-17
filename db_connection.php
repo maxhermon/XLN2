@@ -1,18 +1,14 @@
 <?php
 
-try {
-    
-    $databasePath = __DIR__ . '/XLN_db.db';
-
-    $conn = new PDO("sqlite:" . $databasePath);
-
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    return $conn;
-
-    echo "Database connection is successful!";
-} catch (PDOException $e) {
-    exit("Database connection failed: " . $e->getMessage());
-}
-
+static $db = null;
+    if ($db === null) {
+        $db = new SQLite3('data/XLN_new_DB.db');
+        if (!$db) {
+            die("Database connection error: " . $db->lastErrorMsg());
+        }
+        else{
+            echo("Database connection successful");
+        }
+    }
+    return $db;
 ?>
