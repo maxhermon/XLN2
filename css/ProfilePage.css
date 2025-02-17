@@ -75,61 +75,51 @@ nav ul li a {
 nav ul li select {
     margin-left: 10px;
 }
-main {
-    background-color: #ffffff;
+.profile-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #fff;
     padding: 20px;
-    margin: 20px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
-form {
+
+.profile-header {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
     margin-bottom: 20px;
 }
-form label, form select, form input, form button {
+
+.profile-header img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.profile-header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-details .detail {
     margin-bottom: 10px;
 }
-form input, form select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none;
+
+.profile-details .detail label {
+    font-weight: bold;
+    margin-right: 10px;
 }
-form input:focus, form select:focus {
-    border-color: #001438;
-}
-form button {
-    background-color: #001438;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-form button:hover {
-    background-color: #00275d;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-table, th, td {
-    border: 1px solid #ddd;
-}
-th, td {
-    padding: 10px;
-    text-align: left;
-}
-th {
-    background-color: #f4f4f4;
+
+.profile-details .detail span {
+    color: #555;
 }
 footer {
     background-color: #001438;
