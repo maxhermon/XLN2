@@ -28,21 +28,10 @@
     <div class="container">
         <div class="message">No similar cases exist. Case successfully created.</div>
         <div class="buttons">
-            <button onclick="editCase()">Edit Case</button>
-            <button onclick="createAnotherCase()">Create Another Case</button>
+            <button onclick="window.location.href='EditCase.html'">Edit Case</button>
+            <button onclick="window.location.href='CaseCreation.html'">Create Another Case</button>
         </div>
     </div>
-    <script>
-        function editCase() {
-            // Add your edit case logic here
-            alert('Edit Case button clicked');
-        }
-
-        function createAnotherCase() {
-            // Add your create another case logic here
-            alert('Create Another Case button clicked');
-        }
-    </script>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
         <script>
