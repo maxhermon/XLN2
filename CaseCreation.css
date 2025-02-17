@@ -1,4 +1,4 @@
-/* Header */
+
 header {
     background-color: #001438;
     color: white;
@@ -8,7 +8,7 @@ header {
 }
 img.logo {
     width: 150px; 
-    margin-right: 20px; /* Space between logo and text */
+    margin-right: 20px;/
 }
 
 nav ul {
@@ -23,15 +23,14 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white; /* Ensure the link text is white */
-    text-decoration: none; /* Remove the underline */
+    color: white;
+    text-decoration: none;
 }
 
 nav ul li select {
     margin-left: 10px;
 }
 
-/* Main Section */
 main {
     background-color: #ffffff;
     padding: 20px;
@@ -40,14 +39,13 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: calc(100vh - 100px); /* Adjust height to center the form */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a slight shadow */
+    height: calc(100vh - 100px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Form */
 form {
     width: 100%;
-    max-width: 500px; /* Limit form width */
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -69,7 +67,7 @@ form input, form select, form textarea {
 }
 
 form input:focus, form select:focus, form textarea:focus {
-    border-color: #001438; /* Highlight border on focus */
+    border-color: #001438;
 }
 
 form button {
@@ -85,10 +83,9 @@ form button {
 }
 
 form button:hover {
-    background-color: #00275d; /* Darken button on hover */
+    background-color: #00275d;
 }
 
-/* Footer */
 footer {
     background-color: #001438;
     color: white;
@@ -99,7 +96,6 @@ footer {
     width: 100%;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     header h1 {
         font-size: 18px;

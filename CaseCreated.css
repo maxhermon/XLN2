@@ -6,8 +6,8 @@ header {
     padding: 50px;
 }
 img.logo {
-    width: 100px; /* Adjust the width as needed */
-    margin-right: 20px; /* Space between logo and text */
+    width: 100px;
+    margin-right: 20px;
 }
 header h1 {
     margin: 0;
@@ -24,8 +24,8 @@ nav ul li {
     margin-left: 20px;
 }
 nav ul li a {
-    color: white; /* Ensure the link text is white */
-    text-decoration: none; /* Remove the underline */
+    color: white;
+    text-decoration: none;
 }
 nav ul li select {
     margin-left: 10px;
@@ -35,7 +35,7 @@ nav ul li select {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 100px); /* Adjust height to center the content */
+    height: calc(100vh - 100px);
     text-align: center;
     padding: 20px;
 }
@@ -46,8 +46,8 @@ nav ul li select {
 .buttons {
     display: flex;
     justify-content: space-between;
-    width: 100%; /* Ensure buttons take full width */
-    max-width: 400px; /* Optional: limit the width of the buttons container */
+    width: 100%;
+    max-width: 400px;
 }
 .buttons button {
     padding: 10px 20px;
