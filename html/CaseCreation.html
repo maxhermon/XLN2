@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Case</title>
+    <link rel="stylesheet" href="../css/CaseCreation.css">
+</head>
+<body>
+    <header>
+        <img class="logo" src="images/xlnLogo.png" alt="XLN Logo">
+        <nav>
+            <ul>
+                <li><a href="#">MyAccount</a></li>
+                <li><a href="#">XLN Home</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Create a Case</h2>
+        <form action="create_case.php" method="post">
+            <!-- Case ID and Timestamp will be generated automatically by PHP -->
+            <label for="department">Department:</label>
+            <select id="department" name="department" required>
+                <option value="">Select Department</option>
+                <option value="Account Management">Account Management</option>
+                <option value="Billing">Billing</option>
+                <option value="Cancellations">Cancellations</option>
+                <option value="Faults">Faults</option>
+                <option value="Products & Orders">Products & Orders</option>
+            </select>
+
+            <label for="reason">Reason:</label>
+            <select id="reason" name="reason" required>
+                <option value="">Select Reason</option>
+                <option value="General Enquiry">General Enquiry</option>
+                <option value="Soft Cancellation">Soft Cancellation</option>
+                <option value="Credits">Credits</option>
+                <option value="Cease Request">Cease Request</option>
+            </select>
+
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="">Select Status</option>
+                <option value="Open">Open</option>
+                <option value="Closed">Closed</option>
+            </select>
+
+            <label for="notes">Notes (Optional):</label>
+            <textarea id="notes" name="notes" rows="4"></textarea>
+
+            <button type="submit">Submit Case</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> XLN</p>
+    </footer>
+
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
