@@ -4,23 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Similar Case Exists</title>
-    <link rel="stylesheet" href="SimilarCaseExists.css">
+    <link rel="stylesheet" href="../css/SimilarCaseExists.css">
 </head>
 <body>
     <header>
-        <img class="logo" src="xlnLogo.png" alt="XLN Logo">
+        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
         <nav>
-            <ul>
+            <ul class="left-menu">
                 <li><a href="#">MyAccount</a></li>
                 <li><a href="#">XLN Home</a></li>
                 <li><a href="#">Contact</a></li>
-                <li>
-                    <select name="languages" id="languages">
-                        <option value="english">English</option>
-                        <option value="spanish">Spanish</option>
-                        <option value="french">French</option>
-                        <option value="chineese">Chineese</option>
-                    </select>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="#">Logout</a>
+                    </div>
                 </li>
             </ul>
         </nav>
