@@ -12,12 +12,13 @@ header {
     color: white;
     display: flex;
     align-items: center;
-    padding: 50px;
+    padding: 30px 20px; 
+    width: 100%;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000; /* Keep header on top */
+    z-index: 1000; /* Make sure header stays on top */
 }
 
 img.logo {
@@ -135,7 +136,7 @@ footer {
     background-color: #001438;
     color: white;
     text-align: center;
-    padding: 5px;
+    padding: 20px;
     position: fixed;
     bottom: 0;
     left: 0;
