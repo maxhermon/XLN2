@@ -3,15 +3,15 @@ header {
     color: white;
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 50px;
 }
 img.logo {
-    width: 50px; /* Adjust the width as needed */
+    width: 75px; /* Adjust the width as needed */
     margin-right: 20px; /* Space between logo and text */
 }
 header h1 {
-    flex-grow: 1;
     margin: 0;
+    flex-grow: 1;
 }
 nav ul {
     list-style: none;
@@ -22,6 +22,10 @@ nav ul {
 }
 nav ul li {
     margin-left: 20px;
+}
+nav ul li a {
+    color: white; /* Ensure the link text is white */
+    text-decoration: none; /* Remove the underline */
 }
 nav ul li select {
     margin-left: 10px;
@@ -41,8 +45,26 @@ form {
     flex-direction: column;
     align-items: center;
 }
+form h2 {
+    margin-bottom: 20px; /* Add some space below the welcome message */
+}
 form label, form input, form button {
+    padding-left: 20px;
+    padding-right: 20px;
     margin-bottom: 10px;
+}
+.links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+.links .psw {
+    margin-right: 10px;
+}
+.links .psw a {
+    text-decoration: none; /* Remove the underline */
+    color: #001438; /* Optional: Change the link color */
 }
 .button {
     background-color: #C0C0C0;
