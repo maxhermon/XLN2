@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Case</title>
-    <link rel="stylesheet" href="CaseCreation.css">
+    <title>Edit Case</title>
+    <link rel="stylesheet" href="EditCase.css">
 </head>
 <body>
     <header>
-        <img class="logo" src="images/xlnLogo.png" alt="XLN Logo">
+        <img class="logo" src="xlnLogo.png" alt="XLN Logo">
         <nav>
             <ul>
                 <li><a href="#">MyAccount</a></li>
                 <li><a href="#">XLN Home</a></li>
                 <li><a href="#">Contact</a></li>
+                <li>
+                    <select name="languages" id="languages">
+                        <option value="english">English</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="french">French</option>
+                        <option value="chineese">Chineese</option>
+                    </select>
+                </li>
             </ul>
         </nav>
     </header>
-    <main>
-        <h2>Create a Case</h2>
-        <form action="create_case.php" method="post">
-            <!-- Case ID and Timestamp will be generated automatically by PHP -->
+    <div class="container">
+        <h1>Edit Case</h1>
+        <form id="editCaseForm">
             <label for="department">Department:</label>
             <select id="department" name="department" required>
                 <option value="">Select Department</option>
@@ -40,29 +47,26 @@
                 <option value="Cease Request">Cease Request</option>
             </select>
 
-            <!-- Status field (Open/Closed) -->
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-                <option value="">Select Status</option>
-                <option value="Open">Open</option>
-                <option value="Closed">Closed</option>
-            </select>
+            <label for="caseStatus">Open Case:</label>
+            <label class="switch">
+                <input type="checkbox" id="caseStatus" name="caseStatus">
+                <span class="slider round"></span>
+            </label>
 
-            <!-- Notes field (optional) -->
-            <label for="notes">Notes (Optional):</label>
-            <textarea id="notes" name="notes" rows="4"></textarea>
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
 
-            <button type="submit">Submit Case</button>
+            <label for="caseNotes">Case Notes:</label>
+            <textarea id="caseNotes" name="caseNotes" rows="4" required></textarea>
+
+            <button type="submit">Submit</button>
         </form>
-    </main>
-
+    </div>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
     </footer>
-
     <script>
         document.getElementById("year").innerHTML = new Date().getFullYear();
     </script>
-
 </body>
-</html>
+</html></div>
