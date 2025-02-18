@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require 'db_connection.php';  
 $db = connectToDatabase();    
 
@@ -31,13 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['submitCase'])) {
         
+        if (!isset($_SESSION['userID'])) {
+            header("Location: LoginPage.php");
+            exit;
+        }
+
+
         $deptID   = $_POST['departmentID'] ?? null; 
         $reasonID = $_POST['reasonID']     ?? null;
         $status   = $_POST['status']       ?? null;
         $notes    = $_POST['notes']        ?? '';
 
-
-
+        
+        //Here is where i am doing the insert case code
 
         
         
