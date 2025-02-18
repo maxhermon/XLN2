@@ -1,7 +1,7 @@
 <?php
 
 
-    $db = new SQLITE3('data\XLN_new_DB.db');  
+    $db = new SQLITE3('data\XLN_new_DBA.db');  
     $sql = "SELECT fName || ' ' || COALESCE(mName,'') || ' ' || lName AS name, password, jobID, userID FROM users WHERE email = :email";   
     $stmt = $db->prepare($sql); 
     $stmt->bindParam(':email', $_POST['email'], SQLITE3_TEXT);
@@ -22,7 +22,7 @@
             $_SESSION['jobID'] = $arrayResult[0]['jobID'];
             $_SESSION['userID'] = $arrayResult[0]['userID'];
             echo "true"; // Redirect to home page
-            header("Location: html/CaseCreation.html"); //redirect to case creation page
+            header("Location: php/CaseCreation.php"); //redirect to case creation page
         } else {
             echo "no match"; // Incorrect password
             header("Location: LoginPage.php?Login_Error=1");

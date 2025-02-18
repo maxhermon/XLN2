@@ -36,8 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status   = $_POST['status']       ?? null;
         $notes    = $_POST['notes']        ?? '';
 
-        // Validate and insert into 'cases' as needed
-        // ...
+
+        
+
+        
         
         // For now, we can just echo out or redirect
         echo "<p>Case submitted successfully for Dept $deptID, Reason $reasonID</p>";
