@@ -90,6 +90,7 @@ main {
     background-color: #ffffff;
     padding: 20px;
     margin-top: 80px; /* Adjusted margin to prevent overlap with header */
+    margin-bottom: 80px; /* Adjusted margin to prevent overlap with footer */
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -109,6 +110,7 @@ main {
     left: 50%; /* Horizontally center it */
     transform: translate(-50%, -50%); /* Offset by half of its own width/height */
     text-align: center;
+    margin-top: 100px;
 }
 
 /* Form */
