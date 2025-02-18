@@ -1,31 +1,22 @@
 <?php
 
+require 'db_connection.php';  
+$db = connectToDatabase();    
 
-// For simplicity, put everything in one file (create_case.php).
-// In production, you’d typically separate concerns.
-
-require 'db_connection.php';  // This has your connectToDatabase() function
-$db = connectToDatabase();    // Reuse the same connection
-
-// Step A: Load all departments for the first dropdown
 $departments = [];
 $deptResult = $db->query("SELECT departmentID, deptName FROM departments");
 while ($row = $deptResult->fetchArray(SQLITE3_ASSOC)) {
     $departments[] = $row;
 }
 
-// We'll see if the user posted a department selection
 $selectedDepartmentID = null;
 $reasonsForDepartment = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Check if user selected a department in the first step
     if (isset($_POST['selectDepartment'])) {
-        // The user just clicked “Load reasons” (or similar)
         $selectedDepartmentID = $_POST['departmentID'] ?? null;
 
-        // If department is set, load the reasons
         if ($selectedDepartmentID) {
             $stmt = $db->prepare("SELECT reasonID, reason 
                                   FROM reasons 
@@ -38,10 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Check if user finally submitted the entire case form
     if (isset($_POST['submitCase'])) {
-        // Here you would handle saving the form to your `cases` table
-        $deptID   = $_POST['departmentID'] ?? null; // Hidden or re-sent?
+        
+        $deptID   = $_POST['departmentID'] ?? null; 
         $reasonID = $_POST['reasonID']     ?? null;
         $status   = $_POST['status']       ?? null;
         $notes    = $_POST['notes']        ?? '';
@@ -55,6 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
