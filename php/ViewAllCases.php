@@ -3,7 +3,7 @@
 
 <?php
 function getCases($searchBy = '', $searchTerm = '') {
-    $db = new SQLite3('XLN_new_DB.db');
+    $db = new SQLite3('../data/XLN_new_DBA.db');
 
     $sql = "SELECT c.*, 
                d.deptName AS department_name, 
@@ -105,7 +105,7 @@ $cases = getCases($searchBy, $searchTerm);
 
         document.getElementById('searchForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            // Add your search logic here
+        
         });
     </script>
 </body>
