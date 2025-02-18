@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $userID = $_SESSION['userID'];
 
+        $deptID = $_POST['departmentID'] ?? null;
         $reasonID = $_POST['reasonID']     ?? null;
         $status   = $_POST['status']       ?? null;
         $notes    = $_POST['notes']        ?? '';
