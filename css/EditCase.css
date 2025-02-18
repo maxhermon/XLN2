@@ -8,7 +8,7 @@
 
 /* Header */
 header {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     display: flex;
     align-items: center;
@@ -16,7 +16,7 @@ header {
 }
 
 img.logo {
-    width: 150px;
+    width: 300px;
     margin-right: 20px;
 }
 header h1 {
@@ -137,11 +137,11 @@ form input, form select, form textarea {
 }
 
 form input:focus, form select:focus, form textarea:focus {
-    border-color: #001438;
+    border-color: #003064;
 }
 
 form button {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     padding: 15px 20px;
     font-size: 18px;
@@ -157,7 +157,7 @@ form button:hover {
 
 /* Footer */
 footer {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     text-align: center;
     padding: 20px;
@@ -182,4 +182,40 @@ footer {
     main {
         width: 90%;
     }
+}
+
+
+
+/* Additional styles for ViewCase.php */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.notes-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+    min-height: 100px;
+}
+
+.button {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.button:hover {
+    background-color: #45a049;
 }

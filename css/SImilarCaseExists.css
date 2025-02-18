@@ -8,14 +8,14 @@
 
 /* Header */
 header {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     display: flex;
     align-items: center;
     padding: 50px;
 }
 img.logo {
-    width: 150px;
+    width: 300px;
     margin-right: 20px;
 }
 header h1 {
@@ -166,7 +166,7 @@ th {
 
 /* Footer */
 footer {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     text-align: center;
     padding: 20px;
