@@ -120,9 +120,6 @@ if ($caseID) {
                     <label for="caseNotes">Case Notes:</label>
                     <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
                     
-                    <label for="caseNotes">Case Notes:</label>
-                    <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
-                    
                     <label for="openedDate">Opened Date:</label>
                     <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly> 
 
