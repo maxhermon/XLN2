@@ -1,6 +1,10 @@
 <?php
 
+error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
 session_start();
+
 
 require 'db_connection.php';  
 $db = connectToDatabase();    
@@ -56,20 +60,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
         $stmt->bindValue(':reasonID', $reasonID, SQLITE3_INTEGER);
         $stmt->bindValue(':description', $notes, SQLITE3_TEXT);
-        $stmt->bindValue(':status', $status, SQLITE3_TEXT);
+        $stmt->bindValue(':status', 1, SQLITE3_INTEGER);
         $stmt->bindValue(':created', $createdTime, SQLITE3_TEXT);
-        $stmt->bindValue(':closed', $closedTime, SQLITE3_TEXT);
+        $stmt->bindValue(':closed', null, SQLITE3_NULL);
         $stmt->bindValue(':customerID', null, SQLITE3_NULL);
 
         $stmt->execute();
 
-        
-        //Here is where i am doing the insert case code
+        $result = $stmt->execute();
+        if ($result === false) {
+            echo "<p>Insert failed: " . $db->lastErrorMsg() . "</p>";
+            // Optionally stop execution to see the error
+            exit;
+        }
 
         
         
         // For now, we can just echo out or redirect
-        echo "<p>Case submitted successfully for Dept $deptID, Reason $reasonID</p>";
+        //echo "<p>Case submitted successfully for Dept $deptID, Reason $reasonID</p>";
+        
         header("Location: ViewAllCases.php");
         // exit or redirect to success page
     }
@@ -139,16 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
 
 
-            <!-- Status field (Open/Closed) -->
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-                <option value="">Select Status</option>
-                <option value="Open">Open</option>
-                <option value="Closed">Closed</option>
-            </select>
+            
 
             <!-- Notes field (optional) -->
-            <label for="notes">Notes (Optional):</label>
+            <label for="notes">Notes:</label>
             <textarea id="notes" name="notes" rows="4"></textarea>
 
             <button type="submit" name="submitCase">Submit Case</button>
