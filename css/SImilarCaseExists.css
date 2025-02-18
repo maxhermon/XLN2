@@ -15,7 +15,7 @@ header {
     padding: 50px;
 }
 img.logo {
-    width: 100px;
+    width: 150px;
     margin-right: 20px;
 }
 header h1 {
@@ -98,8 +98,8 @@ main {
 
 /* Container for content */
 .container {
-    width: 90%;
-    max-width: 12000px;
+    width: 100%;
+    max-width: 1200px;
     margin: 50px auto;
     padding: 20px;
     background-color: #fff;
@@ -145,7 +145,7 @@ th {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    gap
+    gap: 20px;
 }
 
 .buttons button {
