@@ -15,7 +15,7 @@ header {
     padding: 50px;
 }
 img.logo {
-    width: 100px;
+    width: 150px;
     margin-right: 20px;
 }
 header h1 {
@@ -89,8 +89,7 @@ nav ul li select {
 main {
     background-color: #ffffff;
     padding: 20px;
-    margin-top: 80px; /* Adjusted margin to prevent overlap with header */
-    margin-bottom: 80px; /* Adjusted margin to prevent overlap with footer */
+    margin-top: 80px;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -110,7 +109,6 @@ main {
     left: 50%; /* Horizontally center it */
     transform: translate(-50%, -50%); /* Offset by half of its own width/height */
     text-align: center;
-    margin-top: 100px;
 }
 
 /* Form */
