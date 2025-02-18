@@ -112,7 +112,6 @@ $cases = getCases($searchBy, $searchTerm);
                 <td><?php echo $case['closed']; ?></td>
                 <td>
                     <a href="EditCases.php?uid=<?php echo $case['caseID']; ?>">Edit</a>
-                    <a href="CloseCase.php?uid=<?php echo $case['caseID']; ?>">Close</a>
                 </td>
             </tr>
         <?php endforeach; ?>
