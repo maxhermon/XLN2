@@ -89,7 +89,7 @@ nav ul li select {
 main {
     background-color: #ffffff;
     padding: 20px;
-    margin-top: 130px; /* Adjust to prevent overlap with fixed header */
+    margin-top: 100px; /* Adjust to prevent overlap with fixed header */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -98,8 +98,8 @@ main {
 
 /* Container for content */
 .container {
-    width: 100%;
-    max-width: 800px;
+    width: 90%;
+    max-width: 12000px;
     margin: 50px auto;
     padding: 20px;
     background-color: #fff;
@@ -143,8 +143,9 @@ th {
 /* Button Group */
 .buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
+    gap
 }
 
 .buttons button {
@@ -170,8 +171,6 @@ footer {
     padding: 20px;
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
     width: 100%;
 }
 
