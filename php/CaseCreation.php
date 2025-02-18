@@ -67,12 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->execute();
 
-        $result = $stmt->execute();
-        if ($result === false) {
-            echo "<p>Insert failed: " . $db->lastErrorMsg() . "</p>";
-            // Optionally stop execution to see the error
-            exit;
-        }
+        
 
         
         
