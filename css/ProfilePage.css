@@ -8,7 +8,7 @@
 
 /* Header */
 header {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     display: flex;
     align-items: center;
@@ -132,7 +132,7 @@ nav ul li select {
     color: #555;
 }
 footer {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     text-align: center;
     padding: 20px;

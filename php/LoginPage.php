@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <img class="logo" src="xlnLogo.png" alt="XLN Logo">
+        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
         <nav>
             <ul class="left-menu">
                 <li><a href="#">MyAccount</a></li>
