@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="css/LoginPage.css">
+    <link rel="stylesheet" href="../css/LoginPage.css">
 </head>
 <body>
     <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+        <img class="logo" src="xlnLogo.png" alt="XLN Logo">
         <nav>
             <ul class="left-menu">
                 <li><a href="#">MyAccount</a></li>
