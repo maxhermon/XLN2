@@ -24,6 +24,11 @@ header h1 {
     margin: 0;
     flex-grow: 1;
 }
+
+h2 {
+    margin-bottom: 30px;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
@@ -125,6 +130,7 @@ form input:focus, form select:focus, form textarea:focus {
     border-color: #001438;
 }
 
+
 form button {
     background-color: #001438;
     color: white;
@@ -134,6 +140,7 @@ form button {
     border-radius: 5px;
     cursor: pointer;
     width: 100%;
+    margin-bottom: 30px;
 }
 
 form button:hover {
