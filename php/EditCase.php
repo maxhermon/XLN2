@@ -113,6 +113,9 @@ if ($caseID) {
                     
                     <label for="customerName">Customer Name:</label>
                     <input type="text" id="customerName" name="customerName" value="<?php echo $caseData['customer_name']; ?>" readonly>
+
+                    <label for="openedDate">Opened Date:</label>
+                    <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly>
                     
                     <label for="caseNotes">Case Notes:</label>
                     <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
