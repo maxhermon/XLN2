@@ -1,3 +1,12 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Header */
 header {
     background-color: #001438;
     color: white;
@@ -5,8 +14,9 @@ header {
     align-items: center;
     padding: 50px;
 }
+
 img.logo {
-    width: 100px;
+    width: 150px;
     margin-right: 20px;
 }
 header h1 {
@@ -125,7 +135,7 @@ footer {
     background-color: #001438;
     color: white;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
     position: fixed;
     bottom: 0;
     width: 100%;
