@@ -7,14 +7,14 @@
 
 /* Header */
 header {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     display: flex;
     align-items: center;
     padding: 50px;
 }
 img.logo {
-    width: 100px;
+    width: 300px;
     margin-right: 20px;
 }
 header h1 {
@@ -111,7 +111,7 @@ form h2 {
     margin-bottom: 50px;
     text-align: center; 
     font-size: 24px;
-    color: #001438;
+    color: #003064;
 }
 
 /* Label */
@@ -133,12 +133,12 @@ form input, form select, form button {
 }
 
 form input:focus, form select:focus, form textarea:focus {
-    border-color: #001438;
+    border-color: #003064;
 }
 
 /* Button */
 form button {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     padding: 15px 20px;
     font-size: 18px;
@@ -163,12 +163,12 @@ form button:hover {
 
 .links .psw a {
     text-decoration: none;
-    color: #001438; 
+    color: #003064; 
 }
 
 /* Footer */
 footer {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     text-align: center;
     padding: 20px;

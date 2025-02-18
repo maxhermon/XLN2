@@ -8,14 +8,14 @@
 
 /* Header */
 header {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     display: flex;
     align-items: center;
     padding: 50px;
 }
 img.logo {
-    width: 150px;
+    width: 300px;
     margin-right: 20px;
 }
 header h1 {
@@ -90,6 +90,7 @@ main {
     background-color: #ffffff;
     padding: 20px;
     margin-top: 100px; /* Adjust to prevent overlap with fixed header */
+    margin-bottom: 100px; /* Adjust to prevent overlap with fixed footer */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -165,12 +166,14 @@ th {
 
 /* Footer */
 footer {
-    background-color: #001438;
+    background-color: #003064;
     color: white;
     text-align: center;
     padding: 20px;
-    position: fixed;
+    position: relative;
     bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
 }
 
