@@ -96,6 +96,7 @@ $cases = getCases($searchBy, $searchTerm);
                     <th>Customer Email</th>
                     <th>Notes</th>
                     <th>Closed Date</th>
+                    <th>Customer Name</th>
                     <td colspan="2" align="center">Action</td>
                 </tr>
             </thead>
@@ -110,6 +111,7 @@ $cases = getCases($searchBy, $searchTerm);
                 <td><?php echo $case['customer_name']; ?></td>
                 <td><?php echo $case['description']; ?></td>
                 <td><?php echo $case['closed']; ?></td>
+                <td><?php echo $case['customer_name']; ?></td>
                 <td>
                     <a href="EditCases.php?uid=<?php echo $case['caseID']; ?>">Edit</a>
                     <a href="CloseCase.php?uid=<?php echo $case['caseID']; ?>">Close</a>
