@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $notes    = $_POST['notes']        ?? '';
 
 
-        
+
 
         
         
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <header>
-        <img class="logo" src="images/xlnLogo.png" alt="XLN Logo">
+        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
         <nav>
             <ul>
                 <li><a href="#">MyAccount</a></li>
