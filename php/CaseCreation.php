@@ -38,11 +38,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        $userID = $_SESSION['userID'];
 
-        $deptID   = $_POST['departmentID'] ?? null; 
         $reasonID = $_POST['reasonID']     ?? null;
         $status   = $_POST['status']       ?? null;
         $notes    = $_POST['notes']        ?? '';
+
+        $createdTime = date('Y-m-d H:i:s');
+        $closedTime = ($status === 'Closed') ? $createdTime : null;
+
+        $sql = "INSERT into cases (userID, reasonID, description, status, created, closed, customerID)
+        VALUES (:userID, :reasonID, :description, :status, :created, :closed, :customerID)";
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
+        $stmt->bindValue(':reasonID', $reasonID, SQLITE3_INTEGER);
+        $stmt->bindValue(':description', $notes, SQLITE3_TEXT);
+        $stmt->bindValue(':status', $status, SQLITE3_TEXT);
+        $stmt->bindValue(':created', $createdTime, SQLITE3_TEXT);
+        $stmt->bindValue(':closed', $closedTime, SQLITE3_TEXT);
+        $stmt->bindValue(':customerID', null, SQLITE3_NULL);
+
+        $stmt->execute();
 
         
         //Here is where i am doing the insert case code
@@ -51,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // For now, we can just echo out or redirect
         echo "<p>Case submitted successfully for Dept $deptID, Reason $reasonID</p>";
+        header("Location: ViewAllCases.php");
         // exit or redirect to success page
     }
 }
