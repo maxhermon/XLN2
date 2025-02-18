@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Header */
+header {
+    background-color: #001438;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 30px 20px; 
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Make sure header stays on top */
+}
+
+h2 { margin-top: 10px;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+/* Logo */
+img.logo {
+    width: 150px;
+    margin-right: 20px;
+}
+
+/* Navigation */
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Main Content */
+main {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 150px auto 20px;
+    max-width: 800px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Adjust margin between form fields */
+form label {
+    font-size: 18px;
+    margin-bottom: 10px; 
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 25px; /* Increase space between form fields */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+form input:focus, form select:focus, form textarea:focus {
+    border-color: #001438;
+}
+
+form button {
+    background-color: #001438;
+    color: white;
+    padding: 15px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+form button:hover {
+    background-color: #00275d;
+}
+
+/* Footer */
+footer {
+    background-color: #001438;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav ul {
+        flex-direction: column;
+    }
+
+    main {
+        width: 90%;
+    }
+}

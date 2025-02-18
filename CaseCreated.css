@@ -1,0 +1,149 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Header */
+header {
+    background-color: #001438;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 30px 20px; 
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Keep header on top */
+}
+
+/* Logo */
+img.logo {
+    width: 150px; 
+    margin-right: 20px; 
+}
+
+/* Header Title */
+header h1 {
+    margin: 0;
+    flex-grow: 1;
+    font-size: 24px;
+}
+
+/* Header Navigation */
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: white; 
+    text-decoration: none; 
+}
+
+nav ul li select {
+    margin-left: 10px;
+}
+
+/* Main Content */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px); 
+    text-align: center;
+    padding: 20px;
+    max-width: 800px; 
+    margin: 100px auto 20px;
+}
+
+/* Success Message */
+.message {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #001438;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; 
+    max-width: 400px; 
+    margin-top: 20px;
+}
+
+.buttons button {
+    padding: 15px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.buttons button:first-child {
+    background-color: #001438;
+    color: white;
+}
+
+.buttons button:first-child:hover {
+    background-color: #00275d;
+}
+
+.buttons button:last-child {
+    background-color: #C0C0C0;
+    color: black;
+}
+
+.buttons button:last-child:hover {
+    background-color: #A0A0A0;
+}
+
+/* Footer */
+footer {
+    background-color: #001438;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav ul {
+        flex-direction: column;
+    }
+
+    .container {
+        width: 90%;
+        margin: 120px auto 20px; 
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
