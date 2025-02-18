@@ -14,8 +14,9 @@ header {
     align-items: center;
     padding: 50px;
 }
+
 img.logo {
-    width: 100px;
+    width: 150px;
     margin-right: 20px;
 }
 header h1 {
@@ -160,7 +161,7 @@ footer {
     color: white;
     text-align: center;
     padding: 20px;
-    position: fixed;
+    position: relative;
     bottom: 0;
     left: 0;
     right: 0;
