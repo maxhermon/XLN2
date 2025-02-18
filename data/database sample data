@@ -17,3 +17,9 @@ INSERT INTO reasons (departmentID, reason) VALUES ('1', 'General Enquiry'),
 ('5', 'Account'),
 ('5', 'Mobile'),
 ('5', 'Wi-Fi'),
+
+INSERT INTO departments (departmentID, deptName) VALUES ('1', 'Account Management'),
+('2', 'Billing'),
+('3', 'Cancellations'),
+('4', 'Faults'),
+('5', 'Products & Orders')
