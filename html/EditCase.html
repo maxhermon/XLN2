@@ -49,17 +49,17 @@
                 <option value="Cease Request">Cease Request</option>
             </select>
 
-            <label for="caseStatus">Open Case:</label>
-            <label class="switch">
-                <input type="checkbox" id="caseStatus" name="caseStatus">
-                <span class="slider round"></span>
-            </label>
-
             <label for="customerName">Customer Name:</label>
             <input type="name" id="customerName" name="customerName" required>
 
             <label for="caseNotes">Case Notes:</label>
             <textarea id="caseNotes" name="caseNotes" rows="4" required></textarea>
+
+            <label for="caseStatus">Close case:</label>
+            <label class="switch">
+                <input type="checkbox" id="caseStatus" name="caseStatus">
+                <span class="slider round"></span>
+            </label>
 
             <button type="submit">Submit</button>
         </form>
