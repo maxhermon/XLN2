@@ -1,50 +1,36 @@
 <?php
-$is_invalid = false;
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Use the PDO connection from db_connection.php
-    $conn = require __DIR__ . "/db_connection.php";
+    $db = new SQLITE3('data\XLN_new_DB.db');  
+    $sql = "SELECT fName || ' ' || COALESCE(mName,'') || ' ' || lName AS name, password, jobID, userID FROM users WHERE email = :email";   
+    $stmt = $db->prepare($sql); 
+    $stmt->bindParam(':email', $_POST['email'], SQLITE3_TEXT);
+    $result = $stmt->execute();
+    
+    $arrayResult = [];
 
-    // Check if email is empty to avoid unnecessary queries
-    if (empty($_POST["email"])) {
-        header("Location: login.php");
-        exit;
+    //get results
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)){  
+        $arrayResult[] = $row;
     }
 
-    // Prepare a statement to select the user by email
-    $stmt = $conn->prepare("SELECT * FROM Users WHERE email_address = :email");
-    // Bind the email parameter securely
-    $stmt->bindValue(':email', $_POST["email"], PDO::PARAM_STR);
-
-    // Execute the statement
-    $stmt->execute();
-
-    // Fetch the user as an associative array
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // If a user was found, verify the password
-    if ($user) {
-        // Check password using password_verify (assuming user_password is a hashed password)
-        if (password_verify($_POST["password"], $user["user_password"])) {
-            // If password matches, start the session
+    //check results
+    if (!empty($arrayResult)) {
+        if (password_verify($_POST["password"], $arrayResult[0]['password'])) {
             session_start();
-
-            // Regenerate session ID to prevent session fixation attacks
-            session_regenerate_id();
-
-            // Store the user data in the session
-            $_SESSION["user_id"]   = $user["user_id"];
-            $_SESSION["email"]     = $user["email_address"]; // Adjust the column name if needed
-            $_SESSION["access"]    = $user["access_level"];  // Adjust if you have a different column
-
-            // Redirect on successful login
-            header("Location: index.php");
-            exit;
+            $_SESSION['name'] = $arrayResult[0]['name'];
+            $_SESSION['jobID'] = $arrayResult[0]['jobID'];
+            $_SESSION['userID'] = $arrayResult[0]['userID'];
+            echo "true"; // Redirect to home page
+            header("Location: html/CaseCreation.html"); //redirect to case creation page
+        } else {
+            echo "no match"; // Incorrect password
+            header("Location: LoginPage.php?Login_Error=1");
         }
+    } else {
+        echo "no user found"; // No user found
+        header("Location: LoginPage.php?Login_Error=1");
     }
 
-    // If we reach this point, login is invalid
-    $is_invalid = true;
-}
-?>
+    ?>
+
