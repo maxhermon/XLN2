@@ -51,6 +51,25 @@ $cases = getCases($searchBy, $searchTerm);
     <link rel="stylesheet" href="../css/ViewAllCases.css">
 </head>
 <body>
+<header>
+        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+        <nav>
+            <ul class="left-menu">
+                <li><a href="#">MyAccount</a></li>
+                <li><a href="#">XLN Home</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
     <main>
         <h2>View All Cases</h2>
         <form method="GET" action="">
