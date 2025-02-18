@@ -1,15 +1,18 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Header */
 header {
     background-color: #001438;
     color: white;
     display: flex;
     align-items: center;
-    padding: 10px; 
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000; /* Make sure header stays on top */
+    padding: 50px;
 }
 
 img.logo {
@@ -142,7 +145,7 @@ footer {
     background-color: #001438;
     color: white;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
     position: fixed;
     bottom: 0;
     width: 100%;

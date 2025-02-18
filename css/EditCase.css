@@ -89,7 +89,7 @@ nav ul li select {
 main {
     background-color: #ffffff;
     padding: 20px;
-    margin-top: 80px; /* Adjusted margin to prevent overlap with header */
+    margin-top: 80px;
     height: 100vh;
     display: flex;
     justify-content: center;
