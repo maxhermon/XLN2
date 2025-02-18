@@ -48,24 +48,6 @@ $cases = getCases($searchBy, $searchTerm);
     <link rel="stylesheet" href="ViewAllCases.css">
 </head>
 <body>
-    <header>
-        <img class="logo" src="xlnLogo.png" alt="XLN Logo">
-        <nav>
-            <ul>
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
-                <li>
-                    <select name="languages" id="languages">
-                        <option value="english">English</option>
-                        <option value="spanish">Spanish</option>
-                        <option value="french">French</option>
-                        <option value="chineese">Chineese</option>
-                    </select>
-                </li>
-            </ul>
-        </nav>
-    </header>
     <main>
         <h2>View All Cases</h2>
         <form method="GET" action="">
