@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require 'db_connection.php';  
 $db = connectToDatabase();    
 
@@ -31,13 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['submitCase'])) {
         
+        if (!isset($_SESSION['userID'])) {
+            header("Location: LoginPage.php");
+            exit;
+        }
+
+
         $deptID   = $_POST['departmentID'] ?? null; 
         $reasonID = $_POST['reasonID']     ?? null;
         $status   = $_POST['status']       ?? null;
         $notes    = $_POST['notes']        ?? '';
 
-        // Validate and insert into 'cases' as needed
-        // ...
+        
+        //Here is where i am doing the insert case code
+
+        
         
         // For now, we can just echo out or redirect
         echo "<p>Case submitted successfully for Dept $deptID, Reason $reasonID</p>";
@@ -59,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <header>
-        <img class="logo" src="images/xlnLogo.png" alt="XLN Logo">
+        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
         <nav>
             <ul>
                 <li><a href="#">MyAccount</a></li>
