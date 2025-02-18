@@ -4,9 +4,9 @@ $db = new SQLite3('../data/XLN_new_DBA.db');
 // Get case data
 $caseResult = null;
 if(isset($_GET['caseID'])) {
-    $sql = "SELECT * FROM cases WHERE CaseID=:caseid";
+    $sql = "SELECT * FROM cases WHERE caseID=:cid";
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':caseid', $_GET['caseid'], SQLITE3_TEXT);
+    $stmt->bindParam(':cid', $_GET['uid'], SQLITE3_TEXT);
     $result = $stmt->execute();
     
     while($row = $result->fetchArray(SQLITE3_NUM)){
@@ -15,17 +15,17 @@ if(isset($_GET['caseID'])) {
 }
 
 if (isset($_POST['submit'])){
-    $db = new SQLite3('../data/EnigmaInc.db');
+    $db = new SQLite3('../data/XLN_new_DBA.db');
     
     // Update only description and status
-    $sql = "UPDATE Cases SET Status = :status, Description = :desc WHERE CaseID = :caseid";
+    $sql = "UPDATE Cases SET Status = :status, Description = :desc WHERE caseID = :cid";
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':caseid', $_GET['caseid'], SQLITE3_TEXT);
+    $stmt->bindParam(':cid', $_GET['caseID'], SQLITE3_TEXT);
     $stmt->bindParam(':status', $_POST['status'], SQLITE3_TEXT);
     $stmt->bindParam(':desc', $_POST['description'], SQLITE3_TEXT);
     $stmt->execute();
     
-    header('Location: viewCases.php');
+    header('Location: ViewAllCases.php');
 }
 ?>
 <div class="container bgColor">
@@ -36,18 +36,13 @@ if (isset($_POST['submit'])){
                     <h3>Update Case</h3>
                     <div class="form-group col-md-3">
                         <label class="control-label labelFont">Case ID</label>
-                        <input class="form-control" type="text" readonly value="<?php echo $_GET['caseid']; ?>">
+                        <input class="form-control" type="text" readonly value="<?php echo $_GET['cid']; ?>">
                     </div>
                     <div class="form-group col-md-3">
                         <label class="control-label labelFont">Status</label>
                         <select class="form-control" name="status">
-                            <?php 
-                            $statuses = ['Open', 'In Progress', 'Closed', 'On Hold'];
-                            foreach($statuses as $status): 
-                                $selected = ($status == $caseResult[3]) ? 'selected' : '';
-                            ?>
-                            <option value="<?php echo $status; ?>" <?php echo $selected; ?>><?php echo $status; ?></option>
-                            <?php endforeach; ?>
+                            <option value="0" <?php echo ($caseResult[3] == 0) ? 'selected' : ''; ?>>Closed</option>
+                            <option value="1" <?php echo ($caseResult[3] == 1) ? 'selected' : ''; ?>>Open</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
