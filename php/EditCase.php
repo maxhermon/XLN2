@@ -125,6 +125,10 @@ if ($caseID) {
                     <label for="closedDate">Closed Date:</label>
                     <input type="text" id="closedDate" name="closedDate" value="<?php echo $caseData['closed']; ?>" readonly>
                     <?php endif; ?>
+
+                    <label for="openedDate">Opened Date:</label>
+                    <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly>
+                    
                     
                     <label for="caseNotes">Case Notes:</label>
                     <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
