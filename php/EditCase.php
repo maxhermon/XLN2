@@ -120,11 +120,18 @@ if ($caseID) {
                     <label for="caseNotes">Case Notes:</label>
                     <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
                     
-                    <label for="caseStatus">Case Status:</label>
+                    <label for="caseNotes">Case Notes:</label>
+                    <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
+                    
+                    <label for="openedDate">Opened Date:</label>
+                    <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly> 
+
+                    <label for="caseStatus">Close case:</label>
                     <label class="switch">
                         <input type="checkbox" id="caseStatus" name="caseStatus" <?php echo $caseData['status'] == 1 ? 'checked' : ''; ?>>
                         <span class="slider round"></span>
                     </label>
+
                     <span id="statusText"><?php echo $caseData['status'] == 1 ? 'Open' : 'Closed'; ?></span>
 
                     <button type="submit">Save Changes</button>
