@@ -7,11 +7,14 @@ function getCases($searchBy = '', $searchTerm = '') {
 
     $sql = "SELECT c.*, 
                d.deptName AS department_name, 
-               r.reason AS reason_name, 
+               r.reason AS reason_name,
+               cu.name AS customer_name, 
                CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
         FROM cases c
-        LEFT JOIN departments d ON c.departmentID = d.departmentID  
-        LEFT JOIN reasons r ON c.reasonID = r.reasonID";
+            LEFT JOIN reasons r ON c.reasonID = r.reasonID
+            LEFT JOIN departments d ON r.departmentID = d.departmentID
+            LEFT JOIN customers cu ON c.customerID = cu.customerID"; 
+
     
     // Apply search filter if user has entered a search term
     if (!empty($searchBy) && !empty($searchTerm)) {
@@ -48,6 +51,25 @@ $cases = getCases($searchBy, $searchTerm);
     <link rel="stylesheet" href="../css/ViewAllCases.css">
 </head>
 <body>
+<header>
+        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+        <nav>
+            <ul class="left-menu">
+                <li><a href="#">MyAccount</a></li>
+                <li><a href="#">XLN Home</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
     <main>
         <h2>View All Cases</h2>
         <form method="GET" action="">
@@ -57,7 +79,7 @@ $cases = getCases($searchBy, $searchTerm);
             <option value="department_name">Department</option>
             <option value="reason_name">Reason</option>
             <option value="status_text">Status</option>
-            <option value="customerEmail">Customer Email</option>
+            <option value="customer_name">Customer Name</option>
         </select>
     <input type="text" name="searchTerm" placeholder="Enter search term">
     <button type="submit">Search</button>
@@ -85,7 +107,7 @@ $cases = getCases($searchBy, $searchTerm);
                 <td><?php echo $case['department_name']; ?></td>
                 <td><?php echo $case['reason_name']; ?></td>
                 <td><?php echo $case['status_text']; ?></td>
-                <td><?php echo $case['customerEmail']; ?></td>
+                <td><?php echo $case['customer_name']; ?></td>
                 <td><?php echo $case['description']; ?></td>
                 <td><?php echo $case['closed']; ?></td>
                 <td>
