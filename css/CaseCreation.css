@@ -1,14 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Header */
 header {
     background-color: #001438;
     color: white;
     display: flex;
     align-items: center;
-    padding: 50px;
+    padding: 30px 20px; 
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Make sure header stays on top */
 }
+
+h2 { margin-top: 10px;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+/* Logo */
 img.logo {
-    width: 150px; 
+    width: 150px;
     margin-right: 20px;
 }
+
+/* Navigation */
 nav ul {
     list-style: none;
     display: flex;
@@ -16,6 +42,7 @@ nav ul {
     margin: 0;
     padding: 0;
 }
+
 nav ul li {
     margin-left: 20px;
 }
@@ -25,39 +52,34 @@ nav ul li a {
     text-decoration: none;
 }
 
-nav ul li select {
-    margin-left: 10px;
-}
-
+/* Main Content */
 main {
     background-color: #ffffff;
     padding: 20px;
-    margin: 20px;
+    margin: 150px auto 20px;
+    max-width: 800px;
     border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: calc(100vh - 100px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Form */
 form {
     width: 100%;
-    max-width: 500px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
+/* Adjust margin between form fields */
 form label {
     font-size: 18px;
-    margin-bottom: 5px;
+    margin-bottom: 10px; 
 }
 
 form input, form select, form textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 25px; /* Increase space between form fields */
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
@@ -77,28 +99,37 @@ form button {
     border-radius: 5px;
     cursor: pointer;
     width: 100%;
-    margin-top: 10px;
 }
 
 form button:hover {
     background-color: #00275d;
 }
 
+/* Footer */
 footer {
     background-color: #001438;
     color: white;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
     position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
 }
 
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-    header h1 {
-        font-size: 18px;
+    header {
+        flex-direction: column;
+        text-align: center;
     }
-    form {
-        padding: 15px;
+
+    nav ul {
+        flex-direction: column;
+    }
+
+    main {
+        width: 90%;
     }
 }

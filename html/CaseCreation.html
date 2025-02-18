@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="../css/CaseCreation.css">
 </head>
 <body>
+
     <header>
-        <img class="logo" src="images/xlnLogo.png" alt="XLN Logo">
+        <img class="logo" src="xlnLogo.png" alt="XLN Logo">
         <nav>
             <ul>
                 <li><a href="#">MyAccount</a></li>
@@ -17,10 +18,11 @@
             </ul>
         </nav>
     </header>
+
     <main>
         <h2>Create a Case</h2>
         <form action="create_case.php" method="post">
-            <!-- Case ID and Timestamp will be generated automatically by PHP -->
+            <!-- Case ID and Timestamp will be generated automatically -->
             <label for="department">Department:</label>
             <select id="department" name="department" required>
                 <option value="">Select Department</option>
@@ -40,6 +42,7 @@
                 <option value="Cease Request">Cease Request</option>
             </select>
 
+            <!-- Status field (Open/Closed) -->
             <label for="status">Status:</label>
             <select id="status" name="status" required>
                 <option value="">Select Status</option>
@@ -47,8 +50,12 @@
                 <option value="Closed">Closed</option>
             </select>
 
+            <!-- Notes field (optional) -->
             <label for="notes">Notes (Optional):</label>
             <textarea id="notes" name="notes" rows="4"></textarea>
+
+            <label for ="email">Customer Email:</label>
+            <input type="email" placeholder="Enter customer email" required>
 
             <button type="submit">Submit Case</button>
         </form>
