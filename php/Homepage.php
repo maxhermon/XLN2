@@ -11,7 +11,6 @@ if (!isset($_SESSION['userID'])) {
 }
 
 $userID = $_SESSION['userID'];
-
 $stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
                       FROM users
                       WHERE userID = :userID");
@@ -48,7 +47,7 @@ if (!$userData) {
         <nav>
             <ul class="left-menu">
                 <li><a href="Homepage.php"><i class="fa-solid fa-house"></i> XLN Home</a></li>
-                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+                <li><a href="Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
@@ -64,7 +63,6 @@ if (!$userData) {
     <main>
         <section class="welcome-section">
             <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
-            <h2><?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?> </h2>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
@@ -72,12 +70,8 @@ if (!$userData) {
             <div class="links-container">
                 <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
                 <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
-                <a href="ProfilePage.php" class="link-box">Profile</a>
+                <a href="../html/ProfilePage.html" class="link-box">Profile</a>
                 <a href="../html/Contact.html" class="link-box">Contact Support</a>
-                <?php if($_SESSION['jobID'] == 2) { ?>
-                    <a href = "UserCreation.php" class="link-box">Add Users</a>
-                    <a href = "UserManagement.php" class="link-box">Manage Users</a>
-                <?php } ?>
             </div>
         </section>
         <section class="notifications">

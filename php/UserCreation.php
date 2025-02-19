@@ -1,9 +1,4 @@
 <?php
-session_start();
-if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
-    header("Location: LoginPage.php");
-    exit;
-}
 
 require 'db_connection.php';  
 $db = connectToDatabase();   

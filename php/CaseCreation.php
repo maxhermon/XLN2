@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $duplicateCases = [];
         while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            $duplicateCases[] = $row['caseID'];
+            $duplicateCases[] = $row['caseID']; // Extract only caseID values
         }
 
         if(empty($duplicateCases)){
@@ -199,6 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
            
  
+            <!-- Notes field (optional) -->
             <label for="description">Notes:</label>
             <textarea id="description" name="description" rows="4"></textarea>
  

@@ -22,7 +22,7 @@
             $_SESSION['jobID'] = $arrayResult[0]['jobID'];
             $_SESSION['userID'] = $arrayResult[0]['userID'];
             echo "true"; // Redirect to home page
-            header("Location: Homepage.php"); //redirect to case creation page
+            header("Location: ../html/Homepage.html"); //redirect to case creation page
         } else {
             echo "no match"; // Incorrect password
             header("Location: LoginPage.php?Login_Error=1");

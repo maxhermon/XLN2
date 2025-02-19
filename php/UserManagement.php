@@ -2,14 +2,6 @@
 <html lang="en">
 
 <?php
-session_start();
-
-require 'db_connection.php';
-if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
-    header('Location: Login.php');
-    exit;
-}
-
 function getUsers($searchBy = '', $searchTerm = '') {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 

@@ -101,9 +101,9 @@ $cases = getCases($searchBy, $searchTerm);
                     <th>Creation Timestamp</th>
                     <th>Department</th>
                     <th>Reason</th>
+                    <th>Status</th>
                     <th>Customer Name</th>
                     <th>Notes</th>
-                    <th>Status</th>
                     <th>Closed Date</th>
                     <th>Action</th>
                 </tr>
@@ -116,9 +116,9 @@ $cases = getCases($searchBy, $searchTerm);
                 <td><?php echo $case['created']; ?></td>
                 <td><?php echo $case['department_name']; ?></td>
                 <td><?php echo $case['reason_name']; ?></td>
+                <td><?php echo $case['status_text']; ?></td>
                 <td><?php echo $case['customer_name']; ?></td>
                 <td><?php echo $case['description']; ?></td>
-                <td><?php echo $case['status_text']; ?></td>
                 <td><?php echo $case['closed']; ?></td>
                 <td>
                     <?php if ($case['status'] == 1) : ?>
