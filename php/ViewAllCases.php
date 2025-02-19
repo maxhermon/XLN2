@@ -8,19 +8,23 @@ function getCases($searchBy = '', $searchTerm = '') {
     $sql = "SELECT c.*, 
                d.deptName AS department_name, 
                r.reason AS reason_name,
-               cu.name AS customer_name, 
+               cu.name AS customer_name,
+               u.fname || ' ' || u.lname AS user_name, 
                CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
         FROM cases c
             LEFT JOIN reasons r ON c.reasonID = r.reasonID
             LEFT JOIN departments d ON r.departmentID = d.departmentID
-            LEFT JOIN customers cu ON c.customerID = cu.customerID"; 
+            LEFT JOIN customers cu ON c.customerID = cu.customerID
+            LEFT JOIN users u ON c.userID = u.userID"; 
 
     
-    // Apply search filter if user has entered a search term
     if (!empty($searchBy) && !empty($searchTerm)) {
-        $sql .= " WHERE $searchBy LIKE :searchTerm";
+        if ($searchBy == 'user_name') {
+            $sql .= " WHERE (u.fname || ' ' || u.lname) LIKE :searchTerm";
+        } else {
+            $sql .= " WHERE $searchBy LIKE :searchTerm";
+        }
     }
-
     $stmt = $db->prepare($sql);
     
     if (!empty($searchBy) && !empty($searchTerm)) {
@@ -80,6 +84,7 @@ $cases = getCases($searchBy, $searchTerm);
             <option value="reason_name">Reason</option>
             <option value="status_text">Status</option>
             <option value="customer_name">Customer Name</option>
+            <option value="user_name">Case Handler</option>
         </select>
     <input type="text" name="searchTerm" placeholder="Enter search term">
     <button type="submit">Search</button>
@@ -89,6 +94,7 @@ $cases = getCases($searchBy, $searchTerm);
             <thead>
                 <tr>
                     <th>Case ID</th>
+                    <th>Case Handler</th>
                     <th>Creation Timestamp</th>
                     <th>Department</th>
                     <th>Reason</th>
@@ -103,6 +109,7 @@ $cases = getCases($searchBy, $searchTerm);
         <?php foreach ($cases as $case) : ?>
             <tr>
                 <td><?php echo $case['caseID']; ?></td>
+                <td><?php echo $case['user_name']; ?></td>
                 <td><?php echo $case['created']; ?></td>
                 <td><?php echo $case['department_name']; ?></td>
                 <td><?php echo $case['reason_name']; ?></td>
