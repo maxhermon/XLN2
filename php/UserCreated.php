@@ -11,7 +11,7 @@ unset($_SESSION['caseID']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Created</title>
+    <title>View Case</title>
     <link rel="stylesheet" href="../css/CaseCreated.css">
     <link
     rel="stylesheet"
@@ -19,7 +19,7 @@ unset($_SESSION['caseID']);
   />
 </head>
 <body>
-    <header>
+<header>
         <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
@@ -38,11 +38,10 @@ unset($_SESSION['caseID']);
         </nav>
     </header>
     <div class="container">
-        <div class="message">No similar cases exist. Case successfully created.</div>
+        <div class="message">Case Handler successfully added to the system.</div>
         <div class="buttons">
-            <button onclick="window.location.href='EditCase.php?uid=<?php echo $newCaseID; ?>'">Edit Case</button>
-            <button onclick="window.location.href='CaseCreation.php'">Create Another Case</button>
-            <button onclick="window.location.href='ViewAllCases.php'">View All Cases</button>
+            <button onclick="window.location.href='UserCreation.php'">Create Another User</button>
+            <button onclick="window.location.href='UserManagement.php'">View All Users</button>
         </div>
     </div>
     <footer>

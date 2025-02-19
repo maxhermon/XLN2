@@ -1,22 +1,21 @@
 <?php
-// Initialize variables
+
 $caseID = isset($_GET['uid']) ? $_GET['uid'] : null;
 $caseData = null;
-
-// Database connection
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
-// Fetch case data if caseID is provided
 if ($caseID) {
     $stmt = $db->prepare("SELECT c.*, 
                         d.deptName AS department_name, 
                         r.reason AS reason_name,
                         cu.name AS customer_name,
+                        u.fname || ' ' || u.lname AS user_name,
                         CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
                 FROM cases c
                 LEFT JOIN reasons r ON c.reasonID = r.reasonID
                 LEFT JOIN departments d ON r.departmentID = d.departmentID
                 LEFT JOIN customers cu ON c.customerID = cu.customerID
+                LEFT JOIN users u ON c.userID = u.userID
                 WHERE c.caseID = :caseID");
     $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);
     $result = $stmt->execute();
@@ -31,22 +30,25 @@ if ($caseID) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Case</title>
     <link rel="stylesheet" href="../css/EditCase.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
 </head>
 <body>
-    <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+<header>
+        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="../html/Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
                         <a href="../html/ProfilePage.html">View Profile</a>
-                        <a href="#">Logout</a>
+                        <a href="logOut.php">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -62,7 +64,10 @@ if ($caseID) {
                         <label>Case ID:</label>
                         <p><?php echo $caseData['caseID']; ?></p>
                     </div>
-                    
+                    <div class="form-group">
+                        <label>Case Handler:</label>
+                        <p><?php echo $caseData['user_name']; ?></p>
+                    </div>
                     <div class="form-group">
                         <label>Department:</label>
                         <p><?php echo $caseData['department_name']; ?></p>

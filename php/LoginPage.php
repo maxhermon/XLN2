@@ -5,24 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../css/LoginPage.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
 </head>
 <body>
     <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-            <ul class="right-menu">
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
-                    <div class="dropdown-content">
-                        <a href="../html/ProfilePage.html">View Profile</a>
-                        <a href="#">Logout</a>
-                    </div>
-                </li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -45,7 +38,7 @@
             <div class="links">
                 <span class="psw"><a href="#">Forgot password?</a></span>
                 <span class="psw"> <b> | </b></span>
-                <span class="psw">Don't have an account? <a href="register.php">Register</a></span>
+                <span class="psw">Don't have an account? <a href="UserCreation.php">Register</a></span>
             </div>
         </form>
     </main>

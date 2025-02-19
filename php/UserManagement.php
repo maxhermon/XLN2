@@ -2,28 +2,16 @@
 <html lang="en">
 
 <?php
-function getCases($searchBy = '', $searchTerm = '') {
+function getUsers($searchBy = '', $searchTerm = '') {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
-    $sql = "SELECT c.*, 
-               d.deptName AS department_name, 
-               r.reason AS reason_name,
-               cu.name AS customer_name,
-               u.fname || ' ' || u.lname AS user_name, 
-               CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
-        FROM cases c
-            LEFT JOIN reasons r ON c.reasonID = r.reasonID
-            LEFT JOIN departments d ON r.departmentID = d.departmentID
-            LEFT JOIN customers cu ON c.customerID = cu.customerID
-            LEFT JOIN users u ON c.userID = u.userID"; 
+    $sql = "SELECT u.*,
+                j.job AS job_name
+        FROM users u
+            LEFT JOIN jobs j ON u.jobID = j.jobID";
 
-    
     if (!empty($searchBy) && !empty($searchTerm)) {
-        if ($searchBy == 'user_name') {
-            $sql .= " WHERE (u.fname || ' ' || u.lname) LIKE :searchTerm";
-        } else {
-            $sql .= " WHERE $searchBy LIKE :searchTerm";
-        }
+        $sql .= " WHERE $searchBy LIKE :searchTerm";
     }
     $stmt = $db->prepare($sql);
     
@@ -44,14 +32,14 @@ function getCases($searchBy = '', $searchTerm = '') {
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
 
-$cases = getCases($searchBy, $searchTerm);
+$users = getUsers($searchBy, $searchTerm);
 ?>
 
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View All Cases</title>
+    <title>View Case</title>
     <link rel="stylesheet" href="../css/ViewAllCases.css">
     <link
     rel="stylesheet"
@@ -82,12 +70,11 @@ $cases = getCases($searchBy, $searchTerm);
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
-            <option value="caseID">Case ID</option>
-            <option value="department_name">Department</option>
-            <option value="reason_name">Reason</option>
-            <option value="status_text">Status</option>
-            <option value="customer_name">Customer Name</option>
-            <option value="user_name">Case Handler</option>
+            <option value="userID">User ID</option>
+            <option value="fName">First Name</option>
+            <option value="lName">Last Name</option>
+            <option value="email">Email</option>
+            <option value="job_name">Job</option>
         </select>
     <input type="text" name="searchTerm" placeholder="Enter search term">
     <button type="submit">Search</button>
@@ -96,35 +83,31 @@ $cases = getCases($searchBy, $searchTerm);
         <table id="casesTable">
             <thead>
                 <tr>
-                    <th>Case ID</th>
-                    <th>Case Handler</th>
-                    <th>Creation Timestamp</th>
-                    <th>Department</th>
-                    <th>Reason</th>
-                    <th>Status</th>
-                    <th>Customer Name</th>
-                    <th>Notes</th>
-                    <th>Closed Date</th>
+                    <th>User ID</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Job</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-        <?php foreach ($cases as $case) : ?>
+        <?php foreach ($users as $user) : ?>
             <tr>
-                <td><?php echo $case['caseID']; ?></td>
-                <td><?php echo $case['user_name']; ?></td>
-                <td><?php echo $case['created']; ?></td>
-                <td><?php echo $case['department_name']; ?></td>
-                <td><?php echo $case['reason_name']; ?></td>
-                <td><?php echo $case['status_text']; ?></td>
-                <td><?php echo $case['customer_name']; ?></td>
-                <td><?php echo $case['description']; ?></td>
-                <td><?php echo $case['closed']; ?></td>
+                <td><?php echo $user['userID']; ?></td>
+                <td><?php echo $user['fName']; ?></td>
+                <td><?php echo $user['mName']; ?></td>
+                <td><?php echo $user['lName']; ?></td>
+                <td><?php echo $user['email']; ?></td>
+                <td><?php echo $user['password']; ?></td>
+                <td><?php echo $user['job_name']; ?></td>
                 <td>
-                    <?php if ($case['status'] == 1) : ?>
-                        <a href="EditCase.php?uid=<?php echo $case['caseID']; ?>">Edit</a>
+                    <?php if ($user['jobID'] == 1) : ?>
+                        <a href="EditUser.php?uid=<?php echo $user['userID']; ?>">Edit</a>
                     <?php else : ?>
-                        <a href="ViewCase.php?uid=<?php echo $case['caseID']; ?>">View</a>
+                        <a href="ViewUser.php?uid=<?php echo $user['userID']; ?>">View</a>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -145,4 +128,3 @@ $cases = getCases($searchBy, $searchTerm);
     </script>
 </body>
 </html>
-<gay></gay>
