@@ -2,9 +2,6 @@
 <?php
 
 session_start();
-echo "<pre>";
-var_dump($_SESSION);
-echo "</pre>";
 
 
 require 'db_connection.php';  
@@ -120,28 +117,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Case</title>
-    <link rel="stylesheet" href="../css/CaseCreation.css">
+    <title>Case Created</title>
+    <link rel="stylesheet" href="../css/CaseCreated.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
 </head>
 <body>
-
     <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
-            <ul>
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
+            <ul class="left-menu">
+                <li><a href="../html/Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
+                    <div class="dropdown-content">
+                        <a href="ProfilePage.php">View Profile</a>
+                        <a href="logOut.php">Logout</a>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>
-
     <main>
         <h2>Create a Case</h2>
         <form action="CaseCreation.php" method="POST">
@@ -161,15 +167,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
             <button type="submit" name= "selectDepartment">Select Department</button>
             </form>
-
-
+ 
+ 
             <?php if ($selectedDepartmentID && !empty($reasonsForDepartment)): ?>
-            
+           
             <form action="CaseCreation.php" method="POST">
-
+ 
             <input type="hidden" name="departmentID"
                 value="<?php echo htmlspecialchars($selectedDepartmentID);?>">
-            
+           
             <label for="reasonID">Reason:</label>
             <select id="reasonID" name="reasonID" required>
                 <option value="">-- Select Reason --</option>
@@ -179,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </option>
                     <?php endforeach; ?>
             </select>
-
+ 
             <label for="customerID">Customer:</label>
             <select id="customerID" name="customerID" required>
                 <option value="">-- Select Customer --</option>
@@ -189,31 +195,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </option>
                     <?php endforeach; ?>
             </select>
-
-
-            
-
+ 
+ 
+           
+ 
             <!-- Notes field (optional) -->
             <label for="description">Notes:</label>
             <textarea id="description" name="description" rows="4"></textarea>
-
+ 
             <button type="submit" name="submitCase">Submit Case</button>
         </form>
-        
+       
         <?php elseif ($selectedDepartmentID && empty($reasonsForDepartment)): ?>
         <p>No reasons found for that department.</p>
     <?php endif; ?>
-    
-
+   
+ 
     </main>
-
+ 
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
     </footer>
-
+ 
     <script>
         document.getElementById("year").innerHTML = new Date().getFullYear();
     </script>
-
+ 
 </body>
 </html>
