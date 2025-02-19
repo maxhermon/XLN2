@@ -70,9 +70,9 @@ if (!$userData) {
         <section class="quick-links">
             <h2>Quick Links</h2>
             <div class="links-container">
-                <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
-                <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
-                <a href="../html/ProfilePage.html" class="link-box">Profile</a>
+                <a href="CaseCreation.php" class="link-box">Create New Case</a>
+                <a href="ViewAllCases.php" class="link-box">View All Cases</a>
+                <a href="ProfilePage.php" class="link-box">Profile</a>
                 <a href="../html/Contact.html" class="link-box">Contact Support</a>
             </div>
         </section>
