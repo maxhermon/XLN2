@@ -65,7 +65,7 @@ nav ul.right-menu {
 }
 
 .dropdown:hover .dropbtn {
-    background-color: #3e8e41;
+    background-color: #f39200
 }
 nav ul {
     list-style: none;
@@ -207,7 +207,7 @@ footer {
 
 .button {
     display: inline-block;
-    background-color: #4CAF50;
+    background-color: #f39200;
     color: white;
     padding: 10px 15px;
     text-align: center;
@@ -217,5 +217,5 @@ footer {
 }
 
 .button:hover {
-    background-color: #45a049;
+    background-color: #e68f1d;
 }

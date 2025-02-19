@@ -64,7 +64,7 @@ nav ul.right-menu {
 }
 
 .dropdown:hover .dropbtn {
-    background-color: #3e8e41;
+    background-color: #f39200;
 }
 nav ul {
     list-style: none;
@@ -116,7 +116,7 @@ nav ul li select {
 }
 
 .dropdown:hover .dropbtn {
-    background-color: #3e8e41;
+    background-color: #f39200;
 }
 html, body {
     height: 100%;
