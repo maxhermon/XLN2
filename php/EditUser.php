@@ -82,7 +82,7 @@ if ($userID) {
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
-                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="ProfilePage.php">View Profile</a>
                         <a href="logOut.php">Logout</a>
                     </div>
                 </li>
