@@ -20,18 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mname = $_POST['mName'];
     $lname = $_POST['lName'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
     $jobID = $_POST['jobID'];
     $userID = $_POST['userID'];
 
     
-    $stmt = $db->prepare("UPDATE users SET fName = :fName, mName = :mName, lName = :lName, email = :email, password = :password, jobID = :jobID WHERE userID = :userID");
+    $stmt = $db->prepare("UPDATE users SET fName = :fName, mName = :mName, lName = :lName, email = :email, jobID = :jobID WHERE userID = :userID");
     
     $stmt->bindValue(':fName', $fname, SQLITE3_TEXT);
     $stmt->bindValue(':mName', $mname, SQLITE3_TEXT);
     $stmt->bindValue(':lName', $lname, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-    $stmt->bindValue(':password', $password, SQLITE3_TEXT);
     $stmt->bindValue(':jobID', $jobID, SQLITE3_INTEGER);
     $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
     
@@ -126,7 +124,7 @@ if ($userID) {
                         <?php endforeach; ?>
                     </select>
                     
-                    <label for="password">Password:</label>
+                    <label>Password:</label>
                     <button>Change Password</button>
 
 
