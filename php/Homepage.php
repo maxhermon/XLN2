@@ -11,6 +11,7 @@ if (!isset($_SESSION['userID'])) {
 }
 
 $userID = $_SESSION['userID'];
+
 $stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
                       FROM users
                       WHERE userID = :userID");
