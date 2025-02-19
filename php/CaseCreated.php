@@ -1,3 +1,14 @@
+<?php
+// Start session if not already started
+session_start();
+
+// Get the case ID from session
+$newCaseID = isset($_SESSION['caseID']) ? $_SESSION['caseID'] : null;
+
+// Clear the session variable after retrieving it
+unset($_SESSION['caseID']);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +40,7 @@
     <div class="container">
         <div class="message">No similar cases exist. Case successfully created.</div>
         <div class="buttons">
-            <button onclick="window.location.href='EditCase.php'">Edit Case</button>
+            <button onclick="window.location.href='EditCase.php?uid=<?php echo $newCaseID; ?>'">Edit Case</button>
             <button onclick="window.location.href='CaseCreation.php'">Create Another Case</button>
             <button onclick="window.location.href='ViewAllCases.php'">View All Cases</button>
         </div>
