@@ -10,6 +10,7 @@ if (isset($_POST['addCaseHandler'])) {
 
 
     $fName = $_POST['fName'] ?? null;
+    $mName = $_POST['mName'] ?? null;
     $lName = $_POST['lName']     ?? null;
     $email = $_POST['email']       ?? null;
     $password = $_POST['password'] ?? null;
@@ -22,7 +23,7 @@ if (isset($_POST['addCaseHandler'])) {
     $stmt = $db->prepare($sql);
 
     $stmt->bindValue(':fName', $fName, SQLITE3_TEXT);
-    $stmt->bindValue(':mName', null, SQLITE3_NULL);
+    $stmt->bindValue(':mName', $mName, SQLITE3_TEXT);
     $stmt->bindValue(':lName', $lName, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':password', $hashedPassword, SQLITE3_TEXT);
@@ -48,7 +49,7 @@ if (isset($_POST['addCaseHandler'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../css/LoginPage.css">
+    <link rel="stylesheet" href="../css/UserCreation.css">
 </head>
 
 <body>
@@ -78,6 +79,8 @@ if (isset($_POST['addCaseHandler'])) {
 
             <label for="fName"><b>First Name</b></label>
             <input type="text" id="fName" name="fName" required>
+            <label for="fName"><b>Middle Name</b></label>
+            <input type="text" id="mName" name="mName">
             <label for="lName"><b>Last Name</b></label>
             <input type="text" id="lName" name="lName" required>
             <label for="email"><b>Email</b></label>
@@ -85,7 +88,6 @@ if (isset($_POST['addCaseHandler'])) {
             <label for="password"><b>Password</b></label>
             <input type="password" id="password" name="password" required>
             <button type="submit" name="addCaseHandler">Add Case Handler</button>
-
         </form>
     </main>
     <footer>
