@@ -47,11 +47,11 @@ try {
     // Content
     $mail->isHTML(true);
     $mail->Subject = 'Password reset request';
-    $mail->Body    = 'Dear ' . htmlspecialchars($user['fName']) . ',<br><br>' .
+    $mail->Body    = 'Dear ' . htmlspecialchars($userData['fName']) . ',<br><br>' .
                              'Click the following link to set up your password: ' .
                              '<a href="http://localhost/EasyHealth%20Hospital%20Management%20System/setup_password.html?token=' . $token . '">Set Up Password</a><br><br>' .
                              'Best Regards,<br> XLN Team';;
-    $mail->AltBody = 'This is the plain text version of the email content';
+    $mail->AltBody = 'Dear ' . htmlspecialchars($userData['fName']) . ', Click the following link to set up your password: http://localhost/EasyHealth%20Hospital%20Management%20System/setup_password.html?token=' . $token . ' Best Regards, XLN Team';
 
     $mail->send();
     echo 'Message has been sent successfully';
