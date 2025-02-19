@@ -57,27 +57,24 @@ if (!$userData) {
         </nav>
     </header>
     <main>
-    <div class="profile-section">
-        <i id="bigicon" class="fa-solid fa-circle-user"></i>
         <div class="profile-container">
-            <h1 class="info">User Profile</h1>
+            <h1>User Profile</h1>
             <div class="profile-info">
-                <p class="info"><strong>Name:</strong>
+                <p><strong>Name:</strong>
                 <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?>
                 </p>
-                <p class="info"><strong>Job Role:</strong>
+                <p><strong>Job Role:</strong>
                 <?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?>
                 </p>
-                <p class="info"><strong>Email:</strong>
+                <p><strong>Email:</strong>
                 <?php echo htmlspecialchars($userData['email']); ?>
                 </p>
-                <p class="info"><strong>User ID:</strong>
+                <p><strong>User ID:</strong>
                 <?php echo htmlspecialchars($userID); ?>
                 </p>
             </div>
         </div>
-    </div>
-</main>
+    </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
     </footer>

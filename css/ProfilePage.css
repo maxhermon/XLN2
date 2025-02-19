@@ -84,6 +84,14 @@ nav ul li a {
 nav ul li select {
     margin-left: 10px;
 }
+.profile-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
 
 html, body {
     height: 100%;
@@ -140,35 +148,4 @@ footer {
     right: 0;
     width: 100%;
     margin-top: auto; 
-}
-
-.profile-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    margin: 50px auto;
-    max-width: 1200px;
-    
-}
-
-#bigicon {
-    font-size: 300px;
-    color: #003064;
-    margin-right: auto;
-}
-
-.profile-container {
-    max-width: 800px;
-    background: #fff;
-    margin:50px auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    position: absolute;
-    padding-left: 30px;
-    padding-right: 100px;
-}
-.info{
-    padding-bottom: 20px;
 }
