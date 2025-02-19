@@ -169,13 +169,14 @@ footer {
     background-color: #003064;
     color: white;
     text-align: center;
-    padding: 20px;
     position: relative;
+    padding: 20px;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
