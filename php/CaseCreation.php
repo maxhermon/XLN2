@@ -51,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $deptID = $_POST['departmentID'] ?? null;
         $reasonID = $_POST['reasonID']     ?? null;
-        $status = $_POST['status']       ?? null;
         $customerID = $_POST['customerID'] ?? null;
         $description    = $_POST['description']        ?? '';
 
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $newCaseID = $db->lastInsertRowID();
         $_SESSION['caseID'] = $newCaseID;
-        header('Location: caseCreated.php');
+        header('Location: CaseCreated.php');
         exit();
         
     }
