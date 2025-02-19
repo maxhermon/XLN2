@@ -2,7 +2,6 @@
 
 session_start();
 
-
 require 'db_connection.php';  
 $db = connectToDatabase();    
 
