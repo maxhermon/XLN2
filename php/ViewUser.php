@@ -50,7 +50,7 @@ if ($userID) {
     </header>
     <main>
         <div class="container">
-            <h1>View Case</h1>
+            <h1>View User</h1>
             
             <?php if ($userData): ?>
                 <div id="viewCaseForm">
@@ -75,11 +75,6 @@ if ($userID) {
                     <div class="form-group">
                         <label>Email:</label>
                         <p><?php echo $userData['email']; ?></p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Password:</label>
-                        <p><?php echo $userData['password']; ?></p>
                     </div>
                     
                     <div class="form-group">

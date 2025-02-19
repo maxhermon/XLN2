@@ -8,7 +8,6 @@ $caseData = null;
 
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
-// Fetch all jobs for the dropdown
 $jobsQuery = "SELECT jobID, job FROM jobs ORDER BY job";
 $jobsResult = $db->query($jobsQuery);
 $jobs = [];
@@ -116,9 +115,6 @@ if ($userID) {
 
                     <label for="email">Email:</label>
                     <input type="text" id="email" name="email" value="<?php echo $userData['email']; ?>">
-                    
-                    <label for="password">Password:</label>
-                    <input type="text" id="password" name="password" value="<?php echo $userData['password']; ?>" readonly>
 
                     <label for="jobID">Job:</label>
                     <select id="jobID" name="jobID">
@@ -130,6 +126,10 @@ if ($userID) {
                         <?php endforeach; ?>
                     </select>
                     
+                    <label for="password">Password:</label>
+                    <button>Change Password</button>
+
+
                     <button type="submit">Save Changes</button>
 
                     <a href="UserManagement.php" class="button">Back to All Users</a>

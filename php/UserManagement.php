@@ -66,7 +66,7 @@ $users = getUsers($searchBy, $searchTerm);
         </nav>
     </header>
     <main>
-        <h2>View All Cases</h2>
+        <h2>View All User</h2>
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
@@ -88,7 +88,6 @@ $users = getUsers($searchBy, $searchTerm);
                     <th>Middle Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
-                    <th>Password</th>
                     <th>Job</th>
                     <th>Action</th>
                 </tr>
@@ -101,7 +100,6 @@ $users = getUsers($searchBy, $searchTerm);
                 <td><?php echo $user['mName']; ?></td>
                 <td><?php echo $user['lName']; ?></td>
                 <td><?php echo $user['email']; ?></td>
-                <td><?php echo $user['password']; ?></td>
                 <td><?php echo $user['job_name']; ?></td>
                 <td>
                     <?php if ($user['jobID'] == 1) : ?>
