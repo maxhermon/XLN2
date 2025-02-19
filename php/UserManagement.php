@@ -2,6 +2,8 @@
 <html lang="en">
 
 <?php
+session_start();
+
 require 'db_connection.php';
 if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
     header('Location: Login.php');
