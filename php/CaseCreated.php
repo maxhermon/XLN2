@@ -1,12 +1,9 @@
 <?php
-// Start session if not already started
+
 session_start();
-
-// Get the case ID from session
 $newCaseID = isset($_SESSION['caseID']) ? $_SESSION['caseID'] : null;
-
-// Clear the session variable after retrieving it
 unset($_SESSION['caseID']);
+
 ?>
 
 <!DOCTYPE html>

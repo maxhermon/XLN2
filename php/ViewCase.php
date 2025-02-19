@@ -1,22 +1,21 @@
 <?php
-// Initialize variables
+
 $caseID = isset($_GET['uid']) ? $_GET['uid'] : null;
 $caseData = null;
-
-// Database connection
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
-// Fetch case data if caseID is provided
 if ($caseID) {
     $stmt = $db->prepare("SELECT c.*, 
                         d.deptName AS department_name, 
                         r.reason AS reason_name,
                         cu.name AS customer_name,
+                        u.fname || ' ' || u.lname AS user_name,
                         CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
                 FROM cases c
                 LEFT JOIN reasons r ON c.reasonID = r.reasonID
                 LEFT JOIN departments d ON r.departmentID = d.departmentID
                 LEFT JOIN customers cu ON c.customerID = cu.customerID
+                LEFT JOIN users u ON c.userID = u.userID
                 WHERE c.caseID = :caseID");
     $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);
     $result = $stmt->execute();
@@ -62,7 +61,10 @@ if ($caseID) {
                         <label>Case ID:</label>
                         <p><?php echo $caseData['caseID']; ?></p>
                     </div>
-                    
+                    <div class="form-group">
+                        <label>Case Handler:</label>
+                        <p><?php echo $caseData['user_name']; ?></p>
+                    </div>
                     <div class="form-group">
                         <label>Department:</label>
                         <p><?php echo $caseData['department_name']; ?></p>
