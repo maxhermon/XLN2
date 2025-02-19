@@ -1,32 +1,32 @@
 <?php
-// Initialize variables
+
 $caseID = isset($_GET['uid']) ? $_GET['uid'] : null;
 $errorMessage = '';
 $successMessage = '';
 $caseData = null;
 
-// Database connection
+
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
-// Handle form submission
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newStatus = isset($_POST['caseStatus']) ? 1 : 0; // 1 for Open, 0 for Closed
     $description = $_POST['caseNotes'];
     $caseID = $_POST['caseID'];
     $oldStatus = $_POST['oldStatus'];
     
-    // Check if status is changing from open to closed
+
     $closedDate = null;
     if ($oldStatus == 1 && $newStatus == 0) {
-        // Case is being closed, set the current timestamp
+
         $closedDate = date('Y-m-d H:i:s');
         $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = :closedDate WHERE caseID = :caseID");
         $stmt->bindValue(':closedDate', $closedDate, SQLITE3_TEXT);
     } elseif ($newStatus == 1 && $oldStatus == 0) {
-        // Case is being reopened, clear the closed date
+   
         $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = NULL WHERE caseID = :caseID");
     } else {
-        // Status not changing, just update status and description
+
         $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description WHERE caseID = :caseID");
     }
     
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch case data if caseID is provided
+
 if ($caseID) {
     $stmt = $db->prepare("SELECT c.*, 
                         d.deptName AS department_name, 
@@ -132,6 +132,8 @@ if ($caseID) {
                     <span id="statusText"><?php echo $caseData['status'] == 1 ? 'Open' : 'Closed'; ?></span>
 
                     <button type="submit">Save Changes</button>
+
+                    <a href="ViewAllCases.php" class="button">Back to All Cases</a>
                 </form>
             <?php else: ?>
                 <p>No case found or invalid case ID.</p>
