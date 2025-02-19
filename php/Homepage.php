@@ -1,3 +1,34 @@
+<?php
+
+
+session_start();                    
+require 'db_connection.php';        
+$db = connectToDatabase();         
+
+if (!isset($_SESSION['userID'])) {
+    header("Location: LoginPage.php");
+    exit;
+}
+
+$userID = $_SESSION['userID'];
+$stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
+                      FROM users
+                      WHERE userID = :userID");
+$stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
+$result = $stmt->execute();
+$userData = $result->fetchArray(SQLITE3_ASSOC);
+
+if (!$userData) {
+    echo "User not found in the database.";
+    exit;
+}
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +62,7 @@
     </header>
     <main>
         <section class="welcome-section">
-            <h1>Welcome, [Staff Name]</h1>
+            <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
