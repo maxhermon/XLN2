@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
                         <a href="../html/ProfilePage.html">View Profile</a>
-                        <a href="#">Logout</a>
+                        <a href="logOut.php">Logout</a>
                     </div>
                 </li>
             </ul>
