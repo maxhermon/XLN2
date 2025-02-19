@@ -37,8 +37,6 @@
             <button type="submit">Login</button>
             <div class="links">
                 <span class="psw"><a href="#">Forgot password?</a></span>
-                <span class="psw"> <b> | </b></span>
-                <span class="psw">Don't have an account? <a href="UserCreation.php">Register</a></span>
             </div>
         </form>
     </main>
