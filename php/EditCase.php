@@ -132,6 +132,8 @@ if ($caseID) {
                     <span id="statusText"><?php echo $caseData['status'] == 1 ? 'Open' : 'Closed'; ?></span>
 
                     <button type="submit">Save Changes</button>
+
+                    <a href="ViewAllCases.php" class="button">Back to All Cases</a>
                 </form>
             <?php else: ?>
                 <p>No case found or invalid case ID.</p>
