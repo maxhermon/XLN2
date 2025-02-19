@@ -60,10 +60,10 @@ $cases = getCases($searchBy, $searchTerm);
 </head>
 <body>
 <header>
-        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+        <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="../html/Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="Homepage.php"><i class="fa-solid fa-house"></i> XLN Home</a></li>
                 <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
