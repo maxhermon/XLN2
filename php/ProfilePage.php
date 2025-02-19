@@ -1,3 +1,30 @@
+<?php
+
+session_start();                    
+require 'db_connection.php';        
+$db = connectToDatabase();         
+
+if (!isset($_SESSION['userID'])) {
+    header("Location: LoginPage.php");
+    exit;
+}
+
+$userID = $_SESSION['userID'];
+$stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
+                      FROM users
+                      WHERE userID = :userID");
+$stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
+$result = $stmt->execute();
+$userData = $result->fetchArray(SQLITE3_ASSOC);
+
+if (!$userData) {
+    echo "User not found in the database.";
+    exit;
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,8 +49,8 @@
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
-                        <a href="../html/ProfilePage.html">View Profile</a>
-                        <a href="#">Logout</a>
+                        <a href="ProfilePage.php">View Profile</a>
+                        <a href="logOut.php">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -33,10 +60,18 @@
         <div class="profile-container">
             <h1>User Profile</h1>
             <div class="profile-info">
-                <p><strong>Name:</strong> John Doe</p>
-                <p><strong>Job:</strong> Software Engineer</p>
-                <p><strong>Email:</strong> john.doe@example.com</p>
-                <p><strong>User ID:</strong> 12345</p>
+                <p><strong>Name:</strong>
+                <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?>
+                </p>
+                <p><strong>Job Role:</strong>
+                <?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?>
+                </p>
+                <p><strong>Email:</strong>
+                <?php echo htmlspecialchars($userData['email']); ?>
+                </p>
+                <p><strong>User ID:</strong>
+                <?php echo htmlspecialchars($userID); ?>
+                </p>
             </div>
         </div>
     </main>

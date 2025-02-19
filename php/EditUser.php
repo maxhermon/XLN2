@@ -8,7 +8,6 @@ $caseData = null;
 
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
-// Fetch all jobs for the dropdown
 $jobsQuery = "SELECT jobID, job FROM jobs ORDER BY job";
 $jobsResult = $db->query($jobsQuery);
 $jobs = [];
@@ -63,23 +62,26 @@ if ($userID) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Case</title>
+    <title>View Case</title>
     <link rel="stylesheet" href="../css/EditCase.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
 </head>
 <body>
-    <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+<header>
+        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="../html/Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
-                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="ProfilePage.php">View Profile</a>
                         <a href="logOut.php">Logout</a>
                     </div>
                 </li>
@@ -113,9 +115,6 @@ if ($userID) {
 
                     <label for="email">Email:</label>
                     <input type="text" id="email" name="email" value="<?php echo $userData['email']; ?>">
-                    
-                    <label for="password">Password:</label>
-                    <input type="text" id="password" name="password" value="<?php echo $userData['password']; ?>" readonly>
 
                     <label for="jobID">Job:</label>
                     <select id="jobID" name="jobID">
@@ -127,6 +126,10 @@ if ($userID) {
                         <?php endforeach; ?>
                     </select>
                     
+                    <label for="password">Password:</label>
+                    <button>Change Password</button>
+
+
                     <button type="submit">Save Changes</button>
 
                     <a href="UserManagement.php" class="button">Back to All Users</a>

@@ -39,23 +39,26 @@ $users = getUsers($searchBy, $searchTerm);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View All Users</title>
+    <title>View Case</title>
     <link rel="stylesheet" href="../css/ViewAllCases.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
 </head>
 <body>
 <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="../html/Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
-                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="ProfilePage.php">View Profile</a>
                         <a href="logOut.php">Logout</a>
                     </div>
                 </li>
@@ -63,7 +66,7 @@ $users = getUsers($searchBy, $searchTerm);
         </nav>
     </header>
     <main>
-        <h2>View All Cases</h2>
+        <h2>View All User</h2>
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
@@ -85,7 +88,6 @@ $users = getUsers($searchBy, $searchTerm);
                     <th>Middle Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
-                    <th>Password</th>
                     <th>Job</th>
                     <th>Action</th>
                 </tr>
@@ -98,7 +100,6 @@ $users = getUsers($searchBy, $searchTerm);
                 <td><?php echo $user['mName']; ?></td>
                 <td><?php echo $user['lName']; ?></td>
                 <td><?php echo $user['email']; ?></td>
-                <td><?php echo $user['password']; ?></td>
                 <td><?php echo $user['job_name']; ?></td>
                 <td>
                     <?php if ($user['jobID'] == 1) : ?>
@@ -125,4 +126,3 @@ $users = getUsers($searchBy, $searchTerm);
     </script>
 </body>
 </html>
-<gay></gay>
