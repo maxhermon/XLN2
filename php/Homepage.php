@@ -11,6 +11,7 @@ if (!isset($_SESSION['userID'])) {
 }
 
 $userID = $_SESSION['userID'];
+
 $stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
                       FROM users
                       WHERE userID = :userID");
@@ -63,6 +64,7 @@ if (!$userData) {
     <main>
         <section class="welcome-section">
             <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
+            <h2><?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?> </h2>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
