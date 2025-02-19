@@ -219,3 +219,91 @@ footer {
 .button:hover {
     background-color: #e68f1d;
 }
+
+/* Toggle Switch Container */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 15px 0;
+    width: 100%;
+  }
+  
+  /* Toggle group for label and status */
+  .toggle-text-group {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    padding-left: 0;
+    margin-left: 0;
+  }
+  
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin: 0 auto;
+    margin-right: 250px;
+  }
+  
+  /* Hide default checkbox */
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #2196F3;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  /* Toggle switch circle */
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  /* Checked state */
+  input:checked + .toggle-slider {
+    background-color: #ccc;
+  }
+  
+  input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+  }
+  
+  /* Focus state */
+  input:focus + .toggle-slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  /* Status text styling */
+  .toggle-status {
+    font-weight: 500;
+    color: #333;
+    user-select: none;
+  }
+  
+  .toggle-label {
+    font-weight: bold;
+    color: #333;
+    margin-left: 0;
+  }
