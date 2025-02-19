@@ -1,29 +1,6 @@
 <?php
 require_once "vendor/autoload.php";
 
-session_start();                    
-require 'db_connection.php';        
-$db = connectToDatabase();         
-
-if (!isset($_SESSION['userID'])) {
-    header("Location: LoginPage.php");
-    exit;
-}
-
-$userID = $_SESSION['userID'];
-$stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
-                      FROM users
-                      WHERE userID = :userID");
-$stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
-$result = $stmt->execute();
-$userData = $result->fetchArray(SQLITE3_ASSOC);
-
-if (!$userData) {
-    echo "User not found in the database.";
-    exit;
-}
-
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -41,7 +18,7 @@ try {
 
     //Recipients
     $mail->setFrom('xlnhelpbot@gmail.com', 'XLN');
-    $mail->addAddress(htmlspecialchars($userData['email']), htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']) ); // Add a recipient
+    $mail->addAddress('recipient@example.com', 'Recipient Name'); // Add a recipient
     $mail->addReplyTo('reply@yourdomain.com', 'Reply');
 
     // Content
@@ -58,5 +35,3 @@ try {
 } catch (Exception $e) {
     echo "Mailer Error: {$mail->ErrorInfo}";
 }
-
-?>
