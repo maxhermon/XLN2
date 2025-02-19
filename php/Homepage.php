@@ -64,14 +64,15 @@ if (!$userData) {
     <main>
         <section class="welcome-section">
             <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
+            <h2><?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?> </h2>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
             <h2>Quick Links</h2>
             <div class="links-container">
-                <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
-                <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
-                <a href="../html/ProfilePage.html" class="link-box">Profile</a>
+                <a href="CaseCreation.php" class="link-box">Create New Case</a>
+                <a href="ViewAllCases.php" class="link-box">View All Cases</a>
+                <a href="ProfilePage.php" class="link-box">Profile</a>
                 <a href="../html/Contact.html" class="link-box">Contact Support</a>
             </div>
         </section>
