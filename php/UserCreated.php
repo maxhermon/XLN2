@@ -28,7 +28,7 @@ unset($_SESSION['caseID']);
                     <a href="javascript:void(0)" class="dropbtn">Profile</a>
                     <div class="dropdown-content">
                         <a href="../html/ProfilePage.html">View Profile</a>
-                        <a href="#">Logout</a>
+                        <a href="logOut.php">Logout</a>
                     </div>
                 </li>
             </ul>

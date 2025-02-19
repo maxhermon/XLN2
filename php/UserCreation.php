@@ -53,20 +53,19 @@ if (isset($_POST['addCaseHandler'])) {
 </head>
 
 <body>
-    <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+<header>
+        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="../html/Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
                         <a href="../html/ProfilePage.html">View Profile</a>
-                        <a href="#">Logout</a>
+                        <a href="logOut.php">Logout</a>
                     </div>
                 </li>
             </ul>
