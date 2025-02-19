@@ -64,7 +64,7 @@ if (!$userData) {
                 <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?>
                 </p>
                 <p><strong>Job Role:</strong>
-                <?php echo htmlspecialchars($userData['jobID']);?>
+                <?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?>
                 </p>
                 <p><strong>Email:</strong>
                 <?php echo htmlspecialchars($userData['email']); ?>
