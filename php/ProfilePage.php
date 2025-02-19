@@ -43,7 +43,7 @@ if (!$userData) {
         <nav>
             <ul class="left-menu">
                 <li><a href="Homepage.php"><i class="fa-solid fa-house"></i> XLN Home</a></li>
-                <li><a href="Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
