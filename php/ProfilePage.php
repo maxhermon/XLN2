@@ -58,18 +58,18 @@ if (!$userData) {
     </header>
     <main>
         <div class="profile-container">
-            <h1>User Profile</h1>
+            <h1 class="info">User Profile</h1>
             <div class="profile-info">
-                <p><strong>Name:</strong>
+                <p class="info"><strong>Name:</strong>
                 <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?>
                 </p>
-                <p><strong>Job Role:</strong>
+                <p class="info"><strong>Job Role:</strong>
                 <?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?>
                 </p>
-                <p><strong>Email:</strong>
+                <p class="info"><strong>Email:</strong>
                 <?php echo htmlspecialchars($userData['email']); ?>
                 </p>
-                <p><strong>User ID:</strong>
+                <p class="info"><strong>User ID:</strong>
                 <?php echo htmlspecialchars($userID); ?>
                 </p>
             </div>
