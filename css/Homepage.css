@@ -23,6 +23,11 @@ header h1 {
     margin: 0;
     flex-grow: 1;
 }
+
+.welcome-section h2 {
+    color: #003064;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
