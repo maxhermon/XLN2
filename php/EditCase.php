@@ -10,7 +10,7 @@ $db = new SQLite3('../data/XLN_new_DBA.db');
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $newStatus = isset($_POST['caseStatus']) ? 0 : 1;
+    $newStatus = isset($_POST['caseStatus']) ? 1 : 0; // 1 for Open, 0 for Closed
     $description = $_POST['caseNotes'];
     $caseID = $_POST['caseID'];
     $oldStatus = $_POST['oldStatus'];
@@ -126,15 +126,13 @@ if ($caseID) {
                     <label for="openedDate">Opened Date:</label>
                     <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly> 
 
-                    <div class="toggle-container">
-                    <span class="toggle-label">Case Status:</span>
-                    <span id="statusText" class="toggle-status"><?php echo $caseData['status'] == 1 ? 'Open' : 'Closed'; ?></span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="caseStatus" name="caseStatus" <?php echo $caseData['status'] == 0 ? 'checked' : ''; ?>>
-                        <span class="toggle-slider"></span>
+                    <label for="caseStatus">Close case:</label>
+                    <label class="switch">
+                        <input type="checkbox" id="caseStatus" name="caseStatus" <?php echo $caseData['status'] == 1 ? 'checked' : ''; ?>>
+                        <span class="slider round"></span>
                     </label>
-                    
-                    </div>
+
+                    <span id="statusText"><?php echo $caseData['status'] == 1 ? 'Open' : 'Closed'; ?></span>
 
                     <button type="submit">Save Changes</button>
 
@@ -152,8 +150,9 @@ if ($caseID) {
     <script>
         document.getElementById("year").innerHTML = new Date().getFullYear();
         
+        // Update status text when checkbox changes
         document.getElementById('caseStatus').addEventListener('change', function() {
-            document.getElementById('statusText').textContent = this.checked ? 'Closed' : 'Open';
+            document.getElementById('statusText').textContent = this.checked ? 'Open' : 'Closed';
         });
     </script>
 </body>

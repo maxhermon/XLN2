@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Case</title>
+    <link rel="stylesheet" href="../css/EditCase.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
+</head>
+<body>
+    <header>
+        <a href="Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+        <nav>
+            <ul class="left-menu">
+                <li><a href="Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
+                    <div class="dropdown-content">
+                        <a href="../php/ProfilePage.php">View Profile</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+    <div class="container">
+        <h1>Edit Case</h1>
+        <form id="editCaseForm">
+            <label for="department">Department:</label>
+            <select id="department" name="department" required>
+                <option value="">Select Department</option>
+                <option value="Account Management">Account Management</option>
+                <option value="Billing">Billing</option>
+                <option value="Cancellations">Cancellations</option>
+                <option value="Faults">Faults</option>
+                <option value="Products & Orders">Products & Orders</option>
+            </select>
+
+            <label for="reason">Reason:</label>
+            <select id="reason" name="reason" required>
+                <option value="">Select Reason</option>
+                <option value="General Enquiry">General Enquiry</option>
+                <option value="Soft Cancellation">Soft Cancellation</option>
+                <option value="Credits">Credits</option>
+                <option value="Cease Request">Cease Request</option>
+            </select>
+
+            <label for="customerName">Customer Name:</label>
+            <input type="name" id="customerName" name="customerName" required>
+
+            <label for="caseNotes">Case Notes:</label>
+            <textarea id="caseNotes" name="caseNotes" rows="4" required></textarea>
+
+            <label for="created">Creation timestamp</label>
+            <input type="text" id="created" name="created" value="2023-10-01 12:34:56" readonly>
+
+            <label for="caseStatus">Close case:</label>
+            <label class="switch">
+                <input type="checkbox" id="caseStatus" name="caseStatus">
+                <span class="slider round"></span>
+            </label>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    </main>
+    <footer>
+        <p>&copy; <span id="year"></span> XLN</p>
+    </footer>
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+    </script>
+</body>
+</html></div>
