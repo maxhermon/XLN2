@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Homepage</title>
+    <link rel="stylesheet" href="../css/Homepage.css">
+</head>
+<body>
+    <header>
+        <a href="Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+        <nav>
+            <ul class="left-menu">
+                <li><a href="Homepage.html">XLN Home</a></li>
+                <li><a href="Contact.html">Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">MyAccount</a>
+                    <div class="dropdown-content">
+                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="../php/logOut.php">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="welcome-section">
+            <h1>Welcome, [Staff Name]</h1>
+            <p>Today is <span id="currentDate"></span></p>
+        </section>
+        <section class="quick-links">
+            <h2>Quick Links</h2>
+            <div class="links-container">
+                <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
+                <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
+                <a href="../html/ProfilePage.html" class="link-box">Profile</a>
+                <a href="../html/Contact.html" class="link-box">Contact Support</a>
+            </div>
+        </section>
+        <section class="notifications">
+            <h2>Notifications</h2>
+            <ul>
+                <li>New case assigned to you.</li>
+                <li>System maintenance scheduled for tomorrow.</li>
+                <li>New company policy update.</li>
+            </ul>
+        </section>
+        <section class="recent-activities">
+            <h2>Recent Activities</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Case #12345 updated</td>
+                        <td>2023-10-01</td>
+                        <td>Completed</td>
+                    </tr>
+                    <tr>
+                        <td>Profile updated</td>
+                        <td>2023-09-30</td>
+                        <td>Completed</td>
+                    </tr>
+                    <tr>
+                        <td>New case created</td>
+                        <td>2023-09-29</td>
+                        <td>Pending</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; <span id="year"></span> XLN</p>
+    </footer>
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+        document.getElementById("currentDate").innerHTML = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>
