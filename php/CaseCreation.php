@@ -74,10 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         
 
+        $newCaseID = $db->lastInsertRowID();
+        $_SESSION['caseID'] = $newCaseID;
+        header('Location: caseCreated.php');
+        exit();
         
-        
-        
-        header("Location: ViewAllCases.php");
     }
 }
 ?>
@@ -114,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main>
         <h2>Create a Case</h2>
         <form action="CaseCreation.php" method="POST">
-            <!-- Case ID and Timestamp will be generated automatically by PHP -->
             <label for="departmentID">Department:</label>
             <select id="departmentID" name="departmentID" required>
                 <option value="">-- Select Department --</option>
