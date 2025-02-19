@@ -1,3 +1,34 @@
+<?php
+
+
+session_start();                    
+require 'db_connection.php';        
+$db = connectToDatabase();         
+
+if (!isset($_SESSION['userID'])) {
+    header("Location: LoginPage.php");
+    exit;
+}
+
+$userID = $_SESSION['userID'];
+$stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
+                      FROM users
+                      WHERE userID = :userID");
+$stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
+$result = $stmt->execute();
+$userData = $result->fetchArray(SQLITE3_ASSOC);
+
+if (!$userData) {
+    echo "User not found in the database.";
+    exit;
+}
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,10 +43,10 @@
 </head>
 <body>
     <header>
-        <a href="Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+        <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="Homepage.php"><i class="fa-solid fa-house"></i> XLN Home</a></li>
                 <li><a href="Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
@@ -23,7 +54,7 @@
                     <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
                         <a href="../php/ProfilePage.php">View Profile</a>
-                        <a href="#">Logout</a>
+                        <a href="logOut.php">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -31,7 +62,7 @@
     </header>
     <main>
         <section class="welcome-section">
-            <h1>Welcome, [Staff Name]</h1>
+            <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
