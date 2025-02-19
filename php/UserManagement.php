@@ -128,4 +128,3 @@ $users = getUsers($searchBy, $searchTerm);
     </script>
 </body>
 </html>
-<gay></gay>
