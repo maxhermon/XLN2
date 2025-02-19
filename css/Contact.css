@@ -128,9 +128,9 @@ html, body {
 main {
     flex-grow: 1;
     background-color: #ffffff;
-    padding: 20px;
+    padding-bottom: 0;
     margin: 20px;
-    margin-bottom: 90px;
+    margin-bottom: 0;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -158,9 +158,10 @@ h2{
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin-top: auto; /* Center vertically */
+    margin-top: 20px; /* Center vertically */
     margin-bottom: auto; /* Center vertically */
 }
+
 footer {
     background-color: #003064;
     color: white;
@@ -170,6 +171,6 @@ footer {
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100%;
-    margin-top: auto; 
+    width: 100vw;
+    margin-top: auto;
 }
