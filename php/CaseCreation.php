@@ -51,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $deptID = $_POST['departmentID'] ?? null;
         $reasonID = $_POST['reasonID']     ?? null;
-        $status = $_POST['status']       ?? null;
         $customerID = $_POST['customerID'] ?? null;
         $description    = $_POST['description']        ?? '';
 
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $newCaseID = $db->lastInsertRowID();
         $_SESSION['caseID'] = $newCaseID;
-        header('Location: caseCreated.php');
+        header('Location: CaseCreated.php');
         exit();
         
     }
@@ -92,20 +91,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Case</title>
     <link rel="stylesheet" href="../css/CaseCreation.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
 </head>
 <body>
-    <header>
-    <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+<header>
+        <a href="Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="../html/Homepage.html">XLN Home</a></li>
-                <li><a href="../html/Contact.html">Contact</a></li>
+                <li><a href="Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="#"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">MyAccount</a>
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
-                        <a href="#">View Profile</a>
+                        <a href="../html/ProfilePage.html">View Profile</a>
                         <a href="#">Logout</a>
                     </div>
                 </li>
