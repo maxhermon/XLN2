@@ -1,7 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-    ini_set('display_errors', 1);
 
 session_start();
 
@@ -13,6 +11,12 @@ $departments = [];
 $deptResult = $db->query("SELECT departmentID, deptName FROM departments");
 while ($row = $deptResult->fetchArray(SQLITE3_ASSOC)) {
     $departments[] = $row;
+}
+
+$customers = [];
+$cResult = $db->query("SELECT customerID, name FROM customers");
+while ($row = $cResult->fetchArray(SQLITE3_ASSOC)) {
+    $customers[] = $row;
 }
 
 $selectedDepartmentID = null;
@@ -32,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             while ($rRow = $rResult->fetchArray(SQLITE3_ASSOC)) {
                 $reasonsForDepartment[] = $rRow;
             }
+
         }
     }
 
@@ -46,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $deptID = $_POST['departmentID'] ?? null;
         $reasonID = $_POST['reasonID']     ?? null;
-        $status   = $_POST['status']       ?? null;
-        $notes    = $_POST['notes']        ?? '';
+        $status = $_POST['status']       ?? null;
+        $customerID = $_POST['customerID'] ?? null;
+        $description    = $_POST['description']        ?? '';
 
         $createdTime = date('Y-m-d H:i:s');
-        $closedTime = ($status === 'Closed') ? $createdTime : null;
 
         $sql = "INSERT into cases (userID, reasonID, description, status, created, closed, customerID)
         VALUES (:userID, :reasonID, :description, :status, :created, :closed, :customerID)";
@@ -59,23 +64,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
         $stmt->bindValue(':reasonID', $reasonID, SQLITE3_INTEGER);
-        $stmt->bindValue(':description', $notes, SQLITE3_TEXT);
+        $stmt->bindValue(':description', $description, SQLITE3_TEXT);
         $stmt->bindValue(':status', 1, SQLITE3_INTEGER);
         $stmt->bindValue(':created', $createdTime, SQLITE3_TEXT);
         $stmt->bindValue(':closed', null, SQLITE3_NULL);
-        $stmt->bindValue(':customerID', null, SQLITE3_NULL);
+        $stmt->bindValue(':customerID', $customerID, SQLITE3_INTEGER);
 
         $stmt->execute();
 
         
 
+        $newCaseID = $db->lastInsertRowID();
+        $_SESSION['caseID'] = $newCaseID;
+        header('Location: caseCreated.php');
+        exit();
         
-        
-        // For now, we can just echo out or redirect
-        //echo "<p>Case submitted successfully for Dept $deptID, Reason $reasonID</p>";
-        
-        header("Location: ViewAllCases.php");
-        // exit or redirect to success page
     }
 }
 ?>
@@ -106,7 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main>
         <h2>Create a Case</h2>
         <form action="CaseCreation.php" method="POST">
-            <!-- Case ID and Timestamp will be generated automatically by PHP -->
             <label for="departmentID">Department:</label>
             <select id="departmentID" name="departmentID" required>
                 <option value="">-- Select Department --</option>
@@ -131,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <input type="hidden" name="departmentID"
                 value="<?php echo htmlspecialchars($selectedDepartmentID);?>">
-
+            
             <label for="reasonID">Reason:</label>
             <select id="reasonID" name="reasonID" required>
                 <option value="">-- Select Reason --</option>
@@ -142,12 +144,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endforeach; ?>
             </select>
 
+            <label for="customerID">Customer:</label>
+            <select id="customerID" name="customerID" required>
+                <option value="">-- Select Customer --</option>
+                <?php foreach ($customers as $customer): ?>
+                    <option value="<?php echo $customer['customerID']; ?>">
+                        <?php echo $customer['name']; ?>
+                    </option>
+                    <?php endforeach; ?>
+            </select>
+
 
             
 
             <!-- Notes field (optional) -->
-            <label for="notes">Notes:</label>
-            <textarea id="notes" name="notes" rows="4"></textarea>
+            <label for="description">Notes:</label>
+            <textarea id="description" name="description" rows="4"></textarea>
 
             <button type="submit" name="submitCase">Submit Case</button>
         </form>

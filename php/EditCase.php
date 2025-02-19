@@ -1,63 +1,156 @@
-<?php 
+<?php
+
+$caseID = isset($_GET['uid']) ? $_GET['uid'] : null;
+$errorMessage = '';
+$successMessage = '';
+$caseData = null;
+
+
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
-// Get case data
-$caseResult = null;
-if(isset($_GET['caseID'])) {
-    $sql = "SELECT * FROM cases WHERE caseID=:cid";
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':cid', $_GET['uid'], SQLITE3_TEXT);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $newStatus = isset($_POST['caseStatus']) ? 1 : 0; // 1 for Open, 0 for Closed
+    $description = $_POST['caseNotes'];
+    $caseID = $_POST['caseID'];
+    $oldStatus = $_POST['oldStatus'];
+    
+
+    $closedDate = null;
+    if ($oldStatus == 1 && $newStatus == 0) {
+
+        $closedDate = date('Y-m-d H:i:s');
+        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = :closedDate WHERE caseID = :caseID");
+        $stmt->bindValue(':closedDate', $closedDate, SQLITE3_TEXT);
+    } elseif ($newStatus == 1 && $oldStatus == 0) {
+   
+        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = NULL WHERE caseID = :caseID");
+    } else {
+
+        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description WHERE caseID = :caseID");
+    }
+    
+    $stmt->bindValue(':status', $newStatus, SQLITE3_INTEGER);
+    $stmt->bindValue(':description', $description, SQLITE3_TEXT);
+    $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);
+    
     $result = $stmt->execute();
     
-    while($row = $result->fetchArray(SQLITE3_NUM)){
-        $caseResult = $row;
+    if ($result) {
+        $successMessage = "Case updated successfully!";
+    } else {
+        $errorMessage = "Failed to update case: " . $db->lastErrorMsg();
     }
 }
 
-if (isset($_POST['submit'])){
-    $db = new SQLite3('../data/XLN_new_DBA.db');
-    
-    // Update only description and status
-    $sql = "UPDATE Cases SET Status = :status, Description = :desc WHERE caseID = :cid";
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':cid', $_GET['caseID'], SQLITE3_TEXT);
-    $stmt->bindParam(':status', $_POST['status'], SQLITE3_TEXT);
-    $stmt->bindParam(':desc', $_POST['description'], SQLITE3_TEXT);
-    $stmt->execute();
-    
-    header('Location: ViewAllCases.php');
+
+if ($caseID) {
+    $stmt = $db->prepare("SELECT c.*, 
+                        d.deptName AS department_name, 
+                        r.reason AS reason_name,
+                        cu.name AS customer_name
+                FROM cases c
+                LEFT JOIN reasons r ON c.reasonID = r.reasonID
+                LEFT JOIN departments d ON r.departmentID = d.departmentID
+                LEFT JOIN customers cu ON c.customerID = cu.customerID
+                WHERE c.caseID = :caseID");
+    $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);
+    $result = $stmt->execute();
+    $caseData = $result->fetchArray(SQLITE3_ASSOC);
 }
 ?>
-<div class="container bgColor">
-    <main role="main" class="pb-3">
-        <div class="row">
-            <div class="col-11">
-                <form method="post">
-                    <h3>Update Case</h3>
-                    <div class="form-group col-md-3">
-                        <label class="control-label labelFont">Case ID</label>
-                        <input class="form-control" type="text" readonly value="<?php echo $_GET['cid']; ?>">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Case</title>
+    <link rel="stylesheet" href="../css/EditCase.css">
+</head>
+<body>
+    <header>
+        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+        <nav>
+            <ul class="left-menu">
+                <li><a href="#">MyAccount</a></li>
+                <li><a href="#">XLN Home</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="#">Logout</a>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label class="control-label labelFont">Status</label>
-                        <select class="form-control" name="status">
-                            <option value="0" <?php echo ($caseResult[3] == 0) ? 'selected' : ''; ?>>Closed</option>
-                            <option value="1" <?php echo ($caseResult[3] == 1) ? 'selected' : ''; ?>>Open</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="control-label labelFont">Description</label>
-                        <textarea class="form-control" name="description" rows="4"><?php echo $caseResult[4]; ?></textarea>
-                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <h1>Edit Case</h1>
+            
+            <?php if ($errorMessage): ?>
+                <div class="error-message"><?php echo $errorMessage; ?></div>
+            <?php endif; ?>
+            
+            <?php if ($successMessage): ?>
+                <div class="success-message"><?php echo $successMessage; ?></div>
+            <?php endif; ?>
+            
+            <?php if ($caseData): ?>
+                <form id="editCaseForm" method="POST">
+                    <input type="hidden" name="caseID" value="<?php echo $caseData['caseID']; ?>">
+                    <input type="hidden" name="oldStatus" value="<?php echo $caseData['status']; ?>">
                     
-                    <div class="form-group col-md-3 mt-3">
-                        <input type="submit" name="submit" value="Update" class="btn btn-primary">
-                    </div>
-                    <div class="form-group col-md-3 mt-3">
-                        <a href="viewCases.php" class="btn btn-secondary">Back</a>
-                    </div>
+                    <label for="department">Department:</label>
+                    <input type="text" id="department" name="department" value="<?php echo $caseData['department_name']; ?>" readonly>
+                    
+                    <label for="reason">Reason:</label>
+                    <input type="text" id="reason" name="reason" value="<?php echo $caseData['reason_name']; ?>" readonly>
+                    
+                    <label for="customerName">Customer Name:</label>
+                    <input type="text" id="customerName" name="customerName" value="<?php echo $caseData['customer_name']; ?>" readonly>
+
+                    <label for="openedDate">Opened Date:</label>
+                    <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly>
+                    
+                    <label for="caseNotes">Case Notes:</label>
+                    <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
+                    
+                    <label for="openedDate">Opened Date:</label>
+                    <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly> 
+
+                    <label for="caseStatus">Close case:</label>
+                    <label class="switch">
+                        <input type="checkbox" id="caseStatus" name="caseStatus" <?php echo $caseData['status'] == 1 ? 'checked' : ''; ?>>
+                        <span class="slider round"></span>
+                    </label>
+
+                    <span id="statusText"><?php echo $caseData['status'] == 1 ? 'Open' : 'Closed'; ?></span>
+
+                    <button type="submit">Save Changes</button>
+
+                    <a href="ViewAllCases.php" class="button">Back to All Cases</a>
                 </form>
-            </div>
+            <?php else: ?>
+                <p>No case found or invalid case ID.</p>
+                <a href="ViewAllCases.php">Back to All Cases</a>
+            <?php endif; ?>
         </div>
     </main>
-</div>
+    <footer>
+        <p>&copy; <span id="year"></span> XLN</p>
+    </footer>
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+        
+        // Update status text when checkbox changes
+        document.getElementById('caseStatus').addEventListener('change', function() {
+            document.getElementById('statusText').textContent = this.checked ? 'Open' : 'Closed';
+        });
+    </script>
+</body>
+</html>
