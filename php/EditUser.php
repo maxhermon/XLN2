@@ -63,7 +63,7 @@ if ($userID) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Case</title>
-    <link rel="stylesheet" href="../css/EditCase.css">
+    <link rel="stylesheet" href="../css/EditUser.css">
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
