@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+        <a href=""><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
                 <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
@@ -37,7 +37,6 @@
             <button type="submit">Login</button>
             <div class="links">
                 <span class="psw"><a href="#">Forgot password?</a></span>
-                <span class="psw"> <b> | </b></span>
             </div>
         </form>
     </main>
