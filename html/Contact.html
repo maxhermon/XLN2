@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Case</title>
+    <link rel="stylesheet" href="../css/Contact.css">
+</head>
+<body>
+    <header>
+        <a href="Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+        <nav>
+            <ul class="left-menu">
+                <li><a href="Homepage.html">XLN Home</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">MyAccount</a>
+                    <div class="dropdown-content">
+                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <body>
+    <main>
+        <h2><b>Contact us</b></h2>
+        <div class="message">
+            <p>For general enquiries, please contact us using the details below.</p>
+        </div>
+        <div class="contactDetails">
+            <p><b>Technical support:</b> 0808 178 5200</p>
+            <p><b>Customer service email:</b> service@telecom-service.co.uk</a></p>
+            <p><b><a href="https://help.xln.co.uk/en/">Customer service</a></b></p>
+            <p><b>Press enquiries</b> marketingmanagers@daisycomms.co.uk</p>
+        </div>
+        <footer>
+            <p>&copy; <span id="year"></span> XLN</p>
+        </footer>
+        <script>
+            document.getElementById("year").innerHTML = new Date().getFullYear();
+        </script>
+    </body>
+    </main>

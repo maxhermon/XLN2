@@ -94,18 +94,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../css/CaseCreation.css">
 </head>
 <body>
-
     <header>
-        <img class="logo" src="../xlnLogo.png" alt="XLN Logo">
+    <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
-            <ul>
-                <li><a href="#">MyAccount</a></li>
-                <li><a href="#">XLN Home</a></li>
-                <li><a href="#">Contact</a></li>
+            <ul class="left-menu">
+                <li><a href="../html/Homepage.html">XLN Home</a></li>
+                <li><a href="../html/Contact.html">Contact</a></li>
+            </ul>
+            <ul class="right-menu">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">MyAccount</a>
+                    <div class="dropdown-content">
+                        <a href="#">View Profile</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>
-
     <main>
         <h2>Create a Case</h2>
         <form action="CaseCreation.php" method="POST">
