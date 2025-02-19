@@ -8,7 +8,6 @@ $caseData = null;
 
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
-// Fetch all jobs for the dropdown
 $jobsQuery = "SELECT jobID, job FROM jobs ORDER BY job";
 $jobsResult = $db->query($jobsQuery);
 $jobs = [];
@@ -21,18 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mname = $_POST['mName'];
     $lname = $_POST['lName'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
     $jobID = $_POST['jobID'];
     $userID = $_POST['userID'];
 
     
-    $stmt = $db->prepare("UPDATE users SET fName = :fName, mName = :mName, lName = :lName, email = :email, password = :password, jobID = :jobID WHERE userID = :userID");
+    $stmt = $db->prepare("UPDATE users SET fName = :fName, mName = :mName, lName = :lName, email = :email, jobID = :jobID WHERE userID = :userID");
     
     $stmt->bindValue(':fName', $fname, SQLITE3_TEXT);
     $stmt->bindValue(':mName', $mname, SQLITE3_TEXT);
     $stmt->bindValue(':lName', $lname, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
-    $stmt->bindValue(':password', $password, SQLITE3_TEXT);
     $stmt->bindValue(':jobID', $jobID, SQLITE3_INTEGER);
     $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
     
@@ -64,7 +61,7 @@ if ($userID) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Case</title>
-    <link rel="stylesheet" href="../css/EditCase.css">
+    <link rel="stylesheet" href="../css/EditUser.css">
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
@@ -82,7 +79,7 @@ if ($userID) {
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
-                        <a href="../html/ProfilePage.html">View Profile</a>
+                        <a href="ProfilePage.php">View Profile</a>
                         <a href="logOut.php">Logout</a>
                     </div>
                 </li>
@@ -116,9 +113,6 @@ if ($userID) {
 
                     <label for="email">Email:</label>
                     <input type="text" id="email" name="email" value="<?php echo $userData['email']; ?>">
-                    
-                    <label for="password">Password:</label>
-                    <input type="text" id="password" name="password" value="<?php echo $userData['password']; ?>" readonly>
 
                     <label for="jobID">Job:</label>
                     <select id="jobID" name="jobID">
@@ -130,6 +124,10 @@ if ($userID) {
                         <?php endforeach; ?>
                     </select>
                     
+                    <label>Password:</label>
+                    <button>Change Password</button>
+
+
                     <button type="submit">Save Changes</button>
 
                     <a href="UserManagement.php" class="button">Back to All Users</a>
