@@ -1,5 +1,8 @@
 <?php
 
+require 'db_connection.php';  
+$db = connectToDatabase();   
+
 
 if (isset($_POST['addCaseHandler'])) {
 
