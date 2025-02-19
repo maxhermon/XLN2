@@ -11,12 +11,12 @@
   />
 </head>
 <body>
-<header>
-        <a href="Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+    <header>
+        <a href="../html/Homepage.html"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
-                <li><a href="Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
-                <li><a href="#"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+                <li><a href="../html/Homepage.html"><i class="fa-solid fa-house"></i> XLN Home</a></li>
+                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
