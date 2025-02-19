@@ -151,15 +151,26 @@ main {
     font-size: 28px;
     color: #003064;
     margin-bottom: 20px;
+    margin-left: 500px;
 }
 
 .links-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    display: grid;
+    gap: 20px;
+    justify-items: center;
 }
 
+.links-container.case-handler {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for case handlers */
+}
+
+.links-container.admin {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for admins */
+}
+
+
 .link-box {
+    max-width: 250px; /* Prevents them from being too wide */
     background-color: #003064;
     color: white;
     padding: 20px;
@@ -170,6 +181,7 @@ main {
     margin: 10px;
     transition: background-color 0.3s ease;
 }
+
 
 .link-box:hover {
     background-color: #00275d;
