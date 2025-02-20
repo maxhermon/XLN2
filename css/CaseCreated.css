@@ -84,7 +84,6 @@ nav ul li select {
     margin-left: 10px;
 }
 
-/* Main Content */
 .container {
     display: flex;
     flex-direction: column;
@@ -97,14 +96,12 @@ nav ul li select {
     margin: 150px auto 20px;
 }
 
-/* Success Message */
 .message {
     font-size: 20px;
     margin-bottom: 20px;
     color: #003064;
 }
 
-/* Buttons */
 .buttons {
     display: flex;
     justify-content: center;
@@ -140,7 +137,6 @@ nav ul li select {
     background-color: #A0A0A0;
 }
 
-/* Footer */
 footer {
     background-color: #003064;
     color: white;
