@@ -5,7 +5,6 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Header */
 header {
     background-color: #003064;
     color: #ffffff;
@@ -85,7 +84,6 @@ nav ul li select {
     margin-left: 10px;
 }
 
-/* Main Content */
 main {
     background-color: #ffffff;
     padding: 80px;
@@ -98,7 +96,6 @@ main {
     flex-direction: column; 
 }
 
-/* Form Container */
 .container {
     background-color: #ffffff;
     padding: 20px;
@@ -111,7 +108,6 @@ main {
     margin-bottom: auto;
 }
 
-/* Form */
 form {
     width: 100%;
     display: flex;
@@ -119,7 +115,6 @@ form {
     align-items: flex-start;
 }
 
-/* Adjust margin between form fields */
 form label {
     font-size: 18px;
     margin-bottom: 10px; 
@@ -128,7 +123,7 @@ form label {
 form input, form select, form textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 25px; /* Increase space between form fields */
+    margin-bottom: 25px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
@@ -155,7 +150,6 @@ form button:hover {
     background-color: #00275d;
 }
 
-/* Footer */
 footer {
     background-color: #003064;
     color: white;
