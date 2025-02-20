@@ -158,8 +158,8 @@ h2{
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin-top: 20px; /* Center vertically */
-    margin-bottom: auto; /* Center vertically */
+    margin-top: 20px; 
+    margin-bottom: auto; 
 }
 
 footer {
