@@ -11,7 +11,7 @@
         <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
     </header>
     <main>
-        <form action="../php/ResetPasswordPage.php" method="POST">
+        <form action="ResetPassword.php" method="POST">
             <label for="email"><b>Email address</b></label>
             <input type="email" id="email" name="email" required>
             <button type="submit">Send email</button>
