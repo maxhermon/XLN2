@@ -43,7 +43,7 @@ if (!$userData) {
         <nav>
             <ul class="left-menu">
                 <li><a href="Homepage.php"><i class="fa-solid fa-house"></i> XLN Home</a></li>
-                <li><a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+                <li><a href="Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
@@ -57,6 +57,8 @@ if (!$userData) {
         </nav>
     </header>
     <main>
+    <div class="profile-section">
+        <i id="bigicon" class="fa-solid fa-circle-user"></i>
         <div class="profile-container">
             <h1 class="info">User Profile</h1>
             <div class="profile-info">
@@ -74,7 +76,8 @@ if (!$userData) {
                 </p>
             </div>
         </div>
-    </main>
+    </div>
+</main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
     </footer>
