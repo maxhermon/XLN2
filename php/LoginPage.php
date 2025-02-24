@@ -36,7 +36,7 @@
             <input type="password" id="password" name="password" required>
             <button type="submit">Login</button>
             <div class="links">
-                <span class="psw"><a href="#">Forgot password?</a></span>
+                <span class="psw"><a href="InputEmailForPasswordReset.php">Forgot password?</a></span>
             </div>
         </form>
     </main>
