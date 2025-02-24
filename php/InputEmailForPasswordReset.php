@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password</title>
-    <link rel="stylesheet" href="../css/LoginPage.css">
+    <link rel="stylesheet" href="../css/InputEmailForPasswordReset.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 </head>
 <body>
     <header>
         <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
+        <a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
     </header>
     <main>
         <form id="resetPasswordForm">
