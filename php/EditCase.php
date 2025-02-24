@@ -113,7 +113,7 @@ if ($caseID) {
                     
                     <label for="reason">Reason:</label>
                     <input type="text" id="reason" name="reason" value="<?php echo $caseData['reason_name']; ?>" readonly>
-                    
+
                     <label for="customerName">Customer Name:</label>
                     <input type="text" id="customerName" name="customerName" value="<?php echo $caseData['customer_name']; ?>" readonly>
 
