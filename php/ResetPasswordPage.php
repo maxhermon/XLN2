@@ -4,7 +4,17 @@ session_start();
 require 'db_connection.php';
 $db = connectToDatabase();
 
-$token = $_GET['token'] ?? null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['token'] ?? null;
+} else {
+    $token = $_GET['token'] ?? null;
+}
+
+if (!$token) {
+    echo "No token provided.";
+    exit;
+}
+
 
 
 if ($token) {
@@ -76,6 +86,9 @@ if ($token) {
     <main>
         <h1>Reset Password</h1>
         <form action="../php/ResetPasswordPage.php" method="POST">
+
+        <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>" />
+
             <label for="newPassword"><b>New Password</b></label>
             <input type="password" id="newPassword" name="newPassword" required>
             <label for="confirmPassword"><b>Confirm Password</b></label>
