@@ -16,8 +16,8 @@
             <label for="email"><b>Email address</b></label>
             <input type="email" id="email" name="email" required>
             <button type="submit">Send email</button>
+            <div id="message" style="display:none;"></div>
         </form>
-        <div id="message" style="display:none;"></div>
     </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
