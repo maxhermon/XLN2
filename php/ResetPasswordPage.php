@@ -1,5 +1,61 @@
 <?php
 
+session_start();
+require 'db_connection.php';
+$db = connectToDatabase();
+
+$token = $_GET['token'] ?? null;
+
+
+if ($token) {
+    $stmt = $db->prepare("
+        SELECT email
+        FROM password_resets
+        WHERE token = :token
+          AND expires > :now
+        LIMIT 1
+    ");
+    $stmt->bindValue(':token', $token, SQLITE3_TEXT);
+    $stmt->bindValue(':now', date("Y-m-d H:i:s"), SQLITE3_TEXT);
+    $result = $stmt->execute();
+    $row    = $result->fetchArray(SQLITE3_ASSOC);
+
+    if (!$row) {
+        echo "Invalid or expired token.";
+        exit;
+    }
+    $email = $row['email'];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $newPassword     = $_POST['newPassword']     ?? '';
+        $confirmPassword = $_POST['confirmPassword'] ?? '';
+
+        if ($newPassword !== $confirmPassword) {
+            echo "Passwords do not match!";
+        } else {
+            $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
+
+            $updateStmt = $db->prepare("
+                UPDATE users
+                SET password = :password
+                WHERE email  = :email
+            ");
+            $updateStmt->bindValue(':password',    $hashed, SQLITE3_TEXT);
+            $updateStmt->bindValue(':email', $email,  SQLITE3_TEXT);
+            $updateStmt->execute();
+
+            $delStmt = $db->prepare("DELETE FROM password_resets WHERE email = :email");
+            $delStmt->bindValue(':email', $email, SQLITE3_TEXT);
+            $delStmt->execute();
+
+            echo "Password has been reset successfully! You can now <a href='LoginPage.php'>log in</a>.";
+            exit;
+        }
+    }
+} else {
+    echo "No token provided.";
+    exit;
+}
 
 
 ?>
