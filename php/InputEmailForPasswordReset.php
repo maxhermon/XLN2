@@ -35,7 +35,7 @@
                 var email = $('#email').val();
                 $.ajax({
                     type: 'POST',
-                    url: 'ResetPassword.php',
+                    url: 'SendEmail.php',
                     data: { email: email },
                     success: function(response) {
                         $('#message').html(response).show();
