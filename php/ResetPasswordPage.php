@@ -4,6 +4,8 @@ session_start();
 require 'db_connection.php';
 $db = connectToDatabase();
 
+$response = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['token'] ?? null;
 } else {
@@ -11,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if (!$token) {
-    echo "No token provided.";
+    $response['status'] = 'error';
+    $response['message'] = 'No token provided.';
+    echo json_encode($response);
     exit;
 }
-
-
 
 if ($token) {
     $stmt = $db->prepare("
@@ -31,7 +33,9 @@ if ($token) {
     $row    = $result->fetchArray(SQLITE3_ASSOC);
 
     if (!$row) {
-        echo "Invalid or expired token.";
+        $response['status'] = 'error';
+        $response['message'] = 'Invalid or expired token.';
+        echo json_encode($response);
         exit;
     }
     $email = $row['email'];
@@ -41,7 +45,8 @@ if ($token) {
         $confirmPassword = $_POST['confirmPassword'] ?? '';
 
         if ($newPassword !== $confirmPassword) {
-            echo "Passwords do not match!";
+            $response['status'] = 'error';
+            $response['message'] = 'Passwords do not match!';
         } else {
             $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
 
@@ -58,18 +63,19 @@ if ($token) {
             $delStmt->bindValue(':email', $email, SQLITE3_TEXT);
             $delStmt->execute();
 
-            echo "Password has been reset successfully! You can now <a href='LoginPage.php'>log in</a>.";
-            exit;
+            $response['status'] = 'success';
+            $response['message'] = 'Password has been reset successfully! You can now <a href="LoginPage.php">log in</a>.';
         }
+        echo json_encode($response);
+        exit;
     }
 } else {
-    echo "No token provided.";
+    $response['status'] = 'error';
+    $response['message'] = 'No token provided.';
+    echo json_encode($response);
     exit;
 }
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en"> 
@@ -88,16 +94,17 @@ if ($token) {
         <a href="../html/Contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
     </header>
     <main>
-        <form action="../php/ResetPasswordPage.php" method="POST">
+        <form id="ResetPassword" action="ResetPasswordPage.php" method="POST">
             <h1>Reset Password</h1>
 
-        <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>" />
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>" />
 
             <label for="newPassword"><b>New Password</b></label>
             <input type="password" id="newPassword" name="newPassword" required>
             <label for="confirmPassword"><b>Confirm Password</b></label>
             <input type="password" id="confirmPassword" name="confirmPassword" required>
             <button type="submit">Reset Password</button>
+            <div id="message" style="display:none;"></div>
         </form>
     </main>
     <footer>
@@ -105,6 +112,28 @@ if ($token) {
     </footer>
     <script>
         document.getElementById("year").innerHTML = new Date().getFullYear();
+
+        $(document).ready(function() {
+            $('#ResetPassword').on('submit', function(e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'ResetPasswordPage.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#message').html(response.message).show();
+                        if (response.status === 'success') {
+                            $('#ResetPassword')[0].reset();
+                        }
+                    },
+                    error: function() {
+                        $('#message').html('An error occurred. Please try again.').show();
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
