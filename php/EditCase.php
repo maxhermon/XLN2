@@ -8,30 +8,42 @@ $caseData = null;
 
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
+$deptStmt = $db->prepare("SELECT * FROM departments ORDER BY deptName");
+$deptResult = $deptStmt->execute();
+$departments = [];
+while ($row = $deptResult->fetchArray(SQLITE3_ASSOC)) {
+    $departments[] = $row;
+}
+
+$reasonStmt = $db->prepare("SELECT r.reasonID, r.reason, r.departmentID FROM reasons r ORDER BY r.reason");
+$reasonResult = $reasonStmt->execute();
+$reasons = [];
+while ($row = $reasonResult->fetchArray(SQLITE3_ASSOC)) {
+    $reasons[] = $row;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newStatus = isset($_POST['caseStatus']) ? 0 : 1;
     $description = $_POST['caseNotes'];
     $caseID = $_POST['caseID'];
     $oldStatus = $_POST['oldStatus'];
+    $reasonID = $_POST['reasonID']; 
     
 
     $closedDate = null;
     if ($oldStatus == 1 && $newStatus == 0) {
-
         $closedDate = date('Y-m-d H:i:s');
-        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = :closedDate WHERE caseID = :caseID");
+        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = :closedDate, reasonID = :reasonID WHERE caseID = :caseID");
         $stmt->bindValue(':closedDate', $closedDate, SQLITE3_TEXT);
     } elseif ($newStatus == 1 && $oldStatus == 0) {
-   
-        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = NULL WHERE caseID = :caseID");
+        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, closed = NULL, reasonID = :reasonID WHERE caseID = :caseID");
     } else {
-
-        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description WHERE caseID = :caseID");
+        $stmt = $db->prepare("UPDATE cases SET status = :status, description = :description, reasonID = :reasonID WHERE caseID = :caseID");
     }
     
     $stmt->bindValue(':status', $newStatus, SQLITE3_INTEGER);
     $stmt->bindValue(':description', $description, SQLITE3_TEXT);
+    $stmt->bindValue(':reasonID', $reasonID, SQLITE3_INTEGER);
     $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);
     
     $result = $stmt->execute();
@@ -47,7 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($caseID) {
     $stmt = $db->prepare("SELECT c.*, 
                         d.deptName AS department_name, 
+                        d.departmentID,
                         r.reason AS reason_name,
+                        r.reasonID,
                         cu.name AS customer_name
                 FROM cases c
                 LEFT JOIN reasons r ON c.reasonID = r.reasonID
@@ -108,11 +122,18 @@ if ($caseID) {
                     <input type="hidden" name="caseID" value="<?php echo $caseData['caseID']; ?>">
                     <input type="hidden" name="oldStatus" value="<?php echo $caseData['status']; ?>">
                     
-                    <label for="department">Department:</label>
-                    <input type="text" id="department" name="department" value="<?php echo $caseData['department_name']; ?>" readonly>
+                    <label for="departmentID">Department:</label>
+                    <select id="departmentID" name="departmentID">
+                        <?php foreach ($departments as $department): ?>
+                            <option value="<?php echo $department['departmentID']; ?>" <?php echo ($department['departmentID'] == $caseData['departmentID']) ? 'selected' : ''; ?>>
+                                <?php echo $department['deptName']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                     
-                    <label for="reason">Reason:</label>
-                    <input type="text" id="reason" name="reason" value="<?php echo $caseData['reason_name']; ?>" readonly>
+                    <label for="reasonID">Reason:</label>
+                    <select id="reasonID" name="reasonID" required>
+                    </select>
 
                     <label for="customerName">Customer Name:</label>
                     <input type="text" id="customerName" name="customerName" value="<?php echo $caseData['customer_name']; ?>" readonly>
@@ -123,9 +144,6 @@ if ($caseID) {
                     <label for="caseNotes">Case Notes:</label>
                     <textarea id="caseNotes" name="caseNotes" rows="4" required><?php echo $caseData['description']; ?></textarea>
                     
-                    <label for="openedDate">Opened Date:</label>
-                    <input type="text" id="openedDate" name="openedDate" value="<?php echo $caseData['created']; ?>" readonly> 
-
                     <div class="toggle-container">
                     <span class="toggle-label">Case Status:</span>
                     <span id="statusText" class="toggle-status"><?php echo $caseData['status'] == 1 ? 'Open' : 'Closed'; ?></span>
@@ -155,6 +173,46 @@ if ($caseID) {
         document.getElementById('caseStatus').addEventListener('change', function() {
             document.getElementById('statusText').textContent = this.checked ? 'Closed' : 'Open';
         });
+
+        const allReasons = <?php echo json_encode($reasons); ?>;
+        const currentReasonID = <?php echo $caseData ? $caseData['reasonID'] : 'null'; ?>;
+        
+        function updateReasonDropdown() {
+            const departmentID = document.getElementById('departmentID').value;
+            const reasonDropdown = document.getElementById('reasonID');
+            
+            reasonDropdown.innerHTML = '';
+            
+            const filteredReasons = allReasons.filter(reason => 
+                reason.departmentID == departmentID
+            );
+            
+            filteredReasons.forEach(reason => {
+                const option = document.createElement('option');
+                option.value = reason.reasonID;
+                option.textContent = reason.reason;
+                
+                if (reason.reasonID == currentReasonID) {
+                    option.selected = true;
+                }
+                
+                reasonDropdown.appendChild(option);
+            });
+            
+            if (filteredReasons.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No reasons available for this department';
+                reasonDropdown.appendChild(option);
+            }
+        }
+        
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateReasonDropdown();
+        });
+        
+       document.getElementById('departmentID').addEventListener('change', updateReasonDropdown);
     </script>
 </body>
 </html>
