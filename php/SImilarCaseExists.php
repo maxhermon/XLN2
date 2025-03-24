@@ -8,7 +8,7 @@ $db = connectToDatabase();
 $cases = $_SESSION['duplicateIDs'];
 
 if (!empty($cases)) {
-    //dynamic placeholders for the IN clause
+    
     $placeholders = implode(',', array_fill(0, count($cases), '?'));
 
     $sql = "SELECT cases.caseID, cases.created, departments.deptName, reasons.reason, cases.description,
@@ -25,7 +25,7 @@ if (!empty($cases)) {
 
     $stmt = $db->prepare($sql);
 
-    //bind caseID values dynamically
+    
     foreach ($cases as $index => $caseID) {
         $stmt->bindValue($index + 1, $caseID, SQLITE3_INTEGER);
     }
