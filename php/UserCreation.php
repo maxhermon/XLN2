@@ -66,11 +66,6 @@ if (isset($_POST['addCaseHandler'])) {
         
     }
 
-    print_r($managers); // Print all names as an array
-    echo "<br><br>";
-    }
-
-
 ?>
 
 
