@@ -16,12 +16,13 @@ if (isset($_POST['addCaseHandler'])) {
     $lName = $_POST['lName']     ?? null;
     $email = $_POST['email']       ?? null;
     $password = $_POST['password'] ?? null;
+    $jobID = $_POST['jobID'] ?? null;
     $managerID = isset($_POST['managerID']) ? $_POST['managerID'] : NULL;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     $sql = "INSERT into users (fName, mName, lName, email, password, jobID, managerID)
-    VALUES (:fName, :mName, :lName, :email, :password, :jobID)";
+    VALUES (:fName, :mName, :lName, :email, :password, :jobID, :managerID);";
 
     $stmt = $db->prepare($sql);
 
@@ -30,8 +31,12 @@ if (isset($_POST['addCaseHandler'])) {
     $stmt->bindValue(':lName', $lName, SQLITE3_TEXT);
     $stmt->bindValue(':email', $email, SQLITE3_TEXT);
     $stmt->bindValue(':password', $hashedPassword, SQLITE3_TEXT);
-    $stmt->bindValue(':jobID', 1, SQLITE3_INTEGER);
-    $stmt->bindValue(':managerID', $managerID, SQLITE3_INTEGER);
+    $stmt->bindValue(':jobID', $jobID, SQLITE3_INTEGER);
+    if ($managerID === null || $managerID === '') {
+        $stmt->bindValue(':managerID', null, SQLITE3_NULL);
+    } else {
+        $stmt->bindValue(':managerID', $managerID, SQLITE3_INTEGER);
+    }
 
     $stmt->execute();
 
