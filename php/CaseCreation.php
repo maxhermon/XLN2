@@ -1,11 +1,7 @@
-
 <?php
-
 session_start();
-
-
-require 'db_connection.php';  
-$db = connectToDatabase();    
+require 'db_connection.php';
+$db = connectToDatabase();
 
 $departments = [];
 $deptResult = $db->query("SELECT departmentID, deptName FROM departments;");
@@ -19,117 +15,75 @@ while ($row = $cResult->fetchArray(SQLITE3_ASSOC)) {
     $customers[] = $row;
 }
 
-$selectedDepartmentID = null;
-$reasonsForDepartment = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_SESSION['userID'])) {
+        header("Location: LoginPage.php");
+        exit;
+    }
+    $userID      = $_SESSION['userID'];
 
-    if (isset($_POST['selectDepartment'])) {
-        $selectedDepartmentID = $_POST['departmentID'] ?? null;
+    $departmentID = $_POST['departmentID']   ?? null; // might not be used directly
+    $reasonID     = $_POST['reasonID']       ?? null;
+    $customerID   = $_POST['customerID']     ?? null;
+    $description  = $_POST['description']    ?? '';
 
-        if ($selectedDepartmentID) {
-            $stmt = $db->prepare("SELECT reasons.reasonID, reasons.reason
-            FROM reasons 
-            INNER JOIN department_reasons ON reasons.reasonID = department_reasons.reasonID
-            WHERE department_reasons.departmentID =  :deptID");
+    $sql = "SELECT cases.caseID
+            FROM cases
+            INNER JOIN reasons   ON cases.reasonID    = reasons.reasonID
+            INNER JOIN customers ON cases.customerID  = customers.customerID
+            WHERE status = 1
+              AND reasons.reasonID   = :reasonID
+              AND customers.customerID = :customerID;
+    ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':reasonID',    $reasonID,   SQLITE3_INTEGER);
+    $stmt->bindValue(':customerID',  $customerID, SQLITE3_INTEGER);
+    $result = $stmt->execute();
 
-            $stmt->bindValue(':deptID', $selectedDepartmentID, SQLITE3_INTEGER);
-            $rResult = $stmt->execute();
-            while ($rRow = $rResult->fetchArray(SQLITE3_ASSOC)) {
-                $reasonsForDepartment[] = $rRow;
-            }
-
-        }
+    $duplicateCases = [];
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $duplicateCases[] = $row['caseID'];
     }
 
-    if (isset($_POST['submitCase'])) {
-        
-        if (!isset($_SESSION['userID'])) {
-            header("Location: LoginPage.php");
-            exit;
-        }
-
-        $userID = $_SESSION['userID'];
-
-        $deptID = $_POST['departmentID'] ?? null;
-        $reasonID = $_POST['reasonID']     ?? null;
-        $status = $_POST['status']       ?? null;
-        $customerID = $_POST['customerID'] ?? null;
-        $description    = $_POST['description'] ?? '';
-
-        $password = $_POST['password'] ?? null;
-
-        echo "<br><br><br><br>";
-        echo "reasonID: $reasonID";
-        echo "<br>";
-        echo "customerID: $customerID";
-        echo "<br><br><br><br>";
-        
-        $sql = "SELECT cases.caseID 
-        FROM cases
-        INNER JOIN reasons ON cases.reasonID = reasons.reasonID
-        INNER JOIN customers ON cases.customerID = customers.customerID
-        WHERE status = 1
-        AND reasons.reasonID = :reasonID
-        AND customers.customerID = :customerID;";
-
+    if (empty($duplicateCases)) {
+        $createdTime = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO cases 
+                (userID, reasonID, description, status, created, closed, customerID)
+                VALUES 
+                (:userID, :reasonID, :description, :status, :created, :closed, :customerID)
+        ";
         $stmt = $db->prepare($sql);
+        $stmt->bindValue(':userID',      $userID,       SQLITE3_INTEGER);
+        $stmt->bindValue(':reasonID',    $reasonID,     SQLITE3_INTEGER);
+        $stmt->bindValue(':description', $description,  SQLITE3_TEXT);
+        $stmt->bindValue(':status',      1,             SQLITE3_INTEGER);
+        $stmt->bindValue(':created',     $createdTime,  SQLITE3_TEXT);
+        $stmt->bindValue(':closed',      null,          SQLITE3_NULL);
+        $stmt->bindValue(':customerID',  $customerID,   SQLITE3_INTEGER);
+        $stmt->execute();
 
-        $stmt->bindValue(':reasonID', $reasonID, SQLITE3_TEXT);
-        $stmt->bindValue(':customerID', $customerID, SQLITE3_INTEGER);
-
-        $result = $stmt->execute();
-
-        $duplicateCases = [];
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            $duplicateCases[] = $row['caseID'];
-        }
-
-        if(empty($duplicateCases)){
-            $createdTime = date('Y-m-d H:i:s');
-
-            $sql = "INSERT into cases (userID, reasonID, description, status, created, closed, customerID)
-            VALUES (:userID, :reasonID, :description, :status, :created, :closed, :customerID)";
-
-            $stmt = $db->prepare($sql);
-
-            $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
-            $stmt->bindValue(':reasonID', $reasonID, SQLITE3_INTEGER);
-            $stmt->bindValue(':description', $description, SQLITE3_TEXT);
-            $stmt->bindValue(':status', 1, SQLITE3_INTEGER);
-            $stmt->bindValue(':created', $createdTime, SQLITE3_TEXT);
-            $stmt->bindValue(':closed', null, SQLITE3_NULL);
-            $stmt->bindValue(':customerID', $customerID, SQLITE3_INTEGER);
-
-            $stmt->execute();
-
-            $newCaseID = $db->lastInsertRowID();
-            $_SESSION['caseID'] = $newCaseID;
-            header('Location: caseCreated.php');
-            exit();
-
-        } else {
-            $_SESSION['duplicateIDs'] = $duplicateCases;
-            header('Location: SimilarCaseExists.php');
-            exit();
-        }         
-        
+        $newCaseID = $db->lastInsertRowID();
+        $_SESSION['caseID'] = $newCaseID;
+        header('Location: caseCreated.php');
+        exit;
+    } else {
+        $_SESSION['duplicateIDs'] = $duplicateCases;
+        header('Location: SimilarCaseExists.php');
+        exit;
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Created</title>
+    <title>Create Case</title>
     <link rel="stylesheet" href="../css/CaseCreation.css">
     <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-  />
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    />
 </head>
 <body>
     <header>
@@ -141,7 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
+                    <a href="javascript:void(0)" class="dropbtn">
+                        <i class="fa-solid fa-circle-user"></i> MyAccount
+                    </a>
                     <div class="dropdown-content">
                         <a href="ProfilePage.php">View Profile</a>
                         <a href="logOut.php">Logout</a>
@@ -152,42 +108,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </header>
     <main>
         <h2>Create a Case</h2>
-        <form action="CaseCreation.php" method="POST">
+        <form method="POST" action="CaseCreation.php">
+            
             <label for="departmentID">Department:</label>
             <select id="departmentID" name="departmentID" required>
                 <option value="">-- Select Department --</option>
                 <?php foreach ($departments as $dept): ?>
-                    <option value="<?php echo $dept['departmentID'];?>"
-                    <?php
-                    if ($selectedDepartmentID == $dept['departmentID']) {
-                        echo 'selected';
-                    }
-                    ?>>
-                    <?php echo $dept['deptName']; ?>
+                    <option value="<?php echo $dept['departmentID']; ?>">
+                        <?php echo $dept['deptName']; ?>
                     </option>
-                    <?php endforeach ?>
+                <?php endforeach; ?>
             </select>
-            <button type="submit" name= "selectDepartment">Select Department</button>
-            </form>
- 
- 
-            <?php if ($selectedDepartmentID && !empty($reasonsForDepartment)): ?>
-           
-            <form action="CaseCreation.php" method="POST">
- 
-            <input type="hidden" name="departmentID"
-                value="<?php echo htmlspecialchars($selectedDepartmentID);?>">
-           
+
             <label for="reasonID">Reason:</label>
             <select id="reasonID" name="reasonID" required>
                 <option value="">-- Select Reason --</option>
-                <?php foreach ($reasonsForDepartment as $reason): ?>
-                    <option value="<?php echo $reason['reasonID']; ?>">
-                        <?php echo $reason['reason']; ?>
-                    </option>
-                    <?php endforeach; ?>
             </select>
- 
+
             <label for="customerID">Customer:</label>
             <select id="customerID" name="customerID" required>
                 <option value="">-- Select Customer --</option>
@@ -195,32 +132,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="<?php echo $customer['customerID']; ?>">
                         <?php echo $customer['name']; ?>
                     </option>
-                    <?php endforeach; ?>
+                <?php endforeach; ?>
             </select>
- 
- 
-           
- 
+
             <label for="description">Notes:</label>
             <textarea id="description" name="description" rows="4"></textarea>
- 
+
             <button type="submit" name="submitCase">Submit Case</button>
         </form>
-       
-        <?php elseif ($selectedDepartmentID && empty($reasonsForDepartment)): ?>
-        <p>No reasons found for that department.</p>
-    <?php endif; ?>
-   
- 
     </main>
- 
+
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
     </footer>
- 
+
     <script>
-        document.getElementById("year").innerHTML = new Date().getFullYear();
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+
+    const deptSelect = document.getElementById('departmentID');
+    const reasonSelect = document.getElementById('reasonID');
+
+    deptSelect.addEventListener('change', function() {
+        const deptID = this.value;
+        reasonSelect.innerHTML = '<option value="">-- Select Reason --</option>';
+
+        if (!deptID) {
+            return;
+        }
+
+        fetch('GetReasons.php?departmentID=' + deptID)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.reasonID;
+                    opt.textContent = item.reason;
+                    reasonSelect.appendChild(opt);
+                });
+            })
+            .catch(err => {
+                console.error('Failed to load reasons:', err);
+            });
+    });
     </script>
- 
 </body>
 </html>
