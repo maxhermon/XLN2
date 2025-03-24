@@ -2,30 +2,55 @@
 <html lang="en">
 
 <?php
-function getCases($searchBy = '', $searchTerm = '') {
+function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 10) {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
+    
     $sql = "SELECT c.*, 
                d.deptName AS department_name, 
                r.reason AS reason_name,
                cu.name AS customer_name,
                u.fname || ' ' || u.lname AS user_name, 
                CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
-        FROM cases c
+            FROM cases c
             LEFT JOIN reasons r ON c.reasonID = r.reasonID
-            LEFT JOIN departments d ON r.departmentID = d.departmentID
+			LEFT JOIN department_reasons dr ON dr.reasonID = r.reasonID
+            LEFT JOIN departments d ON dr.departmentID = d.departmentID
             LEFT JOIN customers cu ON c.customerID = cu.customerID
             LEFT JOIN users u ON c.userID = u.userID"; 
 
     
+    
+    $whereClause = '';
     if (!empty($searchBy) && !empty($searchTerm)) {
         if ($searchBy == 'user_name') {
-            $sql .= " WHERE (u.fname || ' ' || u.lname) LIKE :searchTerm";
+            $whereClause = " WHERE (u.fname || ' ' || u.lname) LIKE :searchTerm";
         } else {
-            $sql .= " WHERE $searchBy LIKE :searchTerm";
+            $whereClause = " WHERE $searchBy LIKE :searchTerm";
         }
     }
+
+    
+    $countSql = "SELECT COUNT(*) as total FROM ($sql $whereClause)";
+    $countStmt = $db->prepare($countSql);
+    
+    if (!empty($searchBy) && !empty($searchTerm)) {
+        $countStmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
+    }
+    
+    $countResult = $countStmt->execute();
+    $totalCases = $countResult->fetchArray(SQLITE3_ASSOC)['total'];
+    
+    $totalPages = ceil($totalCases / $casesPerPage);
+    $page = max(1, min($page, $totalPages));
+    $offset = ($page - 1) * $casesPerPage;
+    
+    
+    $sql = $sql . $whereClause . " LIMIT :limit OFFSET :offset";
     $stmt = $db->prepare($sql);
+    
+    $stmt->bindValue(':limit', $casesPerPage, SQLITE3_INTEGER);
+    $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
     
     if (!empty($searchBy) && !empty($searchTerm)) {
         $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
@@ -38,13 +63,22 @@ function getCases($searchBy = '', $searchTerm = '') {
         $arrayResult[] = $row;
     }
 
-    return $arrayResult;
+    return [
+        'cases' => $arrayResult,
+        'totalCases' => $totalCases,
+        'totalPages' => $totalPages,
+        'currentPage' => $page
+    ];
 }
 
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-$cases = getCases($searchBy, $searchTerm);
+$result = getCases($searchBy, $searchTerm, $page, 10);
+$cases = $result['cases'];
+$totalPages = $result['totalPages'];
+$currentPage = $result['currentPage'];
 ?>
 
 
@@ -82,14 +116,15 @@ $cases = getCases($searchBy, $searchTerm);
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
-            <option value="caseID">Case ID</option>
-            <option value="department_name">Department</option>
-            <option value="reason_name">Reason</option>
-            <option value="status_text">Status</option>
-            <option value="customer_name">Customer Name</option>
-            <option value="user_name">Case Handler</option>
+            <option value="caseID" <?php echo ($searchBy == 'caseID') ? 'selected' : ''; ?>>Case ID</option>
+            <option value="department_name" <?php echo ($searchBy == 'department_name') ? 'selected' : ''; ?>>Department</option>
+            <option value="reason_name" <?php echo ($searchBy == 'reason_name') ? 'selected' : ''; ?>>Reason</option>
+            <option value="status_text" <?php echo ($searchBy == 'status_text') ? 'selected' : ''; ?>>Status</option>
+            <option value="customer_name" <?php echo ($searchBy == 'customer_name') ? 'selected' : ''; ?>>Customer Name</option>
+            <option value="user_name" <?php echo ($searchBy == 'user_name') ? 'selected' : ''; ?>>Case Handler</option>
         </select>
-    <input type="text" name="searchTerm" placeholder="Enter search term">
+    <input type="text" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Enter search term">
+    <input type="hidden" name="page" value="1">
     <button type="submit">Search</button>
 </form>
 
@@ -131,17 +166,48 @@ $cases = getCases($searchBy, $searchTerm);
         <?php endforeach; ?>
     </tbody>
         </table>
+
+        
+        <?php if ($totalPages > 1) : ?>
+        <div class="pagination">
+            <?php if ($currentPage > 1) : ?>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=1"><i class="fa-solid fa-angles-left"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $currentPage - 1; ?>"><i class="fa-solid fa-angle-left"></i></a>
+            <?php else : ?>
+                <span class="disabled"><i class="fa-solid fa-angles-left"></i></span>
+                <span class="disabled"><i class="fa-solid fa-angle-left"></i></span>
+            <?php endif; ?>
+            
+            <?php
+            
+            $startPage = max(1, $currentPage - 2);
+            $endPage = min($totalPages, $currentPage + 2);
+            
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                if ($i == $currentPage) {
+                    echo "<span class=\"active\">$i</span>";
+                } else {
+                    echo "<a href=\"?searchBy=" . urlencode($searchBy) . "&searchTerm=" . urlencode($searchTerm) . "&page=$i\">$i</a>";
+                }
+            }
+            ?>
+            
+            <?php if ($currentPage < $totalPages) : ?>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $currentPage + 1; ?>"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $totalPages; ?>"><i class="fa-solid fa-angles-right"></i></a>
+            <?php else : ?>
+                <span class="disabled"><i class="fa-solid fa-angle-right"></i></span>
+                <span class="disabled"><i class="fa-solid fa-angles-right"></i></span>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
     </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
     </footer>
     <script>
         document.getElementById("year").innerHTML = new Date().getFullYear();
-
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-        
-        });
     </script>
 </body>
 </html>
