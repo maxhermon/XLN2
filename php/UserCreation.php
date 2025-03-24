@@ -65,7 +65,7 @@ if (isset($_POST['addCaseHandler'])) {
         ];
         
     }
-
+}
 ?>
 
 
