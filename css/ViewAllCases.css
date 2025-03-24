@@ -150,6 +150,37 @@ th, td {
 th {
     background-color: #f4f4f4;
 }
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    color: #333;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    margin: 0 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+.pagination a.disabled {
+    color: #ccc;
+    pointer-events: none;
+    border: 1px solid #ddd;
+}
 footer {
     background-color: #003064;
     color: white;

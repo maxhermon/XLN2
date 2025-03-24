@@ -10,11 +10,40 @@ if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
     exit;
 }
 
-function getUsers($searchBy = '', $searchTerm = '') {
+function getUsers($searchBy = '', $searchTerm = '', $limit = 10, $offset = 0) {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
     $sql = "SELECT u.*,
                 j.job AS job_name
+        FROM users u
+            LEFT JOIN jobs j ON u.jobID = j.jobID";
+
+    if (!empty($searchBy) && !empty($searchTerm)) {
+        $sql .= " WHERE $searchBy LIKE :searchTerm";
+    }
+    $sql .= " LIMIT :limit OFFSET :offset";
+    $stmt = $db->prepare($sql);
+    
+    if (!empty($searchBy) && !empty($searchTerm)) {
+        $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
+    }
+    $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
+    $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+
+    $result = $stmt->execute();
+    $arrayResult = [];
+
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $arrayResult[] = $row;
+    }
+
+    return $arrayResult;
+}
+
+function getTotalUsers($searchBy = '', $searchTerm = '') {
+    $db = new SQLite3('../data/XLN_new_DBA.db');
+
+    $sql = "SELECT COUNT(*) as count
         FROM users u
             LEFT JOIN jobs j ON u.jobID = j.jobID";
 
@@ -28,19 +57,21 @@ function getUsers($searchBy = '', $searchTerm = '') {
     }
 
     $result = $stmt->execute();
-    $arrayResult = [];
+    $row = $result->fetchArray(SQLITE3_ASSOC);
 
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-        $arrayResult[] = $row;
-    }
-
-    return $arrayResult;
+    return $row['count'];
 }
 
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10;
+$offset = ($page - 1) * $limit;
 
-$users = getUsers($searchBy, $searchTerm);
+$totalUsers = getTotalUsers($searchBy, $searchTerm);
+$totalPages = ceil($totalUsers / $limit);
+
+$users = getUsers($searchBy, $searchTerm, $limit, $offset);
 ?>
 
 
@@ -120,6 +151,20 @@ $users = getUsers($searchBy, $searchTerm);
         <?php endforeach; ?>
     </tbody>
         </table>
+
+        <div class="pagination">
+            <?php if ($page > 1): ?>
+                <a href="?page=<?php echo $page - 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">Previous</a>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <a href="?page=<?php echo $i; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>" <?php if ($i == $page) echo 'class="active"'; ?>><?php echo $i; ?></a>
+            <?php endfor; ?>
+
+            <?php if ($page < $totalPages): ?>
+                <a href="?page=<?php echo $page + 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">Next</a>
+            <?php endif; ?>
+        </div>
     </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <?php
-function getCases($searchBy = '', $searchTerm = '') {
+function getCases($searchBy = '', $searchTerm = '', $limit = 10, $offset = 0) {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
     $sql = "SELECT c.*, 
@@ -17,7 +17,6 @@ function getCases($searchBy = '', $searchTerm = '') {
             LEFT JOIN customers cu ON c.customerID = cu.customerID
             LEFT JOIN users u ON c.userID = u.userID"; 
 
-    
     if (!empty($searchBy) && !empty($searchTerm)) {
         if ($searchBy == 'user_name') {
             $sql .= " WHERE (u.fname || ' ' || u.lname) LIKE :searchTerm";
@@ -25,11 +24,16 @@ function getCases($searchBy = '', $searchTerm = '') {
             $sql .= " WHERE $searchBy LIKE :searchTerm";
         }
     }
+
+    $sql .= " LIMIT :limit OFFSET :offset";
+
     $stmt = $db->prepare($sql);
     
     if (!empty($searchBy) && !empty($searchTerm)) {
         $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
     }
+    $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
+    $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 
     $result = $stmt->execute();
     $arrayResult = [];
@@ -43,8 +47,11 @@ function getCases($searchBy = '', $searchTerm = '') {
 
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10;
+$offset = ($page - 1) * $limit;
 
-$cases = getCases($searchBy, $searchTerm);
+$cases = getCases($searchBy, $searchTerm, $limit, $offset);
 ?>
 
 
@@ -131,6 +138,16 @@ $cases = getCases($searchBy, $searchTerm);
         <?php endforeach; ?>
     </tbody>
         </table>
+
+        <div class="pagination">
+            <?php if ($page > 1): ?>
+                <a href="?page=<?php echo $page - 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">&laquo; Previous</a>
+            <?php endif; ?>
+            <span>Page <?php echo $page; ?></span>
+            <?php if (count($cases) == $limit): ?>
+                <a href="?page=<?php echo $page + 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">Next &raquo;</a>
+            <?php endif; ?>
+        </div>
     </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
