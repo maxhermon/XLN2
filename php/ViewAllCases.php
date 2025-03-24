@@ -132,14 +132,10 @@ $currentPage = $result['currentPage'];
             <thead>
                 <tr>
                     <th>Case ID</th>
-                    <th>Case Handler</th>
-                    <th>Creation Timestamp</th>
                     <th>Department</th>
                     <th>Reason</th>
                     <th>Customer Name</th>
-                    <th>Notes</th>
                     <th>Status</th>
-                    <th>Closed Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
