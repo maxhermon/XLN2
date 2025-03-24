@@ -13,10 +13,10 @@ if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
 function getUsers($searchBy = '', $searchTerm = '') {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
-    $sql = "SELECT u.*,
-                j.job AS job_name
+    //manager id is now in u, should be added to table
+    $sql = "SELECT u.*, j.job AS job_name
         FROM users u
-            LEFT JOIN jobs j ON u.jobID = j.jobID";
+        LEFT JOIN jobs j ON u.jobID = j.jobID";
 
     if (!empty($searchBy) && !empty($searchTerm)) {
         $sql .= " WHERE $searchBy LIKE :searchTerm";

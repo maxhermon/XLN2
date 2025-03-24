@@ -20,11 +20,10 @@ if (!$token) {
 }
 
 if ($token) {
-    $stmt = $db->prepare("
-        SELECT email
+    $stmt = $db->prepare("SELECT email
         FROM password_resets
         WHERE token = :token
-          AND expires > :now
+        AND expires > :now
         LIMIT 1
     ");
     $stmt->bindValue(':token', $token, SQLITE3_TEXT);

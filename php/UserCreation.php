@@ -61,7 +61,7 @@ if (isset($_POST['addCaseHandler'])) {
   />
 </head>
 <body>
-<header>
+    <header>
         <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">

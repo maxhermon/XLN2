@@ -8,13 +8,13 @@ require 'db_connection.php';
 $db = connectToDatabase();    
 
 $departments = [];
-$deptResult = $db->query("SELECT departmentID, deptName FROM departments");
+$deptResult = $db->query("SELECT departmentID, deptName FROM departments;");
 while ($row = $deptResult->fetchArray(SQLITE3_ASSOC)) {
     $departments[] = $row;
 }
 
 $customers = [];
-$cResult = $db->query("SELECT customerID, name FROM customers");
+$cResult = $db->query("SELECT customerID, name FROM customers;");
 while ($row = $cResult->fetchArray(SQLITE3_ASSOC)) {
     $customers[] = $row;
 }
@@ -28,9 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $selectedDepartmentID = $_POST['departmentID'] ?? null;
 
         if ($selectedDepartmentID) {
-            $stmt = $db->prepare("SELECT reasonID, reason 
-                                  FROM reasons 
-                                  WHERE departmentID = :deptID");
+            $stmt = $db->prepare("SELECT reasons.reasonID, reasons.reason
+            FROM reasons 
+            INNER JOIN department_reasons ON reasons.reasonID = department_reasons.reasonID
+            WHERE department_reasons.departmentID =  :deptID");
+
             $stmt->bindValue(':deptID', $selectedDepartmentID, SQLITE3_INTEGER);
             $rResult = $stmt->execute();
             while ($rRow = $rResult->fetchArray(SQLITE3_ASSOC)) {
@@ -53,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $reasonID = $_POST['reasonID']     ?? null;
         $status = $_POST['status']       ?? null;
         $customerID = $_POST['customerID'] ?? null;
-        $description    = $_POST['description']        ?? '';
+        $description    = $_POST['description'] ?? '';
 
         $password = $_POST['password'] ?? null;
 
@@ -62,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<br>";
         echo "customerID: $customerID";
         echo "<br><br><br><br>";
-
-        $sql = "SELECT cases.caseID
+        
+        $sql = "SELECT cases.caseID 
         FROM cases
         INNER JOIN reasons ON cases.reasonID = reasons.reasonID
         INNER JOIN customers ON cases.customerID = customers.customerID

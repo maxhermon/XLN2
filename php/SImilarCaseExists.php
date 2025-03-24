@@ -8,24 +8,24 @@ $db = connectToDatabase();
 $cases = $_SESSION['duplicateIDs'];
 
 if (!empty($cases)) {
-    // Generate dynamic placeholders for the IN clause
+    //dynamic placeholders for the IN clause
     $placeholders = implode(',', array_fill(0, count($cases), '?'));
 
-    // Second query: Retrieve case details for all matched case IDs
     $sql = "SELECT cases.caseID, cases.created, departments.deptName, reasons.reason, cases.description,
                    cases.status, users.fName || ' ' || users.lName AS CaseHandler, jobs.job,
                    customers.name AS customerName, customers.email AS customerEmail
             FROM cases
             INNER JOIN users ON cases.userID = users.userID
             INNER JOIN reasons ON cases.reasonID = reasons.reasonID
-            INNER JOIN departments ON reasons.departmentID = departments.departmentID
+			INNER JOIN department_reasons ON reasons.reasonID = department_reasons.reasonID
+            INNER JOIN departments ON department_reasons.departmentID = departments.departmentID
             INNER JOIN customers ON cases.customerID = customers.customerID
             INNER JOIN jobs ON users.jobID = jobs.jobID
             WHERE cases.caseID IN ($placeholders);";
 
     $stmt = $db->prepare($sql);
 
-    // Bind caseID values dynamically
+    //bind caseID values dynamically
     foreach ($cases as $index => $caseID) {
         $stmt->bindValue($index + 1, $caseID, SQLITE3_INTEGER);
     }

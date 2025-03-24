@@ -11,9 +11,10 @@ function getCases($searchBy = '', $searchTerm = '') {
                cu.name AS customer_name,
                u.fname || ' ' || u.lname AS user_name, 
                CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
-        FROM cases c
+            FROM cases c
             LEFT JOIN reasons r ON c.reasonID = r.reasonID
-            LEFT JOIN departments d ON r.departmentID = d.departmentID
+			LEFT JOIN department_reasons dr ON dr.reasonID = r.reasonID
+            LEFT JOIN departments d ON dr.departmentID = d.departmentID
             LEFT JOIN customers cu ON c.customerID = cu.customerID
             LEFT JOIN users u ON c.userID = u.userID"; 
 
