@@ -13,7 +13,7 @@ if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
 function getUsers($searchBy = '', $searchTerm = '', $page = 1, $usersPerPage = 5) {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
-    //manager id is now in u, should be added to table
+    
     $sql = "SELECT u.*, j.job AS job_name
         FROM users u
         LEFT JOIN jobs j ON u.jobID = j.jobID";
