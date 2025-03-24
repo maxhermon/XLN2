@@ -38,7 +38,7 @@ unset($_SESSION['caseID']);
         </nav>
     </header>
     <div class="container">
-        <div class="message">Case Handler successfully added to the system.</div>
+        <div class="message">User successfully added to the system.</div>
         <div class="buttons">
             <button onclick="window.location.href='UserCreation.php'">Create Another User</button>
             <button onclick="window.location.href='UserManagement.php'">View All Users</button>

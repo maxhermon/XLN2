@@ -10,16 +10,17 @@ if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
     exit;
 }
 
-function getUsers($searchBy = '', $searchTerm = '', $limit = 10, $offset = 0) {
+function getUsers($searchBy = '', $searchTerm = '') {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
-    $sql = "SELECT u.*,
-                j.job AS job_name
+    
+    $sql = "SELECT u.*, j.job AS job_name
         FROM users u
-            LEFT JOIN jobs j ON u.jobID = j.jobID";
+        LEFT JOIN jobs j ON u.jobID = j.jobID";
 
+    $whereClause = '';
     if (!empty($searchBy) && !empty($searchTerm)) {
-        $sql .= " WHERE $searchBy LIKE :searchTerm";
+        $whereClause = " WHERE $searchBy LIKE :searchTerm";
     }
     $sql .= " LIMIT :limit OFFSET :offset";
     $stmt = $db->prepare($sql);
@@ -30,14 +31,52 @@ function getUsers($searchBy = '', $searchTerm = '', $limit = 10, $offset = 0) {
     $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
     $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
 
-    $result = $stmt->execute();
-    $arrayResult = [];
+$result = $stmt->execute();
+$arrayResult = [];
 
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-        $arrayResult[] = $row;
-    }
+while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+    $arrayResult[] = $row;
+}
 
-    return $arrayResult;
+$countSql = "SELECT COUNT(*) as total FROM ($sql $whereClause)";
+$countStmt = $db->prepare($countSql);
+
+if (!empty($searchBy) && !empty($searchTerm)) {
+    $countStmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
+}
+
+$countResult = $countStmt->execute();
+$totalCases = $countResult->fetchArray(SQLITE3_ASSOC)['total'];
+
+$totalPages = ceil($totalCases / $usersPerPage);
+$page = max(1, min($page, $totalPages));
+$offset = ($page - 1) * $usersPerPage;
+
+$sql = $sql . $whereClause . " LIMIT :limit OFFSET :offset";
+$stmt = $db->prepare($sql);
+
+$stmt->bindValue(':limit', $usersPerPage, SQLITE3_INTEGER);
+$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+
+if (!empty($searchBy) && !empty($searchTerm)) {
+    $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
+}
+
+$result = $stmt->execute();
+$paginatedResult = [];
+
+while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+    $paginatedResult[] = $row;
+}
+
+return [
+    'data' => $paginatedResult,
+    'pagination' => [
+        'totalCases' => $totalCases,
+        'totalPages' => $totalPages,
+        'currentPage' => $page,
+    ],
+];
 }
 
 function getTotalUsers($searchBy = '', $searchTerm = '') {
@@ -64,14 +103,8 @@ function getTotalUsers($searchBy = '', $searchTerm = '') {
 
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10;
-$offset = ($page - 1) * $limit;
 
-$totalUsers = getTotalUsers($searchBy, $searchTerm);
-$totalPages = ceil($totalUsers / $limit);
-
-$users = getUsers($searchBy, $searchTerm, $limit, $offset);
+$users = getUsers($searchBy, $searchTerm);
 ?>
 
 
@@ -109,13 +142,14 @@ $users = getUsers($searchBy, $searchTerm, $limit, $offset);
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
-            <option value="userID">User ID</option>
-            <option value="fName">First Name</option>
-            <option value="lName">Last Name</option>
-            <option value="email">Email</option>
-            <option value="job_name">Job</option>
+            <option value="userID" <?php echo ($searchBy == 'userID') ? 'selected' : ''; ?>> User ID </option>
+            <option value="fName" <?php echo ($searchBy == 'fName') ? 'selected' : ''; ?>>First Name</option>
+            <option value="lName" <?php echo ($searchBy == 'lName') ? 'selected' : ''; ?>>Last Name</option>
+            <option value="email" <?php echo ($searchBy == 'email') ? 'selected' : ''; ?>>Email</option>
+            <option value="job_name" <?php echo ($searchBy == 'job_name') ? 'selected' : ''; ?>>Job</option>
         </select>
-    <input type="text" name="searchTerm" placeholder="Enter search term">
+    <input type="text" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Enter search term">
+    <input type="hidden" name="page" value="1">
     <button type="submit">Search</button>
 </form>
 
@@ -151,20 +185,6 @@ $users = getUsers($searchBy, $searchTerm, $limit, $offset);
         <?php endforeach; ?>
     </tbody>
         </table>
-
-        <div class="pagination">
-            <?php if ($page > 1): ?>
-                <a href="?page=<?php echo $page - 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">Previous</a>
-            <?php endif; ?>
-
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>" <?php if ($i == $page) echo 'class="active"'; ?>><?php echo $i; ?></a>
-            <?php endfor; ?>
-
-            <?php if ($page < $totalPages): ?>
-                <a href="?page=<?php echo $page + 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">Next</a>
-            <?php endif; ?>
-        </div>
     </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>

@@ -191,3 +191,32 @@ footer {
     right: 0;
     width: 100%;
 }
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 5px;
+}
+
+.pagination a, .pagination span {
+    color: #333;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination .active {
+    background-color: #003064;
+    color: white;
+    border: 1px solid #003064;
+}
+
+.pagination .disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}

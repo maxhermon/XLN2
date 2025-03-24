@@ -15,7 +15,11 @@ while ($row = $deptResult->fetchArray(SQLITE3_ASSOC)) {
     $departments[] = $row;
 }
 
-$reasonStmt = $db->prepare("SELECT r.reasonID, r.reason, r.departmentID FROM reasons r ORDER BY r.reason");
+$reasonStmt = $db->prepare("SELECT r.reasonID, r.reason, dr.departmentID 
+                            FROM reasons r 
+                            INNER JOIN department_reasons dr ON r.reasonID = dr.reasonID
+                            ORDER BY r.reason");
+
 $reasonResult = $reasonStmt->execute();
 $reasons = [];
 while ($row = $reasonResult->fetchArray(SQLITE3_ASSOC)) {
@@ -56,18 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-if ($caseID) {
+if ($caseID) { 
     $stmt = $db->prepare("SELECT c.*, 
                         d.deptName AS department_name, 
                         d.departmentID,
                         r.reason AS reason_name,
                         r.reasonID,
                         cu.name AS customer_name
-                FROM cases c
-                LEFT JOIN reasons r ON c.reasonID = r.reasonID
-                LEFT JOIN departments d ON r.departmentID = d.departmentID
-                LEFT JOIN customers cu ON c.customerID = cu.customerID
-                WHERE c.caseID = :caseID");
+                        FROM cases c
+                        LEFT JOIN reasons r ON c.reasonID = r.reasonID
+                        LEFT JOIN department_reasons dr ON r.reasonID = dr.reasonID
+				        LEFT JOIN departments d ON dr.departmentID = d.departmentID
+                        LEFT JOIN customers cu ON c.customerID = cu.customerID
+                        WHERE c.caseID = :caseID");
     $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $caseData = $result->fetchArray(SQLITE3_ASSOC);

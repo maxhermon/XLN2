@@ -2,32 +2,35 @@
 <html lang="en">
 
 <?php
-function getCases($searchBy = '', $searchTerm = '', $limit = 10, $offset = 0) {
+function getCases($searchBy = '', $searchTerm = '') {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
+    
     $sql = "SELECT c.*, 
                d.deptName AS department_name, 
                r.reason AS reason_name,
                cu.name AS customer_name,
                u.fname || ' ' || u.lname AS user_name, 
                CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
-        FROM cases c
+            FROM cases c
             LEFT JOIN reasons r ON c.reasonID = r.reasonID
-            LEFT JOIN departments d ON r.departmentID = d.departmentID
+			LEFT JOIN department_reasons dr ON dr.reasonID = r.reasonID
+            LEFT JOIN departments d ON dr.departmentID = d.departmentID
             LEFT JOIN customers cu ON c.customerID = cu.customerID
             LEFT JOIN users u ON c.userID = u.userID"; 
 
+    
     if (!empty($searchBy) && !empty($searchTerm)) {
         if ($searchBy == 'user_name') {
-            $sql .= " WHERE (u.fname || ' ' || u.lname) LIKE :searchTerm";
+            $whereClause = " WHERE (u.fname || ' ' || u.lname) LIKE :searchTerm";
         } else {
-            $sql .= " WHERE $searchBy LIKE :searchTerm";
+            $whereClause = " WHERE $searchBy LIKE :searchTerm";
         }
     }
-
-    $sql .= " LIMIT :limit OFFSET :offset";
-
     $stmt = $db->prepare($sql);
+    
+    $stmt->bindValue(':limit', $casesPerPage, SQLITE3_INTEGER);
+    $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
     
     if (!empty($searchBy) && !empty($searchTerm)) {
         $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
@@ -42,16 +45,18 @@ function getCases($searchBy = '', $searchTerm = '', $limit = 10, $offset = 0) {
         $arrayResult[] = $row;
     }
 
-    return $arrayResult;
+    return [
+        'cases' => $arrayResult,
+        'totalCases' => $totalCases,
+        'totalPages' => $totalPages,
+        'currentPage' => $page
+    ];
 }
 
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10;
-$offset = ($page - 1) * $limit;
 
-$cases = getCases($searchBy, $searchTerm, $limit, $offset);
+$cases = getCases($searchBy, $searchTerm);
 ?>
 
 
@@ -89,14 +94,15 @@ $cases = getCases($searchBy, $searchTerm, $limit, $offset);
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
-            <option value="caseID">Case ID</option>
-            <option value="department_name">Department</option>
-            <option value="reason_name">Reason</option>
-            <option value="status_text">Status</option>
-            <option value="customer_name">Customer Name</option>
-            <option value="user_name">Case Handler</option>
+            <option value="caseID" <?php echo ($searchBy == 'caseID') ? 'selected' : ''; ?>>Case ID</option>
+            <option value="department_name" <?php echo ($searchBy == 'department_name') ? 'selected' : ''; ?>>Department</option>
+            <option value="reason_name" <?php echo ($searchBy == 'reason_name') ? 'selected' : ''; ?>>Reason</option>
+            <option value="status_text" <?php echo ($searchBy == 'status_text') ? 'selected' : ''; ?>>Status</option>
+            <option value="customer_name" <?php echo ($searchBy == 'customer_name') ? 'selected' : ''; ?>>Customer Name</option>
+            <option value="user_name" <?php echo ($searchBy == 'user_name') ? 'selected' : ''; ?>>Case Handler</option>
         </select>
-    <input type="text" name="searchTerm" placeholder="Enter search term">
+    <input type="text" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Enter search term">
+    <input type="hidden" name="page" value="1">
     <button type="submit">Search</button>
 </form>
 
@@ -138,27 +144,12 @@ $cases = getCases($searchBy, $searchTerm, $limit, $offset);
         <?php endforeach; ?>
     </tbody>
         </table>
-
-        <div class="pagination">
-            <?php if ($page > 1): ?>
-                <a href="?page=<?php echo $page - 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">&laquo; Previous</a>
-            <?php endif; ?>
-            <span>Page <?php echo $page; ?></span>
-            <?php if (count($cases) == $limit): ?>
-                <a href="?page=<?php echo $page + 1; ?>&searchBy=<?php echo $searchBy; ?>&searchTerm=<?php echo $searchTerm; ?>">Next &raquo;</a>
-            <?php endif; ?>
-        </div>
     </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
     </footer>
     <script>
         document.getElementById("year").innerHTML = new Date().getFullYear();
-
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-        
-        });
     </script>
 </body>
 </html>
