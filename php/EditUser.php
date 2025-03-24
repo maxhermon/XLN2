@@ -42,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if ($userID) {
-    $stmt = $db->prepare($sql = "SELECT u.*,
+if ($userID) { //managerID has been added, need to add change manager functionality
+    $stmt = $db->prepare($sql = "SELECT u.*, 
                         j.job AS job_name
                 FROM users u
                 LEFT JOIN jobs j ON u.jobID = j.jobID

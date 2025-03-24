@@ -6,14 +6,15 @@ $db = new SQLite3('../data/XLN_new_DBA.db');
 
 if ($caseID) {
     $stmt = $db->prepare("SELECT c.*, 
-                        d.deptName AS department_name, 
-                        r.reason AS reason_name,
-                        cu.name AS customer_name,
-                        u.fname || ' ' || u.lname AS user_name,
-                        CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
+                    d.deptName AS department_name, 
+                    r.reason AS reason_name,
+                    cu.name AS customer_name,
+                    u.fname || ' ' || u.lname AS user_name, 
+                    CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
                 FROM cases c
                 LEFT JOIN reasons r ON c.reasonID = r.reasonID
-                LEFT JOIN departments d ON r.departmentID = d.departmentID
+                LEFT JOIN department_reasons dr ON dr.reasonID = r.reasonID
+                LEFT JOIN departments d ON dr.departmentID = d.departmentID
                 LEFT JOIN customers cu ON c.customerID = cu.customerID
                 LEFT JOIN users u ON c.userID = u.userID
                 WHERE c.caseID = :caseID");
