@@ -10,7 +10,7 @@ if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
     exit;
 }
 
-function getUsers($searchBy = '', $searchTerm = '') {
+function getUsers($searchBy = '', $searchTerm = '', $page = 1, $usersPerPage = 5) {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
     $sql = "SELECT u.*,
@@ -18,8 +18,9 @@ function getUsers($searchBy = '', $searchTerm = '') {
         FROM users u
             LEFT JOIN jobs j ON u.jobID = j.jobID";
 
+    $whereClause = '';
     if (!empty($searchBy) && !empty($searchTerm)) {
-        $sql .= " WHERE $searchBy LIKE :searchTerm";
+        $whereClause = " WHERE $searchBy LIKE :searchTerm";
     }
     $stmt = $db->prepare($sql);
     
@@ -27,20 +28,62 @@ function getUsers($searchBy = '', $searchTerm = '') {
         $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
     }
 
-    $result = $stmt->execute();
-    $arrayResult = [];
+$result = $stmt->execute();
+$arrayResult = [];
 
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-        $arrayResult[] = $row;
-    }
+while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+    $arrayResult[] = $row;
+}
 
-    return $arrayResult;
+$countSql = "SELECT COUNT(*) as total FROM ($sql $whereClause)";
+$countStmt = $db->prepare($countSql);
+
+if (!empty($searchBy) && !empty($searchTerm)) {
+    $countStmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
+}
+
+$countResult = $countStmt->execute();
+$totalCases = $countResult->fetchArray(SQLITE3_ASSOC)['total'];
+
+$totalPages = ceil($totalCases / $usersPerPage);
+$page = max(1, min($page, $totalPages));
+$offset = ($page - 1) * $usersPerPage;
+
+$sql = $sql . $whereClause . " LIMIT :limit OFFSET :offset";
+$stmt = $db->prepare($sql);
+
+$stmt->bindValue(':limit', $usersPerPage, SQLITE3_INTEGER);
+$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+
+if (!empty($searchBy) && !empty($searchTerm)) {
+    $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
+}
+
+$result = $stmt->execute();
+$paginatedResult = [];
+
+while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+    $paginatedResult[] = $row;
+}
+
+return [
+    'data' => $paginatedResult,
+    'pagination' => [
+        'totalCases' => $totalCases,
+        'totalPages' => $totalPages,
+        'currentPage' => $page,
+    ],
+];
 }
 
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-$users = getUsers($searchBy, $searchTerm);
+$result = getUsers($searchBy, $searchTerm, $page, 5);
+$users = $result['data'];
+$totalPages = $result['pagination']['totalPages'];
+$currentPage = $result['pagination']['currentPage'];
 ?>
 
 
@@ -78,13 +121,14 @@ $users = getUsers($searchBy, $searchTerm);
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
-            <option value="userID">User ID</option>
-            <option value="fName">First Name</option>
-            <option value="lName">Last Name</option>
-            <option value="email">Email</option>
-            <option value="job_name">Job</option>
+            <option value="userID" <?php echo ($searchBy == 'userID') ? 'selected' : ''; ?>> User ID </option>
+            <option value="fName" <?php echo ($searchBy == 'fName') ? 'selected' : ''; ?>>First Name</option>
+            <option value="lName" <?php echo ($searchBy == 'lName') ? 'selected' : ''; ?>>Last Name</option>
+            <option value="email" <?php echo ($searchBy == 'email') ? 'selected' : ''; ?>>Email</option>
+            <option value="job_name" <?php echo ($searchBy == 'job_name') ? 'selected' : ''; ?>>Job</option>
         </select>
-    <input type="text" name="searchTerm" placeholder="Enter search term">
+    <input type="text" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Enter search term">
+    <input type="hidden" name="page" value="1">
     <button type="submit">Search</button>
 </form>
 
@@ -120,6 +164,43 @@ $users = getUsers($searchBy, $searchTerm);
         <?php endforeach; ?>
     </tbody>
         </table>
+
+        
+        
+        <?php if ($totalPages > 1) : ?>
+        <div class="pagination">
+            <?php if ($currentPage > 1) : ?>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=1"><i class="fa-solid fa-angles-left"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $currentPage - 1; ?>"><i class="fa-solid fa-angle-left"></i></a>
+            <?php else : ?>
+                <span class="disabled"><i class="fa-solid fa-angles-left"></i></span>
+                <span class="disabled"><i class="fa-solid fa-angle-left"></i></span>
+            <?php endif; ?>
+            
+            <?php
+            
+            $startPage = max(1, $currentPage - 2);
+            $endPage = min($totalPages, $currentPage + 2);
+            
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                if ($i == $currentPage) {
+                    echo "<span class=\"active\">$i</span>";
+                } else {
+                    echo "<a href=\"?searchBy=" . urlencode($searchBy) . "&searchTerm=" . urlencode($searchTerm) . "&page=$i\">$i</a>";
+                }
+            }
+            ?>
+            
+            <?php if ($currentPage < $totalPages) : ?>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $currentPage + 1; ?>"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $totalPages; ?>"><i class="fa-solid fa-angles-right"></i></a>
+            <?php else : ?>
+                <span class="disabled"><i class="fa-solid fa-angle-right"></i></span>
+                <span class="disabled"><i class="fa-solid fa-angles-right"></i></span>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
     </main>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
