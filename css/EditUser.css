@@ -132,6 +132,22 @@ form input, form select, form textarea {
     resize: none;
 }
 
+#manager-container select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#manager-container {
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+}
+
 form input:focus, form select:focus, form textarea:focus {
     border-color: #003064;
 }
