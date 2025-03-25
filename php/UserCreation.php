@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) { //if not admin
+if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
     header("Location: LoginPage.php");
     exit;
 }
@@ -125,7 +125,7 @@ if (isset($_POST['addCaseHandler'])) {
             <label for="password"><b>Password</b></label>
             <input type="password" id="password" name="password" required>
             
-            <!-- create dropdown for job -->
+
             <label for="job"><b>Select Job</b></label>
             <select id="job" name="jobID" required onchange="toggleManagerDropdown()">
                 <option value="">-- Select Job --</option>
@@ -136,7 +136,6 @@ if (isset($_POST['addCaseHandler'])) {
                 <?php endforeach; ?>
             </select>
 
-            <!-- create dropdown for manager -->
             <div id="manager-container" style="display: none;">
                 <label for="manager"><b>Select Manager</b></label>
                 <select id="manager" name="managerID">
@@ -161,20 +160,19 @@ if (isset($_POST['addCaseHandler'])) {
 </script>
 
 <script>
-//for hiding/showing the maganger drowdown
 function toggleManagerDropdown() {
     let jobDropdown = document.getElementById("job");
     let managerContainer = document.getElementById("manager-container");
     let managerSelect = document.getElementById("manager");
 
-    let requiresManagerJobID = "1"; // Ensure it's a string for correct comparison
+    let requiresManagerJobID = "1";
 
     if (jobDropdown.value === requiresManagerJobID) {
         managerContainer.style.display = "block";
-        managerSelect.removeAttribute("disabled"); // Enable manager dropdown
+        managerSelect.removeAttribute("disabled");
     } else {
         managerContainer.style.display = "none";
-        managerSelect.setAttribute("disabled", "disabled"); // Disable manager dropdown
+        managerSelect.setAttribute("disabled", "disabled");
     }
 }
 </script>

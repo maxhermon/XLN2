@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if ($userID) { //managerID has been added, need to add change manager functionality
+if ($userID) {
     $stmt = $db->prepare($sql = "SELECT u.*, 
                         j.job AS job_name
                 FROM users u
@@ -52,6 +52,14 @@ if ($userID) { //managerID has been added, need to add change manager functional
     $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $userData = $result->fetchArray(SQLITE3_ASSOC);
+
+    $managerQuery = "SELECT userID, fName || ' ' || lName as managerName FROM users 
+                     WHERE jobID = 3;"; // manager jobID is 3
+    $managerResult = $db->query($managerQuery);
+    $managers = [];
+    while ($row = $managerResult->fetchArray(SQLITE3_ASSOC)) {
+        $managers[] = $row;
+    }
 }
 ?>
 
@@ -61,11 +69,13 @@ if ($userID) { //managerID has been added, need to add change manager functional
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Case</title>
+
     <link rel="stylesheet" href="../css/EditUser.css">
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
   />
+
 </head>
 <body>
 <header>
@@ -115,7 +125,7 @@ if ($userID) { //managerID has been added, need to add change manager functional
                     <input type="text" id="email" name="email" value="<?php echo $userData['email']; ?>">
 
                     <label for="jobID">Job:</label>
-                    <select id="jobID" name="jobID">
+                    <select id="jobID" name="jobID" onchange="toggleManagerDropdown()">
                         <?php foreach ($jobs as $job): ?>
                             <option value="<?php echo $job['jobID']; ?>" 
                             <?php echo ($userData['jobID'] == $job['jobID']) ? 'selected' : ''; ?>>
@@ -123,7 +133,20 @@ if ($userID) { //managerID has been added, need to add change manager functional
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    
+
+                    <div id="manager-container" style="display: none;">
+                        <label for="manager">Manager:</label>
+                        <select id="manager" name="manager">
+                            <option value="" disabled selected>-- Select Manager --</option>
+                            <?php foreach ($managers as $manager): ?>
+                                <option value="<?php echo $manager['userID']; ?>" 
+                                <?php echo ($userData['managerID'] == $manager['userID']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($manager['managerName']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                     <label>Password:</label>
                     <button>Change Password</button>
 
@@ -143,3 +166,25 @@ if ($userID) { //managerID has been added, need to add change manager functional
     </footer>
 </body>
 </html>
+
+<script>
+function toggleManagerDropdown() {
+    let jobDropdown = document.getElementById("jobID");
+    let managerContainer = document.getElementById("manager-container");
+    let managerSelect = document.getElementById("manager");
+
+    let requiresManagerJobID = "1"; // Change this to the correct jobID
+
+    if (jobDropdown.value === requiresManagerJobID) {
+        managerContainer.style.display = "block";
+        managerSelect.setAttribute("required", "required"); // Make required
+    } else {
+        managerContainer.style.display = "none";
+        managerSelect.removeAttribute("required"); // Remove required
+        managerSelect.value = ""; // Reset value to null
+    }
+}
+
+// Run function on page load to set correct visibility (useful for editing users)
+document.addEventListener("DOMContentLoaded", toggleManagerDropdown);
+</script>

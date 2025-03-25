@@ -9,26 +9,26 @@
     
     $arrayResult = [];
 
-    //get results
+
     while ($row = $result->fetchArray(SQLITE3_ASSOC)){  
         $arrayResult[] = $row;
     }
 
-    //check results
+    
     if (!empty($arrayResult)) {
         if (password_verify($_POST["password"], $arrayResult[0]['password'])) {
             session_start();
             $_SESSION['name'] = $arrayResult[0]['name'];
             $_SESSION['jobID'] = $arrayResult[0]['jobID'];
             $_SESSION['userID'] = $arrayResult[0]['userID'];
-            echo "true"; // Redirect to home page
-            header("Location: Homepage.php"); //redirect to case creation page
+            echo "true";
+            header("Location: Homepage.php");
         } else {
-            echo "no match"; // Incorrect password
+            echo "no match";
             header("Location: LoginPage.php?Login_Error=1");
         }
     } else {
-        echo "no user found"; // No user found
+        echo "no user found";
         header("Location: LoginPage.php?Login_Error=1");
     }
 

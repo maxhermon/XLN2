@@ -2,10 +2,9 @@
 <html lang="en">
 
 <?php
-function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 10) {
+function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 10, $sortBy = '', $sortOrder = 'ASC') {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
-    
     $sql = "SELECT c.*, 
                d.deptName AS department_name, 
                r.reason AS reason_name,
@@ -14,13 +13,11 @@ function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 1
                CASE WHEN c.status = 1 THEN 'Open' ELSE 'Closed' END AS status_text
             FROM cases c
             LEFT JOIN reasons r ON c.reasonID = r.reasonID
-			LEFT JOIN department_reasons dr ON dr.reasonID = r.reasonID
+            LEFT JOIN department_reasons dr ON dr.reasonID = r.reasonID
             LEFT JOIN departments d ON dr.departmentID = d.departmentID
             LEFT JOIN customers cu ON c.customerID = cu.customerID
             LEFT JOIN users u ON c.userID = u.userID"; 
 
-    
-    
     $whereClause = '';
     if (!empty($searchBy) && !empty($searchTerm)) {
         if ($searchBy == 'user_name') {
@@ -30,7 +27,11 @@ function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 1
         }
     }
 
-    
+    $orderBy = '';
+    if (!empty($sortBy)) {
+        $orderBy = " ORDER BY $sortBy $sortOrder";
+    }
+
     $countSql = "SELECT COUNT(*) as total FROM ($sql $whereClause)";
     $countStmt = $db->prepare($countSql);
     
@@ -45,8 +46,7 @@ function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 1
     $page = max(1, min($page, $totalPages));
     $offset = ($page - 1) * $casesPerPage;
     
-    
-    $sql = $sql . $whereClause . " LIMIT :limit OFFSET :offset";
+    $sql = $sql . $whereClause . $orderBy . " LIMIT :limit OFFSET :offset";
     $stmt = $db->prepare($sql);
     
     $stmt->bindValue(':limit', $casesPerPage, SQLITE3_INTEGER);
@@ -74,23 +74,21 @@ function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 1
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$sortBy = isset($_GET['sortBy']) ? $_GET['sortBy'] : '';
+$sortOrder = isset($_GET['sortOrder']) ? $_GET['sortOrder'] : 'ASC';
 
-$result = getCases($searchBy, $searchTerm, $page, 10);
+$result = getCases($searchBy, $searchTerm, $page, 10, $sortBy, $sortOrder);
 $cases = $result['cases'];
 $totalPages = $result['totalPages'];
 $currentPage = $result['currentPage'];
 ?>
-
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View All Cases</title>
     <link rel="stylesheet" href="../css/ViewAllCases.css">
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-  />
+    <script src="https://kit.fontawesome.com/e3b58c845d.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
@@ -128,33 +126,25 @@ $currentPage = $result['currentPage'];
     <button type="submit">Search</button>
 </form>
 
-        <table id="casesTable">
-            <thead>
-                <tr>
-                    <th>Case ID</th>
-                    <th>Case Handler</th>
-                    <th>Creation Timestamp</th>
-                    <th>Department</th>
-                    <th>Reason</th>
-                    <th>Customer Name</th>
-                    <th>Notes</th>
-                    <th>Status</th>
-                    <th>Closed Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
+<table id="casesTable">
+        <thead>
+            <tr>
+                <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=caseID&sortOrder=<?php echo ($sortBy == 'caseID' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Case ID <?php if ($sortBy == 'caseID') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=department_name&sortOrder=<?php echo ($sortBy == 'department_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Department <?php if ($sortBy == 'department_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=reason_name&sortOrder=<?php echo ($sortBy == 'reason_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Reason <?php if ($sortBy == 'reason_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=customer_name&sortOrder=<?php echo ($sortBy == 'customer_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Customer Name <?php if ($sortBy == 'customer_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=status_text&sortOrder=<?php echo ($sortBy == 'status_text' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Status <?php if ($sortBy == 'status_text') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
         <?php foreach ($cases as $case) : ?>
             <tr>
                 <td><?php echo $case['caseID']; ?></td>
-                <td><?php echo $case['user_name']; ?></td>
-                <td><?php echo $case['created']; ?></td>
                 <td><?php echo $case['department_name']; ?></td>
                 <td><?php echo $case['reason_name']; ?></td>
                 <td><?php echo $case['customer_name']; ?></td>
-                <td><?php echo $case['description']; ?></td>
                 <td><?php echo $case['status_text']; ?></td>
-                <td><?php echo $case['closed']; ?></td>
                 <td>
                     <?php if ($case['status'] == 1) : ?>
                         <a href="EditCase.php?uid=<?php echo $case['caseID']; ?>">Edit</a>
@@ -164,15 +154,14 @@ $currentPage = $result['currentPage'];
                 </td>
             </tr>
         <?php endforeach; ?>
-    </tbody>
-        </table>
+        </tbody>
+    </table>
 
-        
-        <?php if ($totalPages > 1) : ?>
+    <?php if ($totalPages > 1) : ?>
         <div class="pagination">
             <?php if ($currentPage > 1) : ?>
-                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=1"><i class="fa-solid fa-angles-left"></i></a>
-                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $currentPage - 1; ?>"><i class="fa-solid fa-angle-left"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=1"><i class="fa-solid fa-angles-left"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=<?php echo $currentPage - 1; ?>"><i class="fa-solid fa-angle-left"></i></a>
             <?php else : ?>
                 <span class="disabled"><i class="fa-solid fa-angles-left"></i></span>
                 <span class="disabled"><i class="fa-solid fa-angle-left"></i></span>
@@ -187,20 +176,20 @@ $currentPage = $result['currentPage'];
                 if ($i == $currentPage) {
                     echo "<span class=\"active\">$i</span>";
                 } else {
-                    echo "<a href=\"?searchBy=" . urlencode($searchBy) . "&searchTerm=" . urlencode($searchTerm) . "&page=$i\">$i</a>";
+                    echo "<a href=\"?searchBy=" . urlencode($searchBy) . "&searchTerm=" . urlencode($searchTerm) . "&sortBy=" . urlencode($sortBy) . "&sortOrder=" . urlencode($sortOrder) . "&page=$i\">$i</a>";
                 }
             }
             ?>
             
             <?php if ($currentPage < $totalPages) : ?>
-                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $currentPage + 1; ?>"><i class="fa-solid fa-angle-right"></i></a>
-                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&page=<?php echo $totalPages; ?>"><i class="fa-solid fa-angles-right"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=<?php echo $currentPage + 1; ?>"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=<?php echo $totalPages; ?>"><i class="fa-solid fa-angles-right"></i></a>
             <?php else : ?>
                 <span class="disabled"><i class="fa-solid fa-angle-right"></i></span>
                 <span class="disabled"><i class="fa-solid fa-angles-right"></i></span>
             <?php endif; ?>
         </div>
-        <?php endif; ?>
+    <?php endif; ?>
 
     </main>
     <footer>
@@ -211,4 +200,3 @@ $currentPage = $result['currentPage'];
     </script>
 </body>
 </html>
-<gay></gay>
