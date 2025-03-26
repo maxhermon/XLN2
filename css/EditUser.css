@@ -136,17 +136,17 @@ form input, form select, form textarea {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; 
-    text-align: left; 
+    align-items: flex-start; /* Align everything to the left */
+    text-align: left; /* Ensure text is aligned left */
 }
 
 #manager-container label {
-    display: block; 
+    display: block; /* Ensure label takes full width */
     text-align: left;
 }
 
 #manager-container select {
-    width: 100%; 
+    width: 100%; /* Ensure dropdown spans full width */
 }
 
 
