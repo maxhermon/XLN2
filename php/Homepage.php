@@ -87,14 +87,6 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                 <?php } ?>
             </div>
         </section>
-        <section class="notifications">
-            <h2>Notifications</h2>
-            <ul>
-                <li>New case assigned to you.</li>
-                <li>System maintenance scheduled for tomorrow.</li>
-                <li>New company policy update.</li>
-            </ul>
-        </section>
         <section class="recent-activities">
             <h2>Recent Activities</h2>
             <table>
