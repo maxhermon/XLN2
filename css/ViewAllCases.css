@@ -110,6 +110,13 @@ form {
     align-items: center;
     margin-bottom: 20px;
 }
+a{
+    text-decoration: none;
+    color: inherit;
+}
+a:hover {
+    text-decoration: underline;
+}
 form label, form select, form input, form button {
     margin-bottom: 10px;
 }
