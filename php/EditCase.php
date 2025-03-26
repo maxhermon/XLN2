@@ -1,12 +1,13 @@
 <?php
 
+session_start();
+require 'db_connection.php';
+$db = connectToDatabase();
+
 $caseID = isset($_GET['uid']) ? $_GET['uid'] : null;
 $errorMessage = '';
 $successMessage = '';
 $caseData = null;
-
-
-$db = new SQLite3('../data/XLN_new_DBA.db');
 
 $deptStmt = $db->prepare("SELECT * FROM departments ORDER BY deptName");
 $deptResult = $deptStmt->execute();
@@ -32,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $caseID = $_POST['caseID'];
     $oldStatus = $_POST['oldStatus'];
     $reasonID = $_POST['reasonID']; 
-    
+    $userID = $_SESSION['userID']; // Get the user ID from the session
 
     $closedDate = null;
     if ($oldStatus == 1 && $newStatus == 0) {
@@ -54,11 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($result) {
         $successMessage = "Case updated successfully!";
+        // Log the activity with status text
+        $statusText = $newStatus == 1 ? 'Open' : 'Closed';
+        logActivity($userID, "Updated case #$caseID", $statusText);
     } else {
         $errorMessage = "Failed to update case: " . $db->lastErrorMsg();
     }
 }
-
 
 if ($caseID) { 
     $stmt = $db->prepare("SELECT c.*, 
@@ -70,7 +73,7 @@ if ($caseID) {
                         FROM cases c
                         LEFT JOIN reasons r ON c.reasonID = r.reasonID
                         LEFT JOIN department_reasons dr ON r.reasonID = dr.reasonID
-				        LEFT JOIN departments d ON dr.departmentID = d.departmentID
+                        LEFT JOIN departments d ON dr.departmentID = d.departmentID
                         LEFT JOIN customers cu ON c.customerID = cu.customerID
                         WHERE c.caseID = :caseID");
     $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);

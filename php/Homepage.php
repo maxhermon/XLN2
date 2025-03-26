@@ -24,11 +24,18 @@ if (!$userData) {
     exit;
 }
 
+$activitiesStmt = $db->prepare("SELECT activity, date, status
+                                FROM activities
+                                WHERE userID = :userID
+                                ORDER BY date DESC
+                                LIMIT 5");
+$activitiesStmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
+$activitiesResult = $activitiesStmt->execute();
+$recentActivities = [];
+while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
+    $recentActivities[] = $row;
+}
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,26 +75,18 @@ if (!$userData) {
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
-    <h2>Quick Links</h2>
-    <div class="links-container <?php echo ($_SESSION['jobID'] == 2) ? 'admin' : 'case-handler'; ?>">
-        <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
-        <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
-        <a href="ProfilePage.php" class="link-box">Profile</a>
-        <a href="../html/Contact.html" class="link-box">Contact Support</a>
-        <?php if ($_SESSION['jobID'] == 2) { ?>
-            <a href="UserCreation.php" class="link-box">Add Users</a>
-            <a href="UserManagement.php" class="link-box">Manage Users</a>
-            <a href="JobRoleCreation.php" class="link-box">Add Job Role</a>
-        <?php } ?>
-    </div>
-</section>
-        <section class="notifications">
-            <h2>Notifications</h2>
-            <ul>
-                <li>New case assigned to you.</li>
-                <li>System maintenance scheduled for tomorrow.</li>
-                <li>New company policy update.</li>
-            </ul>
+            <h2>Quick Links</h2>
+            <div class="links-container <?php echo ($_SESSION['jobID'] == 2) ? 'admin' : 'case-handler'; ?>">
+                <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
+                <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
+                <a href="ProfilePage.php" class="link-box">Profile</a>
+                <a href="../html/Contact.html" class="link-box">Contact Support</a>
+                <?php if ($_SESSION['jobID'] == 2) { ?>
+                    <a href="UserCreation.php" class="link-box">Add Users</a>
+                    <a href="UserManagement.php" class="link-box">Manage Users</a>
+                    <a href="JobRoleCreation.php" class="link-box">Add Job Role</a>
+                <?php } ?>
+            </div>
         </section>
         <section class="recent-activities">
             <h2>Recent Activities</h2>
@@ -100,21 +99,19 @@ if (!$userData) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Case #12345 updated</td>
-                        <td>2023-10-01</td>
-                        <td>Completed</td>
-                    </tr>
-                    <tr>
-                        <td>Profile updated</td>
-                        <td>2023-09-30</td>
-                        <td>Completed</td>
-                    </tr>
-                    <tr>
-                        <td>New case created</td>
-                        <td>2023-09-29</td>
-                        <td>Pending</td>
-                    </tr>
+                    <?php if (empty($recentActivities)): ?>
+                        <tr>
+                            <td colspan="3">No recent activities found.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($recentActivities as $activity): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($activity['activity']); ?></td>
+                                <td><?php echo htmlspecialchars($activity['date']); ?></td>
+                                <td><?php echo htmlspecialchars($activity['status']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </section>
