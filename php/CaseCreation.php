@@ -65,7 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
 
         $newCaseID = $db->lastInsertRowID();
         $_SESSION['caseID'] = $newCaseID;
-        header('Location: CaseCreated.php');
+
+        // Log the activity
+        logActivity($userID, "Created new case #$newCaseID", "Opened    ");
+
+        header('Location: caseCreated.php');
         exit;
     } else {
         $_SESSION['duplicateIDs'] = $duplicateCases;
