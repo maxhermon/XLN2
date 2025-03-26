@@ -83,25 +83,21 @@ function getAllDropdownOptions() {
         'user_name' => []
     ];
 
-    // Fetch department names
     $result = $db->query("SELECT DISTINCT deptName FROM departments ORDER BY deptName");
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         $options['department_name'][] = $row['deptName'];
     }
 
-    // Fetch reasons
     $result = $db->query("SELECT DISTINCT reason FROM reasons ORDER BY reason");
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         $options['reason_name'][] = $row['reason'];
     }
 
-    // Fetch customer names
     $result = $db->query("SELECT DISTINCT name FROM customers ORDER BY name");
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         $options['customer_name'][] = $row['name'];
     }
 
-    // Fetch user names
     $result = $db->query("SELECT DISTINCT (fname || ' ' || lname) as full_name FROM users ORDER BY full_name");
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         $options['user_name'][] = $row['full_name'];
