@@ -111,8 +111,7 @@ $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $sortBy = isset($_GET['sortBy']) ? $_GET['sortBy'] : '';
 $sortOrder = isset($_GET['sortOrder']) ? $_GET['sortOrder'] : 'ASC';
-
-// Get all dropdown options
+  
 $allDropdownOptions = getAllDropdownOptions();
 
 $result = getCases($searchBy, $searchTerm, $page, 10, $sortBy, $sortOrder);
@@ -173,12 +172,18 @@ $currentPage = $result['currentPage'];
             <div id="filterDropdown" class="dropdown-content2">
             </div>
         </div>
-
         <input type="hidden" name="page" value="1">
         <button type="submit">Search</button>
     </form>
 
     <table id="casesTable">
+    <input type="text" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>" placeholder="Enter search term">
+    <input type="hidden" name="page" value="1">
+    <button type="submit">Search</button>
+</form>
+
+<table id="casesTable">
+
         <thead>
             <tr>
                 <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=caseID&sortOrder=<?php echo ($sortBy == 'caseID' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Case ID <?php if ($sortBy == 'caseID') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
@@ -249,6 +254,38 @@ $currentPage = $result['currentPage'];
 
 <script>
     const allDropdownOptions = <?php echo json_encode($allDropdownOptions); ?>;
+        <div class="pagination">
+            <?php if ($currentPage > 1) : ?>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=1"><i class="fa-solid fa-angles-left"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=<?php echo $currentPage - 1; ?>"><i class="fa-solid fa-angle-left"></i></a>
+            <?php else : ?>
+                <span class="disabled"><i class="fa-solid fa-angles-left"></i></span>
+                <span class="disabled"><i class="fa-solid fa-angle-left"></i></span>
+            <?php endif; ?>
+            
+            <?php
+            
+            $startPage = max(1, $currentPage - 2);
+            $endPage = min($totalPages, $currentPage + 2);
+            
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                if ($i == $currentPage) {
+                    echo "<span class=\"active\">$i</span>";
+                } else {
+                    echo "<a href=\"?searchBy=" . urlencode($searchBy) . "&searchTerm=" . urlencode($searchTerm) . "&sortBy=" . urlencode($sortBy) . "&sortOrder=" . urlencode($sortOrder) . "&page=$i\">$i</a>";
+                }
+            }
+            ?>
+            
+            <?php if ($currentPage < $totalPages) : ?>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=<?php echo $currentPage + 1; ?>"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=<?php echo urlencode($sortBy); ?>&sortOrder=<?php echo urlencode($sortOrder); ?>&page=<?php echo $totalPages; ?>"><i class="fa-solid fa-angles-right"></i></a>
+            <?php else : ?>
+                <span class="disabled"><i class="fa-solid fa-angle-right"></i></span>
+                <span class="disabled"><i class="fa-solid fa-angles-right"></i></span>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 
     function updateDropdownOptions() {
         const searchBy = document.getElementById('searchBy').value;
@@ -317,4 +354,3 @@ $currentPage = $result['currentPage'];
     </script>
 </body>
 </html>
-<gay></gay>

@@ -10,7 +10,7 @@ if (!isset($_SESSION['userID'])) {
 }
 
 $userID = $_SESSION['userID'];
-$stmt = $db->prepare("SELECT fName, mName, lName, email, jobID
+$stmt = $db->prepare("SELECT fName, mName, lName, email, jobID, managerID
                       FROM users
                       WHERE userID = :userID");
 $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
@@ -20,6 +20,18 @@ $userData = $result->fetchArray(SQLITE3_ASSOC);
 if (!$userData) {
     echo "User not found in the database.";
     exit;
+}
+
+if ($userData['managerID'] != null) {
+    $stmt = $db->prepare("SELECT fName || ' ' || lName as managerName,
+                                    email
+                          FROM users
+                          WHERE userID = :managerID");
+    $stmt->bindValue(':managerID', $userData['managerID'], SQLITE3_INTEGER);
+    $result = $stmt->execute();
+    $managerData = $result->fetchArray(SQLITE3_ASSOC);
+
+
 }
 ?>
 
@@ -75,6 +87,18 @@ if (!$userData) {
                 <?php echo htmlspecialchars($userID); ?>
                 </p>
             </div>
+            <?php if ($userData['managerID'] != null) { ?>
+                <div class="profile-info">
+                    <p class="info"><strong>Manager:</strong>
+                    <?php echo htmlspecialchars($managerData['managerName']); ?>
+                    </p>
+                    <p class="info"><strong>Manager Email:</strong>
+                    <?php echo htmlspecialchars($managerData['email']); ?>
+                    </p>
+                </div>
+            <?php } ?>
+
+            
         </div>
     </div>
 </main>

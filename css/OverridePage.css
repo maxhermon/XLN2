@@ -85,76 +85,42 @@ nav ul li select {
     margin-left: 10px;
 }
 
-main {
-    background-color: #ffffff;
-    padding: 80px;
-    margin-top: 20px; 
-    margin-bottom: 100px; 
-    min-height: calc(100vh - 180px); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; 
-}
-
 .container {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px; 
+    max-width: 800px;
+    margin: 50px auto;
     text-align: center;
-    margin-top: 10px;
-    margin-bottom: auto;
 }
 
-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-form label {
+.case-details p {
     font-size: 18px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
-form input, form select, form textarea {
+table {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 25px; 
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
     border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none;
-    resize: none;
 }
 
-#manager-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; 
-    text-align: left; 
-}
-
-#manager-container label {
-    display: block; 
+th, td {
+    padding: 10px;
     text-align: left;
 }
 
-#manager-container select {
-    width: 100%; 
+th {
+    background-color: #f4f4f4;
 }
 
-
-form input:focus, form select:focus, form textarea:focus {
-    border-color: #003064;
-}
-
-form button {
+button#overrideButton {
     background-color: #003064;
     color: white;
     padding: 15px 20px;
@@ -162,27 +128,25 @@ form button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%;
+    margin-top: 20px;
 }
 
-form button:hover {
+button#overrideButton:hover {
     background-color: #00275d;
 }
-
 
 footer {
     background-color: #003064;
     color: white;
     text-align: center;
-    position: relative;
     padding: 20px;
+    position: relative;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
@@ -193,54 +157,15 @@ footer {
         flex-direction: column;
     }
 
-    main {
+    .container {
         width: 90%;
     }
-}
 
+    table, th, td {
+        font-size: 14px;
+    }
 
-
-/* Additional styles for ViewCase.php */
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.notes-container {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    padding: 1rem;
-    border-radius: 4px;
-    min-height: 100px;
-}
-
-.button {
-    display: inline-block;
-    background-color: #f39200;
-    color: white;
-    padding: 10px 15px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-top: 1rem;
-}
-
-.button:hover {
-    background-color: #e68f1d;
-}
-button{
-    background-color: #003064;
-    color: white;
-    padding: 15px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 30px;
+    button#overrideButton {
+        width: 100%;
+    }
 }
