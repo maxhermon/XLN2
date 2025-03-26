@@ -77,6 +77,7 @@ if (!$userData) {
         <?php if ($_SESSION['jobID'] == 2) { ?>
             <a href="UserCreation.php" class="link-box">Add Users</a>
             <a href="UserManagement.php" class="link-box">Manage Users</a>
+            <a href="JobRoleCreation.php" class="link-box">Add Job Role</a>
         <?php } ?>
     </div>
 </section>

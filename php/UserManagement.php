@@ -10,77 +10,75 @@ if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
     exit;
 }
 
-function getUsers($searchBy = '', $searchTerm = '', $page = 1, $usersPerPage = 5) {
+function getUsers($searchBy = '', $searchTerm = '', $page = 1, $usersPerPage = 5, $sortBy = '', $sortOrder = 'ASC') {
     $db = new SQLite3('../data/XLN_new_DBA.db');
 
-    
     $sql = "SELECT u.*, j.job AS job_name
         FROM users u
         LEFT JOIN jobs j ON u.jobID = j.jobID";
 
     $whereClause = '';
     if (!empty($searchBy) && !empty($searchTerm)) {
-        $whereClause = " WHERE $searchBy LIKE :searchTerm";
+        if ($searchBy == 'fullName') {
+            $whereClause = " WHERE (u.fName || ' ' || u.lName) LIKE :searchTerm";
+        } else {
+            $whereClause = " WHERE $searchBy LIKE :searchTerm";
+        }
     }
+
+    $orderBy = '';
+    if (!empty($sortBy)) {
+        $orderBy = " ORDER BY $sortBy $sortOrder";
+    }
+
+    $countSql = "SELECT COUNT(*) as total FROM ($sql $whereClause)";
+    $countStmt = $db->prepare($countSql);
+
+    if (!empty($searchBy) && !empty($searchTerm)) {
+        $countStmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
+    }
+
+    $countResult = $countStmt->execute();
+    $totalCases = $countResult->fetchArray(SQLITE3_ASSOC)['total'];
+
+    $totalPages = ceil($totalCases / $usersPerPage);
+    $page = max(1, min($page, $totalPages));
+    $offset = ($page - 1) * $usersPerPage;
+
+    $sql = $sql . $whereClause . $orderBy . " LIMIT :limit OFFSET :offset";
     $stmt = $db->prepare($sql);
-    
+
+    $stmt->bindValue(':limit', $usersPerPage, SQLITE3_INTEGER);
+    $stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
+
     if (!empty($searchBy) && !empty($searchTerm)) {
         $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
     }
 
-$result = $stmt->execute();
-$arrayResult = [];
+    $result = $stmt->execute();
+    $paginatedResult = [];
 
-while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    $arrayResult[] = $row;
-}
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $paginatedResult[] = $row;
+    }
 
-$countSql = "SELECT COUNT(*) as total FROM ($sql $whereClause)";
-$countStmt = $db->prepare($countSql);
-
-if (!empty($searchBy) && !empty($searchTerm)) {
-    $countStmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
-}
-
-$countResult = $countStmt->execute();
-$totalCases = $countResult->fetchArray(SQLITE3_ASSOC)['total'];
-
-$totalPages = ceil($totalCases / $usersPerPage);
-$page = max(1, min($page, $totalPages));
-$offset = ($page - 1) * $usersPerPage;
-
-$sql = $sql . $whereClause . " LIMIT :limit OFFSET :offset";
-$stmt = $db->prepare($sql);
-
-$stmt->bindValue(':limit', $usersPerPage, SQLITE3_INTEGER);
-$stmt->bindValue(':offset', $offset, SQLITE3_INTEGER);
-
-if (!empty($searchBy) && !empty($searchTerm)) {
-    $stmt->bindValue(':searchTerm', "%$searchTerm%", SQLITE3_TEXT);
-}
-
-$result = $stmt->execute();
-$paginatedResult = [];
-
-while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    $paginatedResult[] = $row;
-}
-
-return [
-    'data' => $paginatedResult,
-    'pagination' => [
-        'totalCases' => $totalCases,
-        'totalPages' => $totalPages,
-        'currentPage' => $page,
-    ],
-];
+    return [
+        'data' => $paginatedResult,
+        'pagination' => [
+            'totalCases' => $totalCases,
+            'totalPages' => $totalPages,
+            'currentPage' => $page,
+        ],
+    ];
 }
 
 $searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : '';
 $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$sortBy = isset($_GET['sortBy']) ? $_GET['sortBy'] : '';
+$sortOrder = isset($_GET['sortOrder']) ? $_GET['sortOrder'] : 'ASC';
 
-$result = getUsers($searchBy, $searchTerm, $page, 5);
+$result = getUsers($searchBy, $searchTerm, $page, 5, $sortBy, $sortOrder);
 $users = $result['data'];
 $totalPages = $result['pagination']['totalPages'];
 $currentPage = $result['pagination']['currentPage'];
@@ -92,13 +90,11 @@ $currentPage = $result['pagination']['currentPage'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Case</title>
     <link rel="stylesheet" href="../css/ViewAllCases.css">
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-  />
+    <script src="https://kit.fontawesome.com/e3b58c845d.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
+        <i class="fa-sharp fa-light fa-arrow-up"></i>
         <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
         <nav>
             <ul class="left-menu">
@@ -117,13 +113,14 @@ $currentPage = $result['pagination']['currentPage'];
         </nav>
     </header>
     <main>
-        <h2>View All User</h2>
+        <h2>View All Users</h2>
         <form method="GET" action="">
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
             <option value="userID" <?php echo ($searchBy == 'userID') ? 'selected' : ''; ?>> User ID </option>
             <option value="fName" <?php echo ($searchBy == 'fName') ? 'selected' : ''; ?>>First Name</option>
             <option value="lName" <?php echo ($searchBy == 'lName') ? 'selected' : ''; ?>>Last Name</option>
+            <option value="fullName" <?php echo ($searchBy == 'fullName') ? 'selected' : ''; ?>>Full Name</option>
             <option value="email" <?php echo ($searchBy == 'email') ? 'selected' : ''; ?>>Email</option>
             <option value="job_name" <?php echo ($searchBy == 'job_name') ? 'selected' : ''; ?>>Job</option>
         </select>
@@ -135,12 +132,12 @@ $currentPage = $result['pagination']['currentPage'];
         <table id="casesTable">
             <thead>
                 <tr>
-                    <th>User ID</th>
-                    <th>First Name</th>
+                    <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=userID&sortOrder=<?php echo ($sortBy == 'userID' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">User ID <?php if ($sortBy == 'userID') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                    <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=fName&sortOrder=<?php echo ($sortBy == 'fName' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">First Name <?php if ($sortBy == 'fName') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
                     <th>Middle Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Job</th>
+                    <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=lName&sortOrder=<?php echo ($sortBy == 'lName' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Last Name <?php if ($sortBy == 'lName') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                    <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=email&sortOrder=<?php echo ($sortBy == 'email' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Email <?php if ($sortBy == 'email') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                    <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=job_name&sortOrder=<?php echo ($sortBy == 'job_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Job <?php if ($sortBy == 'job_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
                     <th>Action</th>
                 </tr>
             </thead>
