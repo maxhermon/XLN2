@@ -7,7 +7,7 @@
 
 header {
     background-color: #003064;
-    color: white;
+    color: #ffffff;
     display: flex;
     align-items: center;
     padding: 50px;
@@ -17,7 +17,21 @@ img.logo {
     width: 300px;
     margin-right: 20px;
 }
-
+header h1 {
+    margin: 0;
+    flex-grow: 1;
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+nav ul.left-menu {
+    flex-grow: 1;
+}
+nav ul.right-menu {
+    justify-content: flex-end;
+}
 .dropdown {
     position: relative;
     display: inline-block;
@@ -26,7 +40,7 @@ img.logo {
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -49,37 +63,6 @@ img.logo {
     display: block;
 }
 
-.dropdown:hover .dropbtn {
-    background-color: #f39200;
-}
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-nav ul.left-menu {
-    flex-grow: 1;
-}
-nav ul.right-menu {
-    justify-content: flex-end;
-}
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 nav ul {
     list-style: none;
     display: flex;
@@ -91,24 +74,11 @@ nav ul li {
     margin-left: 20px;
 }
 nav ul li a {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
 }
-
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    left: 50%;
-    transform: translateX(-50%);
+nav ul li select {
+    margin-left: 10px;
 }
 
 html, body {
