@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $caseID = $_POST['caseID'];
     $oldStatus = $_POST['oldStatus'];
     $reasonID = $_POST['reasonID']; 
-    $userID = $_SESSION['userID']; // Get the user ID from the session
+    $userID = $_SESSION['userID'];
 
     $closedDate = null;
     if ($oldStatus == 1 && $newStatus == 0) {
@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($result) {
         $successMessage = "Case updated successfully!";
-        // Log the activity with status text
         $statusText = $newStatus == 1 ? 'Open' : 'Closed';
         logActivity($userID, "Updated case #$caseID", $statusText);
     } else {
