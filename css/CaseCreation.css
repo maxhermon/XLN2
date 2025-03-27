@@ -21,6 +21,7 @@ header h1 {
     margin: 0;
     flex-grow: 1;
 }
+
 nav {
     display: flex;
     justify-content: space-between;
