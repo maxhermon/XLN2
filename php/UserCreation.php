@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
     }
     $userID      = $_SESSION['userID'];
 
-    $departmentID = $_POST['departmentID']   ?? null; // might not be used directly
+    $departmentID = $_POST['departmentID']   ?? null;
     $reasonID     = $_POST['reasonID']       ?? null;
     $customerID   = $_POST['customerID']     ?? null;
     $description  = $_POST['description']    ?? '';
@@ -134,7 +134,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
         $newCaseID = $db->lastInsertRowID();
         $_SESSION['caseID'] = $newCaseID;
 
-        // Log the activity
         logActivity($userID, "Created new case #$newCaseID", "Completed");
 
         header('Location: caseCreated.php');
@@ -187,18 +186,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
         <form action="UserCreation.php" method="POST">
             <h2>User Creation Page</h2>
 
+        <label for="fName"><b>First Name</b></label>
+        <input type="text" id="fName" name="fName" required>
 
-            <label for="fName"><b>First Name</b></label>
-            <input type="text" id="fName" name="fName" required>
-            <label for="fName"><b>Middle Name</b></label>
-            <input type="text" id="mName" name="mName">
-            <label for="lName"><b>Last Name</b></label>
-            <input type="text" id="lName" name="lName" required>
-            <label for="email"><b>Email</b></label>
-            <input type="text" id="email" name="email" required>
-            <label for="password"><b>Password</b></label>
-            <input type="password" id="password" name="password" required>
-            
+        <label for="mName"><b>Middle Name</b></label>
+        <input type="text" id="mName" name="mName">
+
+        <label for="lName"><b>Last Name</b></label>
+        <input type="text" id="lName" name="lName" required>
+
+        <label for="email"><b>Email</b></label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password"><b>Password</b></label>
+        <input type="password" id="password" name="password" required>
 
             <label for="job"><b>Select Job</b></label>
             <select id="job" name="jobID" required onchange="toggleManagerDropdown()">

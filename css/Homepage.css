@@ -153,18 +153,21 @@ main {
     justify-items: center;
 }
 
-/* Case Handlers: 4 columns */
 .links-container.case-handler {
     display: grid; 
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 }
 
-/* Admins: 3 columns */
 .links-container.admin {
     display: grid; 
     grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
 }
-
+.links-container.manager {
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+}
 .link-box {
     max-width: 250px; 
     background-color: #003064;
@@ -178,6 +181,12 @@ main {
     transition: background-color 0.3s ease;
 }
 
+.link-box.job-role {
+    grid-column: 2;
+}
+.link-box.SeeCaseHandlers {
+    grid-column: 3;
+}
 
 .link-box:hover {
     background-color: #00275d;
@@ -233,7 +242,6 @@ footer {
     width: 100%;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
