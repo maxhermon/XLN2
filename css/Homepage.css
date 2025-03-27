@@ -7,7 +7,7 @@
 
 header {
     background-color: #003064;
-    color: white;
+    color: #ffffff;
     display: flex;
     align-items: center;
     padding: 50px;
@@ -21,7 +21,6 @@ header h1 {
     margin: 0;
     flex-grow: 1;
 }
-
 nav {
     display: flex;
     justify-content: space-between;
@@ -41,7 +40,7 @@ nav ul.right-menu {
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -64,9 +63,6 @@ nav ul.right-menu {
     display: block;
 }
 
-.dropdown:hover .dropbtn {
-    background-color: #f39200;
-}
 nav ul {
     list-style: none;
     display: flex;
@@ -78,12 +74,13 @@ nav ul li {
     margin-left: 20px;
 }
 nav ul li a {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
 }
 nav ul li select {
     margin-left: 10px;
 }
+
 
 main {
     padding: 20px;
@@ -116,23 +113,24 @@ main {
     display: grid;
     gap: 20px;
     justify-items: center;
-}
-
-.links-container.case-handler {
-    display: grid; 
-    grid-template-columns: repeat(2, 1fr);
+    padding: 20px;
+    background-color: #f9f9f9; /* Optional: Add a light background color */
+    border-radius: 8px; /* Optional: Add rounded corners */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .links-container.admin {
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
+
 .links-container.manager {
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
+
+.links-container.case-handler {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
 .link-box {
     max-width: 250px; 
     background-color: #003064;
@@ -141,20 +139,26 @@ main {
     border-radius: 8px;
     text-align: center;
     text-decoration: none;
-    width: 200px;
+    width: 100%;
     margin: 10px;
     transition: background-color 0.3s ease;
 }
 
 .link-box.job-role {
-    grid-column: 2;
+    grid-column: 4;
 }
-.link-box.SeeCaseHandlers {
-    grid-column: 3;
+.link-box.user-management {
+    grid-column: 2;
 }
 
 .link-box:hover {
     background-color: #00275d;
+}
+
+@media (max-width: 768px) {
+    .links-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
 }
 
 .notifications, .recent-activities {
@@ -172,13 +176,6 @@ main {
     padding: 0;
 }
 
-.notifications ul li {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
 
 .recent-activities table {
     width: 100%;
@@ -207,22 +204,3 @@ footer {
     width: 100%;
 }
 
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    nav ul {
-        flex-direction: column;
-    }
-
-    .links-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .link-box {
-        width: 90%;
-    }
-}
