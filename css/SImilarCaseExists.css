@@ -61,10 +61,6 @@ nav ul.right-menu {
 .dropdown:hover .dropdown-content {
     display: block;
 }
-
-.dropdown:hover .dropbtn {
-    background-color: #f39200;
-}
 nav ul {
     list-style: none;
     display: flex;
