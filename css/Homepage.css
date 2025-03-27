@@ -17,10 +17,6 @@ img.logo {
     width: 300px;
     margin-right: 20px;
 }
-header h1 {
-    margin: 0;
-    flex-grow: 1;
-}
 
 nav {
     display: flex;
@@ -49,24 +45,6 @@ nav ul.right-menu {
     transform: translateX(-50%);
 }
 
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #f39200;
-}
 nav ul {
     list-style: none;
     display: flex;
@@ -80,9 +58,6 @@ nav ul li {
 nav ul li a {
     color: white;
     text-decoration: none;
-}
-nav ul li select {
-    margin-left: 10px;
 }
 
 .dropdown {
@@ -101,24 +76,6 @@ nav ul li select {
     transform: translateX(-50%);
 }
 
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #f39200
-}
 
 main {
     padding: 20px;
@@ -153,21 +110,12 @@ main {
     justify-items: center;
 }
 
-.links-container.case-handler {
-    display: grid; 
-    grid-template-columns: repeat(2, 1fr);
-}
-
 .links-container.admin {
     display: grid; 
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
 }
-.links-container.manager {
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
-}
+
 .link-box {
     max-width: 250px; 
     background-color: #003064;
@@ -183,13 +131,6 @@ main {
 
 .link-box.job-role {
     grid-column: 2;
-}
-.link-box.SeeCaseHandlers {
-    grid-column: 3;
-}
-
-.link-box:hover {
-    background-color: #00275d;
 }
 
 .notifications, .recent-activities {
@@ -207,13 +148,6 @@ main {
     padding: 0;
 }
 
-.notifications ul li {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
 
 .recent-activities table {
     width: 100%;
@@ -242,22 +176,3 @@ footer {
     width: 100%;
 }
 
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    nav ul {
-        flex-direction: column;
-    }
-
-    .links-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .link-box {
-        width: 90%;
-    }
-}
