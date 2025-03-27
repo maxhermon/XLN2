@@ -113,12 +113,22 @@ main {
     display: grid;
     gap: 20px;
     justify-items: center;
+    padding: 20px;
+    background-color: #f9f9f9; /* Optional: Add a light background color */
+    border-radius: 8px; /* Optional: Add rounded corners */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .links-container.admin {
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.links-container.manager {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.links-container.case-handler {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .link-box {
@@ -129,13 +139,26 @@ main {
     border-radius: 8px;
     text-align: center;
     text-decoration: none;
-    width: 200px;
+    width: 100%;
     margin: 10px;
     transition: background-color 0.3s ease;
 }
 
 .link-box.job-role {
+    grid-column: 4;
+}
+.link-box.user-management {
     grid-column: 2;
+}
+
+.link-box:hover {
+    background-color: #00275d;
+}
+
+@media (max-width: 768px) {
+    .links-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
 }
 
 .notifications, .recent-activities {
