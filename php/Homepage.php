@@ -152,7 +152,7 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                                 <td><?php echo htmlspecialchars($activity['status']); ?></td>
                                 <td>
                                     <?php if (!empty($activity['caseID'])): ?>
-                                        <a href="ViewCase.php?caseID=<?php echo $activity['caseID']; ?>">
+                                        <a href="ViewCase.php?uid=<?php echo $activity['caseID']; ?>">
                                             View Case
                                         </a>
                                     <?php else: ?>
