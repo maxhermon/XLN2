@@ -163,7 +163,11 @@ main {
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
 }
-
+.links-container.manager {
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+}
 .link-box {
     max-width: 250px; 
     background-color: #003064;
@@ -179,6 +183,9 @@ main {
 
 .link-box.job-role {
     grid-column: 2;
+}
+.link-box.SeeCaseHandlers {
+    grid-column: 3;
 }
 
 .link-box:hover {
