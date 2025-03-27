@@ -173,18 +173,16 @@ function toggleManagerDropdown() {
     let managerContainer = document.getElementById("manager-container");
     let managerSelect = document.getElementById("manager");
 
-    let requiresManagerJobID = "1"; // Change this to the correct jobID
+    let requiresManagerJobID = "1";
 
     if (jobDropdown.value === requiresManagerJobID) {
         managerContainer.style.display = "block";
-        managerSelect.setAttribute("required", "required"); // Make required
+        managerSelect.setAttribute("required", "required");
     } else {
         managerContainer.style.display = "none";
-        managerSelect.removeAttribute("required"); // Remove required
-        managerSelect.value = ""; // Reset value to null
+        managerSelect.removeAttribute("required");
+        managerSelect.value = "";
     }
 }
-
-// Run function on page load to set correct visibility (useful for editing users)
 document.addEventListener("DOMContentLoaded", toggleManagerDropdown);
 </script>
