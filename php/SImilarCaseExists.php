@@ -94,32 +94,66 @@ if (!empty($cases)) {
                 </tr>
             </thead>
             <tbody>
-        <?php if (!empty($cases)): ?>
-            <?php foreach ($caseDetails as $case): ?>
+                <?php if (!empty($cases)): ?>
+                    <?php foreach ($caseDetails as $case): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($case['caseID']) ?></td>
+                            <td><?= htmlspecialchars($case['created']) ?></td>
+                            <td><?= htmlspecialchars($case['deptName']) ?></td>
+                            <td><?= htmlspecialchars($case['reason']) ?></td>
+                            <td><?= htmlspecialchars($case['description']) ?></td>
+                            <td><?= $case['status'] == 1 ? 'Open' : 'Closed' ?></td>
+                            <td><?= htmlspecialchars($case['CaseHandler']) ?></td>
+                            <td><?= htmlspecialchars($case['job']) ?></td>
+                            <td><?= htmlspecialchars($case['customerName']) ?></td>
+                            <td><?= htmlspecialchars($case['customerEmail']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                        <tr>
+                            <td colspan="10">No cases found</td>
+                        </tr>
+                    <?php endif; ?>
+            </tbody>
+        </table>
+
+        <div>
+            <h1>proposed case</h1>
+            <table>
                 <tr>
-                    <td><?= htmlspecialchars($case['caseID']) ?></td>
-                    <td><?= htmlspecialchars($case['created']) ?></td>
-                    <td><?= htmlspecialchars($case['deptName']) ?></td>
+                    <th>Department</th>
+                    <th>Case Reason</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Handler</th>
+                    <th>Role</th>
+                    <th>Customer Name</th>
+                    <th>Customer Email</th>
+                </tr>
+                <tr>
+                    <td><?= htmlspecialchars($case['deptName']) ?></td> 
                     <td><?= htmlspecialchars($case['reason']) ?></td>
-                    <td><?= htmlspecialchars($case['description']) ?></td>
-                    <td><?= $case['status'] == 1 ? 'Open' : 'Closed' ?></td>
-                    <td><?= htmlspecialchars($case['CaseHandler']) ?></td>
+                    <td><?php echo isset($_SESSION['proposedCase']['description']) ? htmlspecialchars($_SESSION['proposedCase']['description']) : ''; ?></td>
+                    <td>Proposed</td>
+                    <td><?php echo $_SESSION['name'] ?></td>
                     <td><?= htmlspecialchars($case['job']) ?></td>
                     <td><?= htmlspecialchars($case['customerName']) ?></td>
                     <td><?= htmlspecialchars($case['customerEmail']) ?></td>
                 </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="10">No cases found</td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-        </table>
+
+            </table>
+        </div>
 
         <div class="buttons">
             <button onclick="window.location.href='CaseCreation.php'">Create Another Case</button>
         </div>
+
+        <div>
+            <h2>not a duplicate?</h2>
+            <p>if this case is not a duplicate, you can create a temporary case and request a manager review.</p>
+            <button>manager review</button>
+        </div>
+
     </div>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
