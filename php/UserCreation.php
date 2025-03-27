@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
         $newCaseID = $db->lastInsertRowID();
         $_SESSION['caseID'] = $newCaseID;
 
-        logActivity($userID, $caseID, "Created new case #$newCaseID", "Completed");
+        logActivity($userID, "Created new case #$newCaseID", "Completed");
 
         header('Location: caseCreated.php');
         exit;

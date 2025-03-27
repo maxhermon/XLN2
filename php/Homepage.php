@@ -1,9 +1,9 @@
 <?php
 
 
-session_start();
-require 'db_connection.php';
-$db = connectToDatabase();
+session_start();                    
+require 'db_connection.php';        
+$db = connectToDatabase();         
 
 if (!isset($_SESSION['userID'])) {
     header("Location: LoginPage.php");
@@ -29,7 +29,7 @@ $recentActivities = [];
 if ($_SESSION['jobID'] == 3) {
     // Fetch recent activities for all case handlers managed by this manager
     $activitiesStmt = $db->prepare("
-        SELECT a.activity, a.date, a.status, a.caseID, u.fName || ' ' || u.lName AS handlerName
+        SELECT a.activity, a.date, a.status, u.fName || ' ' || u.lName AS handlerName
         FROM activities a
         INNER JOIN users u ON a.userID = u.userID
         WHERE u.managerID = :managerID
@@ -40,7 +40,7 @@ if ($_SESSION['jobID'] == 3) {
 } else {
     // Fetch recent activities for the logged-in user
     $activitiesStmt = $db->prepare("
-        SELECT activity, date, status, caseID
+        SELECT activity, date, status
         FROM activities
         WHERE userID = :userID
         ORDER BY date DESC
@@ -58,17 +58,16 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Homepage</title>
     <link rel="stylesheet" href="../css/Homepage.css">
     <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  />
 </head>
-
 <body>
     <header>
         <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
@@ -91,26 +90,15 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
     <main>
         <section class="welcome-section">
             <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
-            <h2>
-                <?php
-                if ($userData['jobID'] == 1) {
-                    echo "Case Handler";
-                } elseif ($userData['jobID'] == 2) {
-                    echo "Admin";
-                } elseif ($userData['jobID'] == 3) {
-                    echo "Manager";
-                } else {
-                    echo "Unknown Role";
-                }
-                ?>
-            </h2>
+            <h2><?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?> </h2>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
             <h2>Quick Links</h2>
-            <div class="links-container <?php
-                                        echo ($_SESSION['jobID'] == 2) ? 'admin' : (($_SESSION['jobID'] == 3) ? 'manager' : 'case-handler');
-                                        ?>">
+            <div class="links-container <?php 
+                echo ($_SESSION['jobID'] == 2) ? 'admin' : 
+                     (($_SESSION['jobID'] == 3) ? 'manager' : 'case-handler'); 
+            ?>">
                 <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
                 <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
                 <a href="ProfilePage.php" class="link-box">Profile</a>
@@ -133,7 +121,6 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                         <th>Activity</th>
                         <th>Date</th>
                         <th>Status</th>
-                        <th>Action</th>
                         <?php if ($_SESSION['jobID'] == 3): ?>
                             <th>Case Handler</th>
                         <?php endif; ?>
@@ -150,15 +137,6 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                                 <td><?php echo htmlspecialchars($activity['activity']); ?></td>
                                 <td><?php echo htmlspecialchars($activity['date']); ?></td>
                                 <td><?php echo htmlspecialchars($activity['status']); ?></td>
-                                <td>
-                                    <?php if (!empty($activity['caseID'])): ?>
-                                        <a href="ViewCase.php?uid=<?php echo $activity['caseID']; ?>">
-                                            View Case
-                                        </a>
-                                    <?php else: ?>
-                                        --
-                                    <?php endif; ?>
-                                </td>
                                 <?php if ($_SESSION['jobID'] == 3): ?>
                                     <td><?php echo htmlspecialchars($activity['handlerName']); ?></td>
                                 <?php endif; ?>
@@ -177,5 +155,4 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
         document.getElementById("currentDate").innerHTML = new Date().toLocaleDateString();
     </script>
 </body>
-
 </html>
