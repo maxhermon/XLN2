@@ -13,7 +13,7 @@ function connectToDatabase() {
 
 function logActivity($userID, $caseID, $activity, $status) {
     $db = connectToDatabase();
-    $stmt = $db->prepare("INSERT INTO activities (userID, caseID, activity, date, status) VALUES (:userID, :activity, :date, :status)");
+    $stmt = $db->prepare("INSERT INTO activities (userID, caseID, activity, date, status) VALUES (:userID, :caseID, :activity, :date, :status)");
     $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
     $stmt->bindValue(':caseID', $caseID, SQLITE3_INTEGER);
     $stmt->bindValue(':activity', $activity, SQLITE3_TEXT);

@@ -29,7 +29,7 @@ $recentActivities = [];
 if ($_SESSION['jobID'] == 3) {
     // Fetch recent activities for all case handlers managed by this manager
     $activitiesStmt = $db->prepare("
-        SELECT a.activity, a.date, a.status, u.fName || ' ' || u.lName AS handlerName
+        SELECT a.activity, a.date, a.status, a.caseID, u.fName || ' ' || u.lName AS handlerName
         FROM activities a
         INNER JOIN users u ON a.userID = u.userID
         WHERE u.managerID = :managerID
@@ -40,7 +40,7 @@ if ($_SESSION['jobID'] == 3) {
 } else {
     // Fetch recent activities for the logged-in user
     $activitiesStmt = $db->prepare("
-        SELECT activity, date, status
+        SELECT activity, date, status, caseID
         FROM activities
         WHERE userID = :userID
         ORDER BY date DESC
@@ -121,6 +121,7 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                         <th>Activity</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Action</th>
                         <?php if ($_SESSION['jobID'] == 3): ?>
                             <th>Case Handler</th>
                         <?php endif; ?>
@@ -140,7 +141,7 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                                 <td>
                                     <?php if (!empty($activity['caseID'])): ?>
                                         <a href="ViewCase.php?uid=<?php echo $activity['caseID']; ?>">
-                                            View
+                                            View Case
                                         </a>
                                     <?php else: ?>
                                         --
