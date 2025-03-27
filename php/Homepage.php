@@ -76,7 +76,7 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
         </section>
         <section class="quick-links">
             <h2>Quick Links</h2>
-            <div class="links-container <?php echo ($_SESSION['jobID'] == 2) ? 'admin' : 'case-handler'; ?>">
+            <div class="links-container <?php echo ($_SESSION['jobID'] == 2 || 3) ? 'admin' : 'case-handler'; ?>">
                 <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
                 <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
                 <a href="ProfilePage.php" class="link-box">Profile</a>
@@ -85,6 +85,9 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                     <a href="UserCreation.php" class="link-box">Add Users</a>
                     <a href="UserManagement.php" class="link-box">Manage Users</a>
                     <a href="JobRoleCreation.php" class="link-box job-role">Add Job Role</a>
+                <?php } ?>
+                <?php if ($_SESSION['jobID'] == 3) { ?>
+                    <a href="SeeCaseHandlers.php" class="link-box">See Case Handlers</a>
                 <?php } ?>
             </div>
         </section>
