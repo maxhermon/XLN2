@@ -130,7 +130,7 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                 <tbody>
                     <?php if (empty($recentActivities)): ?>
                         <tr>
-                            <td colspan="<?php echo ($_SESSION['jobID'] == 3) ? '4' : '3'; ?>">No recent activities found.</td>
+                            <td colspan="<?php echo ($_SESSION['jobID'] == 3) ? '5' : '4'; ?>">No recent activities found.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($recentActivities as $activity): ?>

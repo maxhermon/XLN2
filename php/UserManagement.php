@@ -163,7 +163,7 @@ $currentPage = $result['pagination']['currentPage'];
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
             <option value="userID" <?php echo ($searchBy == 'userID') ? 'selected' : ''; ?>>User ID</option>
-            <option value="fullName" <?php echo ($searchBy == 'Name') ? 'selected' : ''; ?>>Full Name</option>
+            <option value="fullName" <?php echo ($searchBy == 'Name') ? 'selected' : ''; ?>>Name</option>
             <option value="email" <?php echo ($searchBy == 'email') ? 'selected' : ''; ?>>Email</option>
             <option value="job_name" <?php echo ($searchBy == 'job_name') ? 'selected' : ''; ?>>Job</option>
         </select>
