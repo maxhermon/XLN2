@@ -151,8 +151,8 @@ $currentPage = $result['pagination']['currentPage'];
                 <td><?php echo $user['email']; ?></td>
                 <td><?php echo $user['job_name']; ?></td>
                 <td>
-                    <?php if ($user['jobID'] == 1) : ?>
-                        <a href="EditUser.php?uid=<?php echo $user['userID']; ?>">Edit</a>
+                    <?php if ($user['jobID'] >= 0) : ?>
+                        <a href="ViewUser.php?uid=<?php echo $user['userID']; ?>">View</a>
                     <?php else : ?>
                         <a href="ViewUser.php?uid=<?php echo $user['userID']; ?>">View</a>
                     <?php endif; ?>
