@@ -112,7 +112,6 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $sortBy = isset($_GET['sortBy']) ? $_GET['sortBy'] : '';
 $sortOrder = isset($_GET['sortOrder']) ? $_GET['sortOrder'] : 'ASC';
 
-// Get all dropdown options
 $allDropdownOptions = getAllDropdownOptions();
 
 $result = getCases($searchBy, $searchTerm, $page, 10, $sortBy, $sortOrder);

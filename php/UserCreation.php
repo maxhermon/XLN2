@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
     }
     $userID      = $_SESSION['userID'];
 
-    $departmentID = $_POST['departmentID']   ?? null; // might not be used directly
+    $departmentID = $_POST['departmentID']   ?? null;
     $reasonID     = $_POST['reasonID']       ?? null;
     $customerID   = $_POST['customerID']     ?? null;
     $description  = $_POST['description']    ?? '';
@@ -134,7 +134,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
         $newCaseID = $db->lastInsertRowID();
         $_SESSION['caseID'] = $newCaseID;
 
-        // Log the activity
         logActivity($userID, "Created new case #$newCaseID", "Completed");
 
         header('Location: caseCreated.php');

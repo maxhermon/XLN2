@@ -164,7 +164,6 @@ footer {
     width: 100%;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
