@@ -117,7 +117,7 @@ a{
     color: inherit;
 }
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 form label, form select, form input, form button {
     margin-bottom: 10px;
@@ -225,4 +225,13 @@ footer {
 }
 .show {
     display: block;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+header a:hover {
+    text-decoration: none;
 }

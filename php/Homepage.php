@@ -24,14 +24,33 @@ if (!$userData) {
     exit;
 }
 
-$activitiesStmt = $db->prepare("SELECT activity, date, status
-                                FROM activities
-                                WHERE userID = :userID
-                                ORDER BY date DESC
-                                LIMIT 5");
-$activitiesStmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
-$activitiesResult = $activitiesStmt->execute();
 $recentActivities = [];
+
+if ($_SESSION['jobID'] == 3) {
+    // Fetch recent activities for all case handlers managed by this manager
+    $activitiesStmt = $db->prepare("
+        SELECT a.activity, a.date, a.status, u.fName || ' ' || u.lName AS handlerName
+        FROM activities a
+        INNER JOIN users u ON a.userID = u.userID
+        WHERE u.managerID = :managerID
+        ORDER BY a.date DESC
+        LIMIT 5
+    ");
+    $activitiesStmt->bindValue(':managerID', $userID, SQLITE3_INTEGER);
+} else {
+    // Fetch recent activities for the logged-in user
+    $activitiesStmt = $db->prepare("
+        SELECT activity, date, status
+        FROM activities
+        WHERE userID = :userID
+        ORDER BY date DESC
+        LIMIT 5
+    ");
+    $activitiesStmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
+}
+
+$activitiesResult = $activitiesStmt->execute();
+
 while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
     $recentActivities[] = $row;
 }
@@ -89,7 +108,10 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
         </section>
         <section class="quick-links">
             <h2>Quick Links</h2>
-            <div class="links-container <?php echo ($_SESSION['jobID'] == 2 || 3) ? 'admin' : 'case-handler'; ?>">
+            <div class="links-container <?php 
+                echo ($_SESSION['jobID'] == 2) ? 'admin' : 
+                     (($_SESSION['jobID'] == 3) ? 'manager' : 'case-handler'); 
+            ?>">
                 <a href="../php/CaseCreation.php" class="link-box">Create New Case</a>
                 <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
                 <a href="ProfilePage.php" class="link-box">Profile</a>
@@ -100,7 +122,7 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                     <a href="JobRoleCreation.php" class="link-box job-role">Add Job Role</a>
                 <?php } ?>
                 <?php if ($_SESSION['jobID'] == 3) { ?>
-                    <a href="SeeCaseHandlers.php" class="link-box">See Case Handlers</a>
+                    <a href="SeeCaseHandlers.php" class="link-box  SeeCaseHandlers">See Case Handlers</a>
                 <?php } ?>
             </div>
         </section>
@@ -112,12 +134,15 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                         <th>Activity</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <?php if ($_SESSION['jobID'] == 3): ?>
+                            <th>Case Handler</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($recentActivities)): ?>
                         <tr>
-                            <td colspan="3">No recent activities found.</td>
+                            <td colspan="<?php echo ($_SESSION['jobID'] == 3) ? '4' : '3'; ?>">No recent activities found.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($recentActivities as $activity): ?>
@@ -125,6 +150,9 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                                 <td><?php echo htmlspecialchars($activity['activity']); ?></td>
                                 <td><?php echo htmlspecialchars($activity['date']); ?></td>
                                 <td><?php echo htmlspecialchars($activity['status']); ?></td>
+                                <?php if ($_SESSION['jobID'] == 3): ?>
+                                    <td><?php echo htmlspecialchars($activity['handlerName']); ?></td>
+                                <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

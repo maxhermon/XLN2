@@ -109,6 +109,11 @@ if ($caseID) {
                     </div>
                     
                     <a href="ViewAllCases.php" class="button">Back to All Cases</a>
+
+                    <?php if ($caseData['status'] == 1 or 0) : ?>
+                        <a href="EditCase.php?uid=<?php echo $caseData['caseID']; ?>" class="button">Edit Case</a>                            
+                    <?php endif; ?>
+                    
                 </div>
             <?php else: ?>
                 <p>No case found or invalid case ID.</p>
