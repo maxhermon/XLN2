@@ -9,13 +9,18 @@ if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
 
 $userID = isset($_GET['uid']) ? $_GET['uid'] : null;
 $userData = null;
+$managerData = null;
 $db = new SQLite3('../data/XLN_new_DBA.db');
 
 if ($userID) {
-    $stmt = $db->prepare($sql = "SELECT u.*,
-                                j.job AS job_name
+
+    $stmt = $db->prepare("SELECT u.*,
+                            j.job AS job_name,
+                            m.fName AS manager_first_name,
+                            m.lName AS manager_last_name
                     FROM users u
                     LEFT JOIN jobs j ON u.jobID = j.jobID
+                    LEFT JOIN users m ON u.managerID = m.userID
                     WHERE u.userID = :userID");
 
     $stmt->bindValue(':userID', $userID, SQLITE3_INTEGER);
@@ -88,6 +93,22 @@ if ($userID) {
                         <label>Job Title:</label>
                         <p><?php echo $userData['job_name']; ?></p>
                     </div>
+
+                    <?php if ($userData['jobID'] == 1) : ?>
+                        <div class="form-group">
+                            <label>Manager:</label>
+                            <p>
+                                <?php 
+                                if (!empty($userData['manager_first_name']) && !empty($userData['manager_last_name'])) {
+                                    echo $userData['manager_first_name'] . ' ' . $userData['manager_last_name'];
+                                } else {
+                                    echo 'No manager assigned';
+                                }
+                                ?>
+                            </p>
+                        </div>
+                    <?php endif; ?>
+
                     
                     <a href="UserManagement.php" class="button">Back to All Users</a>
 
