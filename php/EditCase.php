@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($result) {
         $successMessage = "Case updated successfully!";
         $statusText = $newStatus == 1 ? 'Open' : 'Closed';
-        logActivity($userID, $caseID, "Updated case #$caseID", $statusText);
+        logActivity($userID, "Updated case #$caseID", $statusText);
     } else {
         $errorMessage = "Failed to update case: " . $db->lastErrorMsg();
     }
