@@ -41,6 +41,33 @@ if (!empty($cases)) {
     $stmt->close();
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    managerReview($db);
+}
+
+function managerReview($db) {
+
+    $createdTime = date('Y-m-d H:i:s');
+    
+    $createdTime = date('Y-m-d H:i:s');
+    $sql = "INSERT INTO temp_cases 
+            (userID, reasonID, description, status, created, customerID)
+            VALUES 
+            (:userID, :reasonID, :description, :status, :created, :customerID)
+    ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':userID',      $_SESSION['userID'],       SQLITE3_INTEGER);
+    $stmt->bindValue(':reasonID',    $_SESSION['proposedCase']['reasonID'],     SQLITE3_INTEGER);
+    $stmt->bindValue(':description', $_SESSION['proposedCase']['description'],  SQLITE3_TEXT);
+    $stmt->bindValue(':status',      1,             SQLITE3_INTEGER);
+    $stmt->bindValue(':created',     $createdTime,  SQLITE3_TEXT);
+    $stmt->bindValue(':customerID',  $_SESSION['proposedCase']['customerID'],   SQLITE3_INTEGER);
+    $stmt->execute();
+    
+    header('Location: TempcaseCreated.php');
+        exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +75,7 @@ if (!empty($cases)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
+    <title>Similar Case</title>
     <link rel="stylesheet" href="../css/SimilarCaseExists.css">
     <link
     rel="stylesheet"
@@ -151,7 +178,9 @@ if (!empty($cases)) {
         <div>
             <h2>not a duplicate?</h2>
             <p>if this case is not a duplicate, you can create a temporary case and request a manager review.</p>
-            <button>manager review</button>
+            <form method="post">
+                <button>manager review</button>
+            </form>
         </div>
 
     </div>
