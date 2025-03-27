@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+require 'db_connection.php';
+if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 2) {
+    header('Location: Login.php');
+    exit;
+}
 
 $userID = isset($_GET['uid']) ? $_GET['uid'] : null;
 $userData = null;
@@ -83,6 +90,11 @@ if ($userID) {
                     </div>
                     
                     <a href="UserManagement.php" class="button">Back to All Users</a>
+
+                    <?php if ($_SESSION['jobID'] == 2 and $userData['jobID'] != 2) : ?>
+                        <a href="EditUser.php?uid=<?php echo $userData['userID']; ?>" class="button">Edit User</a>
+                    <?php endif; ?>
+
                 </div>
             <?php else: ?>
                 <p>No User found or invalid User ID.</p>

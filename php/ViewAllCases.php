@@ -112,7 +112,6 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $sortBy = isset($_GET['sortBy']) ? $_GET['sortBy'] : '';
 $sortOrder = isset($_GET['sortOrder']) ? $_GET['sortOrder'] : 'ASC';
 
-// Get all dropdown options
 $allDropdownOptions = getAllDropdownOptions();
 
 $result = getCases($searchBy, $searchTerm, $page, 10, $sortBy, $sortOrder);
@@ -198,8 +197,8 @@ $currentPage = $result['currentPage'];
                 <td><?php echo $case['customer_name']; ?></td>
                 <td><?php echo $case['status_text']; ?></td>
                 <td>
-                    <?php if ($case['status'] == 1) : ?>
-                        <a href="EditCase.php?uid=<?php echo $case['caseID']; ?>">Edit</a>
+                    <?php if ($case['status'] == 1 or 0) : ?>
+                        <a href="ViewCase.php?uid=<?php echo $case['caseID']; ?>">View</a>
                     <?php else : ?>
                         <a href="ViewCase.php?uid=<?php echo $case['caseID']; ?>">View</a>
                     <?php endif; ?>
