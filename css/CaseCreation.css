@@ -19,10 +19,6 @@ img.logo {
     width: 300px;
     margin-right: 20px;
 }
-header h1 {
-    margin: 0;
-    flex-grow: 1;
-}
 
 h2 {
     margin-bottom: 30px;
@@ -55,24 +51,6 @@ nav ul.right-menu {
     transform: translateX(-50%);
 }
 
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #f39200;
-}
 nav ul {
     list-style: none;
     display: flex;
@@ -86,9 +64,6 @@ nav ul li {
 nav ul li a {
     color: white;
     text-decoration: none;
-}
-nav ul li select {
-    margin-left: 10px;
 }
 
 html, body {
@@ -131,11 +106,6 @@ form input, form select, form textarea {
     resize: none;
 }
 
-form input:focus, form select:focus, form textarea:focus {
-    border-color: #003064;
-}
-
-
 form button {
     background-color: #003064;
     color: white;
@@ -146,10 +116,6 @@ form button {
     cursor: pointer;
     width: 100%;
     margin-bottom: 30px;
-}
-
-form button:hover {
-    background-color: #00275d;
 }
 
 footer {
@@ -164,17 +130,3 @@ footer {
     width: 100%;
 }
 
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    nav ul {
-        flex-direction: column;
-    }
-
-    main {
-        width: 90%;
-    }
-}
