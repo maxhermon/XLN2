@@ -1,9 +1,9 @@
 <?php
 
 
-session_start();                    
-require 'db_connection.php';        
-$db = connectToDatabase();         
+session_start();
+require 'db_connection.php';
+$db = connectToDatabase();
 
 if (!isset($_SESSION['userID'])) {
     header("Location: LoginPage.php");
@@ -39,16 +39,17 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Homepage</title>
     <link rel="stylesheet" href="../css/Homepage.css">
     <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-  />
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 </head>
+
 <body>
     <header>
         <a href="Homepage.php"><img class="logo" src="../xlnLogo.png" alt="XLN Logo"></a>
@@ -71,7 +72,19 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
     <main>
         <section class="welcome-section">
             <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
-            <h2><?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?> </h2>
+            <h2>
+                <?php
+                if ($userData['jobID'] == 1) {
+                    echo "Case Handler";
+                } elseif ($userData['jobID'] == 2) {
+                    echo "Admin";
+                } elseif ($userData['jobID'] == 3) {
+                    echo "Manager";
+                } else {
+                    echo "Unknown Role";
+                }
+                ?>
+            </h2>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
@@ -127,4 +140,5 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
         document.getElementById("currentDate").innerHTML = new Date().toLocaleDateString();
     </script>
 </body>
+
 </html>
