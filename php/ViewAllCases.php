@@ -76,12 +76,18 @@ function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 1
 function getAllDropdownOptions() {
     $db = new SQLite3('../data/XLN_new_DBA.db');
     $options = [
+        'caseID' => [],
         'status_text' => ['Open', 'Closed'],
         'department_name' => [],
         'reason_name' => [],
         'customer_name' => [],
         'user_name' => []
     ];
+
+    $result = $db->query("SELECT DISTINCT caseID FROM cases ORDER BY caseID");
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $options['caseID'][] = $row['caseID'];
+    }
 
     $result = $db->query("SELECT DISTINCT deptName FROM departments ORDER BY deptName");
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
