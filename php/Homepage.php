@@ -91,7 +91,19 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
     <main>
         <section class="welcome-section">
             <h1>Welcome, <?php echo htmlspecialchars($userData['fName'] . ' ' . ($userData['mName'] ?: '') . ' ' . $userData['lName']); ?></h1>
-            <h2><?php echo htmlspecialchars($userData['jobID'] == 1) ? "Case Handler" : "Admin"; ?> </h2>
+            <h2>
+                <?php
+                if ($userData['jobID'] == 1) {
+                    echo "Case Handler";
+                } elseif ($userData['jobID'] == 2) {
+                    echo "Admin";
+                } elseif ($userData['jobID'] == 3) {
+                    echo "Manager";
+                } else {
+                    echo "Unknown Role";
+                }
+                ?>
+            </h2>
             <p>Today is <span id="currentDate"></span></p>
         </section>
         <section class="quick-links">
