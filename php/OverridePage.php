@@ -119,7 +119,7 @@ $temp_cases_stmt->close();
                     </table>
                     
                 <?php
-
+            echo "<div class='existing-cases'>";
             echo "<br><br><h1>Existing Similar Case(s):</h1>";
 
             $sql = "SELECT cases.caseID
