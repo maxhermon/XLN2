@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
         $newCaseID = $db->lastInsertRowID();
         $_SESSION['caseID'] = $newCaseID;
 
-        logActivity($userID, "Created new case #$newCaseID", "Opened    ");
+        logActivity($userID, $newCaseID, "Created new case #$newCaseID", "Opened    ");
 
         header('Location: caseCreated.php');
         exit;
@@ -98,11 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
             </ul>
             <ul class="right-menu">
                 <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">
-                        <i class="fa-solid fa-circle-user"></i> MyAccount
-                    </a>
+                    <a href="javascript:void(0)" class="dropbtn"><i class="fa-solid fa-circle-user"></i> MyAccount</a>
                     <div class="dropdown-content">
-                        <a href="ProfilePage.php">View Profile</a>
+                        <a href="../php/ProfilePage.php">View Profile</a>
                         <a href="logOut.php">Logout</a>
                     </div>
                 </li>
