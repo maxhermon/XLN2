@@ -72,6 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
         exit;
     } else {
         $_SESSION['duplicateIDs'] = $duplicateCases;
+        $_SESSION['proposedCase'] = [
+            'userID'      => $userID,
+            'reasonID'    => $reasonID,
+            'description' => $description,
+            'customerID'  => $customerID,
+        ];
         header('Location: SimilarCaseExists.php');
         exit;
     }
