@@ -7,7 +7,7 @@
 
 header {
     background-color: #003064;
-    color: #ffffff;
+    color: white;
     display: flex;
     align-items: center;
     padding: 50px;
@@ -40,7 +40,7 @@ nav ul.right-menu {
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -63,6 +63,10 @@ nav ul.right-menu {
     display: block;
 }
 
+.dropdown:hover .dropbtn {
+    background-color: #f39200;
+}
+
 nav ul {
     list-style: none;
     display: flex;
@@ -74,7 +78,8 @@ nav ul li {
     margin-left: 20px;
 }
 nav ul li a {
-    color: #ffffff;
+
+    color: white;
     text-decoration: none;
 }
 nav ul li select {
@@ -82,16 +87,17 @@ nav ul li select {
 }
 
 main {
+    flex: 1;
     background-color: #ffffff;
     padding: 20px;
-    margin: 50px auto 20px;
+    margin: 30px auto 20px;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 600px;
-    max-width: 1000px; 
+    min-height: 600px;
     width: 90%;
+    max-width: 800px; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -106,13 +112,14 @@ main {
     flex-grow: 1;
 }
 
-
 form {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 400px; 
+
+    margin-top: -100px;
 }
 
 form h2 {
@@ -187,6 +194,7 @@ footer {
     right: 0;
     width: 100%;
     margin-top: auto; 
+
 }
 
 @media (max-width: 768px) {
