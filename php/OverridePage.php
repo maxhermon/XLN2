@@ -30,12 +30,11 @@
         <div class="container">
             <h1>Current Case</h1>
             <div class="case-details">
-                <!-- Display current case details here -->
-                <p><strong>Case ID:</strong> <!-- Case ID --></p>
-                <p><strong>Description:</strong> <!-- Case Description --></p>
-                <p><strong>Status:</strong> <!-- Case Status --></p>
-                <p><strong>Handler:</strong> <!-- Case Handler --></p>
-                <p><strong>Customer Name:</strong> <!-- Customer Name --></p>
+                <p><strong>Case ID:</strong></p>
+                <p><strong>Description:</strong></p>
+                <p><strong>Status:</strong>p>
+                <p><strong>Handler:</strong></p>
+                <p><strong>Customer Name:</strong></p>
             </div>
             <h2>Similar Cases</h2>
             <table>
@@ -52,7 +51,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Loop through similar cases and display them here -->
                     <tr>
                         <td><!-- Similar Case ID --></td>
                         <td><!-- Similar Case Creation Timestamp --></td>

@@ -148,6 +148,12 @@ main {
 .link-box.user-management {
     grid-column: 2;
 }
+.link-box.override {
+    grid-column: 3;
+}
+.link-box.add-users {
+    grid-column: 3;
+}
 
 .link-box:hover {
     background-color: #00275d;
