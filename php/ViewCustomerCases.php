@@ -120,7 +120,6 @@ function getAllDropdownOptions() {
     return $options;
 }
 
-// Validate and sanitize inputs
 $customerID = isset($_GET['cid']) ? (int)$_GET['cid'] : null;
 
 if (!$customerID) {

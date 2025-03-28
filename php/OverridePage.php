@@ -3,25 +3,21 @@ session_start();
 require 'db_connection.php';
 $db = connectToDatabase();
 
-// Redirect non-managers to homepage
 if ($_SESSION['jobID'] != 3) {
     header("Location: Homepage.php");
     exit;
 }
 
-// Handle form submission for accept or reject
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && isset($_POST['tempCaseID'])) {
         $tempCaseID = $_POST['tempCaseID'];
         
         try {
-            // Begin transaction
             if (!$db->exec('BEGIN TRANSACTION')) {
                 throw new Exception("Failed to start transaction.");
             }
 
             if ($_POST['action'] === 'accept') {
-                // Insert into cases table
                 $insert_sql = "INSERT INTO cases (userID, customerID, reasonID, description, created, status) 
                                SELECT userID, customerID, reasonID, description, datetime('now'), 1 
                                FROM temp_cases WHERE tempCaseID = :tempCaseID";
@@ -31,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new Exception("Error inserting case: " . $db->lastErrorMsg());
                 }
 
-                // Delete from temp_cases
                 $delete_sql = "DELETE FROM temp_cases WHERE tempCaseID = :tempCaseID";
                 $delete_stmt = $db->prepare($delete_sql);
                 $delete_stmt->bindValue(':tempCaseID', $tempCaseID, SQLITE3_INTEGER);
@@ -39,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new Exception("Error deleting temp case: " . $db->lastErrorMsg());
                 }
             } elseif ($_POST['action'] === 'reject') {
-                // Delete from temp_cases
                 $delete_sql = "DELETE FROM temp_cases WHERE tempCaseID = :tempCaseID";
                 $delete_stmt = $db->prepare($delete_sql);
                 $delete_stmt->bindValue(':tempCaseID', $tempCaseID, SQLITE3_INTEGER);
@@ -47,8 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new Exception("Error deleting temp case: " . $db->lastErrorMsg());
                 }
             }
-
-            // Commit transaction
             if (!$db->exec('COMMIT')) {
                 throw new Exception("Commit failed.");
             }

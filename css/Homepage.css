@@ -154,6 +154,12 @@ main {
 .link-box.add-users {
     grid-column: 3;
 }
+.links-container .link-box.SeeCaseHandlers {
+    grid-column: 2;
+}
+.links-container .link-box.link-box.override {
+    grid-column: 4;
+}
 
 .link-box:hover {
     background-color: #00275d;

@@ -1,5 +1,4 @@
 <?php
-// filepath: C:/xampp/htdocs/XLN2/php/SeeCaseHandlers.php
 session_start();
 require 'db_connection.php';
 

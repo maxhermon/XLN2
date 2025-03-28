@@ -27,30 +27,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
     $customerID   = $_POST['customerID']     ?? null;
     $description  = $_POST['description']    ?? '';
 
-    // Check if we need to create a new customer
     if ($customerID === 'addNew') {
         $customerName = $_POST['newCustomerName'] ?? null;
         $customerEmail = $_POST['newCustomerEmail'] ?? null;
 
         if ($customerName && $customerEmail) {
-            // Insert new customer
             $sql = "INSERT INTO customers (name, email) VALUES (:name, :email);";
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':name', $customerName, SQLITE3_TEXT);
             $stmt->bindValue(':email', $customerEmail, SQLITE3_TEXT);
             $stmt->execute();
-
-            // Get the newly created customer ID
             $customerID = $db->lastInsertRowID();
         } else {
-            // Handle error: customer details not provided
             $_SESSION['error'] = "Customer name and email are required.";
             header('Location: CaseCreation.php');
             exit;
         }
     }
 
-    // Check for duplicate cases
     $sql = "SELECT cases.caseID
             FROM cases
             INNER JOIN reasons   ON cases.reasonID    = reasons.reasonID

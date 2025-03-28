@@ -54,7 +54,7 @@ if ($userID) {
     $userData = $result->fetchArray(SQLITE3_ASSOC);
 
     $managerQuery = "SELECT userID, fName || ' ' || lName as managerName FROM users 
-                     WHERE jobID = 3;"; // manager jobID is 3
+                     WHERE jobID = 3;";
     $managerResult = $db->query($managerQuery);
     $managers = [];
     while ($row = $managerResult->fetchArray(SQLITE3_ASSOC)) {
