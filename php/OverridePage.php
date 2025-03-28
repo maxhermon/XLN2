@@ -1,65 +1,72 @@
 <?php
 session_start();
-
 require 'db_connection.php';
 $db = connectToDatabase();
 
-
-
-
-//if not manager then redirect to homepage
+// Redirect non-managers to homepage
 if ($_SESSION['jobID'] != 3) {
     header("Location: Homepage.php");
     exit;
 }
 
-//get all handlers that are under the manager
-$handler_sql = "SELECT userID FROM users WHERE managerID = :managerID;";
+// Handle form submission for accept or reject
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action']) && isset($_POST['tempCaseID'])) {
+        $tempCaseID = $_POST['tempCaseID'];
+        
+        try {
+            // Begin transaction
+            if (!$db->exec('BEGIN TRANSACTION')) {
+                throw new Exception("Failed to start transaction.");
+            }
 
-$handler_stmt = $db->prepare($handler_sql);
-$handler_stmt->bindValue(':managerID', $_SESSION['userID'], SQLITE3_INTEGER);
-$handler_result = $handler_stmt->execute();
+            if ($_POST['action'] === 'accept') {
+                // Insert into cases table
+                $insert_sql = "INSERT INTO cases (userID, customerID, reasonID, description, created, status) 
+                               SELECT userID, customerID, reasonID, description, datetime('now'), 1 
+                               FROM temp_cases WHERE tempCaseID = :tempCaseID";
+                $insert_stmt = $db->prepare($insert_sql);
+                $insert_stmt->bindValue(':tempCaseID', $tempCaseID, SQLITE3_INTEGER);
+                if (!$insert_stmt->execute()) {
+                    throw new Exception("Error inserting case: " . $db->lastErrorMsg());
+                }
 
-$handlers = [];
-while ($row = $handler_result->fetchArray(SQLITE3_ASSOC)) {
-    $handlers[] = $row['userID'];
+                // Delete from temp_cases
+                $delete_sql = "DELETE FROM temp_cases WHERE tempCaseID = :tempCaseID";
+                $delete_stmt = $db->prepare($delete_sql);
+                $delete_stmt->bindValue(':tempCaseID', $tempCaseID, SQLITE3_INTEGER);
+                if (!$delete_stmt->execute()) {
+                    throw new Exception("Error deleting temp case: " . $db->lastErrorMsg());
+                }
+            } elseif ($_POST['action'] === 'reject') {
+                // Delete from temp_cases
+                $delete_sql = "DELETE FROM temp_cases WHERE tempCaseID = :tempCaseID";
+                $delete_stmt = $db->prepare($delete_sql);
+                $delete_stmt->bindValue(':tempCaseID', $tempCaseID, SQLITE3_INTEGER);
+                if (!$delete_stmt->execute()) {
+                    throw new Exception("Error deleting temp case: " . $db->lastErrorMsg());
+                }
+            }
+
+            // Commit transaction
+            if (!$db->exec('COMMIT')) {
+                throw new Exception("Commit failed.");
+            }
+
+            $_SESSION['message'] = ($_POST['action'] === 'accept') 
+                ? "Case accepted successfully." 
+                : "Case rejected successfully.";
+        } catch (Exception $e) {
+            $db->exec('ROLLBACK');
+            $_SESSION['message'] = "Transaction failed: " . $e->getMessage();
+        }
+
+        header("Location: OverridePage.php");
+        exit;
+    }
 }
-
-$handler_stmt->close();
-
-
-
-//get all cases that are assigned to the handlers
-$temp_cases_sql = "SELECT tempCaseID, departments.deptName, reasons.reasonID, reasons.reason, description, 
-                    users.fName || ' ' || users.lName as handler,
-                    customers.customerID, customers.name, customers.email
-                    FROM temp_cases
-                    INNER JOIN reasons on reasons.reasonID = temp_cases.reasonID
-                    INNER JOIN department_reasons on department_reasons.reasonID = reasons.reasonID
-                    INNER JOIN departments on department_reasons.departmentID = departments.departmentID
-                    INNER JOIN users on users.userID = temp_cases.userID
-                    INNER JOIN customers on customers.customerID = temp_cases.customerID
-                    WHERE temp_cases.userID IN (" . implode(',', array_fill(0, count($handlers), '?')) . ");";
-           
-$temp_cases_stmt = $db->prepare($temp_cases_sql);
-
-foreach ($handlers as $index => $handler) {
-    $temp_cases_stmt->bindValue($index + 1, $handler, SQLITE3_INTEGER);
-}
-
-$temp_cases_result = $temp_cases_stmt->execute();
-
-$caseDetails = [];
-while ($row = $temp_cases_result->fetchArray(SQLITE3_ASSOC)) {
-    $caseDetails[] = $row;
-}
-
-$temp_cases_stmt->close();
 
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,151 +95,73 @@ $temp_cases_stmt->close();
             </ul>
         </nav>
     </header>
-    <main>
-            <?php
-            if (empty($caseDetails)) {
-                echo "<h1>No cases to display</h1>";
-            } else {
-                foreach ($caseDetails as $case) {
-                    echo "<div class='container'>";
-                    echo "<h1>Proposed Case:</h1>";
-                    ?>
-                    <table>
-                        <tr>
-                            <th>Department</th>
-                            <th>Case Reason</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Handler</th>
-                            <th>Customer Name</th>
-                            <th>Customer Email</th>
-                        </tr>
-                        <tr>
-                            <td><?php echo $case['deptName']; ?></td>
-                            <td><?php echo $case['reason']; ?></td>
-                            <td><?php echo $case['description']; ?></td>
-                            <td>Pending</td>
-                            <td><?php echo $case['handler']; ?></td>
-                            <td><?php echo $case['name']; ?></td>
-                            <td><?php echo $case['email']; ?></td>
-                        </tr>
-                    </table>
-                    
-                <?php
-            echo "<div class='existing-cases'>";
-            echo "<br><br><h1>Existing Similar Case(s):</h1>";
 
-            $sql = "SELECT cases.caseID
-                    FROM cases
-                    INNER JOIN reasons   ON cases.reasonID    = reasons.reasonID
-                    INNER JOIN customers ON cases.customerID  = customers.customerID
-                    WHERE status = 1 
-                    AND reasons.reasonID   = :reasonID
-                    AND customers.customerID = :customerID;";
-                    
-                    $stmt = $db->prepare($sql);
-                    $stmt->bindValue(':reasonID', $case['reasonID'], SQLITE3_INTEGER);
-                    $stmt->bindValue(':customerID', $case['customerID'], SQLITE3_INTEGER);
+    <div class="container">
+        <h2>Conflicting Cases</h2>
+        <?php
+        $conflictingCases = $db->query("
+            SELECT 
+                c.caseID AS original_caseID, 
+                c.userID AS original_userID, 
+                c.customerID AS original_customerID, 
+                c.reasonID AS original_reasonID, 
+                c.description AS original_description,
+                t.tempCaseID AS duplicate_tempCaseID, 
+                t.userID AS duplicate_userID, 
+                t.customerID AS duplicate_customerID, 
+                t.reasonID AS duplicate_reasonID, 
+                t.description AS duplicate_description
+            FROM temp_cases t
+            INNER JOIN cases c 
+                ON t.customerID = c.customerID 
+                AND t.reasonID = c.reasonID
+        ");
 
-                    $result = $stmt->execute();
-                    $existingCases = [];
-                    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-                        $existingCases[] = $row;
-                    }
-                    $stmt->close();
+        if (!$conflictingCases) {
+            die("Error in query: " . $db->lastErrorMsg());
+        }
 
-                    $caseIDs = array_column($existingCases, 'caseID');
+        while ($row = $conflictingCases->fetchArray(SQLITE3_ASSOC)) {
+            echo "<div class='case-group'>";
+            echo "<h3>Original Case</h3>";
+            echo "<table class='styled-table'>";
+            echo "<tr><th>Case ID</th><th>User ID</th><th>Customer ID</th><th>Reason</th><th>Description</th></tr>";
+            echo "<tr>";
+            echo "<td>{$row['original_caseID']}</td>";
+            echo "<td>{$row['original_userID']}</td>";
+            echo "<td>{$row['original_customerID']}</td>";
+            echo "<td>{$row['original_reasonID']}</td>";
+            echo "<td>{$row['original_description']}</td>";
+            echo "</tr></table>";
 
-                    if (!empty($caseIDs)) {
-                        // Corrected SQL with proper placeholders
-                        $cases_sql = "SELECT cases.caseID, created, departments.deptName, reasons.reason,
-                                    cases.description, status, 
-                                    users.fName || ' ' || users.lName as handler,
-                                    customers.name, customers.email
-                                    FROM cases
-                                    INNER JOIN reasons ON cases.reasonID = reasons.reasonID
-                                    INNER JOIN department_reasons ON department_reasons.reasonID = reasons.reasonID
-                                    INNER JOIN departments ON department_reasons.departmentID = departments.departmentID
-                                    INNER JOIN users ON cases.userID = users.userID
-                                    INNER JOIN customers ON cases.customerID = customers.customerID
-                                    WHERE cases.caseID IN (" . implode(',', array_fill(0, count($caseIDs), '?')) . ")";
+            echo "<h3>Duplicate Case</h3>";
+            echo "<table class='styled-table'>";
+            echo "<tr><th>Temp Case ID</th><th>User ID</th><th>Customer ID</th><th>Reason</th><th>Description</th><th>Actions</th></tr>";
+            echo "<tr>";
+            echo "<td>{$row['duplicate_tempCaseID']}</td>";
+            echo "<td>{$row['duplicate_userID']}</td>";
+            echo "<td>{$row['duplicate_customerID']}</td>";
+            echo "<td>{$row['duplicate_reasonID']}</td>";
+            echo "<td>{$row['duplicate_description']}</td>";
+            echo "<td>
+                <form method='POST'>
+                    <input type='hidden' name='tempCaseID' value='{$row['duplicate_tempCaseID']}'>
+                    <button type='submit' name='action' value='accept'>Accept</button>
+                    <button type='submit' name='action' value='reject'>Reject</button>
+                </form>
+            </td>";
+            echo "</tr></table>";
+            echo "</div><br>";
+        }
+        ?>
 
-                        $cases_stmt = $db->prepare($cases_sql);
-
-                        // Bind caseIDs correctly
-                        foreach ($caseIDs as $index => $caseID) {
-                            $cases_stmt->bindValue($index + 1, $caseID, SQLITE3_INTEGER);
-                        }
-
-                        $cases_result = $cases_stmt->execute();
-
-                        // Fetch case data
-                        $cases = [];
-                        while ($row = $cases_result->fetchArray(SQLITE3_ASSOC)) {
-                            $cases[] = $row;
-                        }
-                        $cases_stmt->close();
-                    } else {
-                        $cases = []; // If no cases, ensure it's an empty array
-                    }
-
-                    ?>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Case ID</th>
-                                <th>Creation Timestamp</th>
-                                <th>Department</th>
-                                <th>Case Reason</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Handler</th>
-                                <th>Customer Name</th>
-                                <th>Customer Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if (empty($cases)) {
-                                echo "<tr><td colspan='9'>No cases available</td></tr>";
-                            } else {
-                                foreach ($cases as $case) {
-                                    // Convert status to readable format
-                                    $statusText = ($case['status'] == 0) ? "Closed" : "Open";
-                                    
-                                    echo "<tr>
-                                            <td>{$case['caseID']}</td>
-                                            <td>{$case['created']}</td>
-                                            <td>{$case['deptName']}</td>
-                                            <td>{$case['reason']}</td>
-                                            <td>{$case['description']}</td>
-                                            <td>{$statusText}</td>
-                                            <td>{$case['handler']}</td>
-                                            <td>{$case['name']}</td>
-                                            <td>{$case['email']}</td>
-                                        </tr>";
-                                }
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <button>Accept Proposed case</button>
-                    <button>Reject Proposed case</button>
-                </div>
-                <?php
-                }
-            }
-         ?>
-
-
-
-    </main>
-    <footer>
-        <p>&copy; <span id="year"></span> XLN</p>
-        <script>
-            document.getElementById("year").innerHTML = new Date().getFullYear();
-        </script>
-    </footer>
+        <?php
+        if (isset($_SESSION['message'])) {
+            echo "<p class='message'>{$_SESSION['message']}</p>";
+            unset($_SESSION['message']);
+        }
+        ?>
+    </div>
 </body>
 </html>
+
