@@ -27,7 +27,7 @@ if (!$userData) {
 $recentActivities = [];
 
 if ($_SESSION['jobID'] == 3) {
-    // Fetch recent activities for all case handlers managed by this manager
+
     $activitiesStmt = $db->prepare("
         SELECT a.activity, a.date, a.status, a.caseID, u.fName || ' ' || u.lName AS handlerName
         FROM activities a
@@ -38,7 +38,7 @@ if ($_SESSION['jobID'] == 3) {
     ");
     $activitiesStmt->bindValue(':managerID', $userID, SQLITE3_INTEGER);
 } else {
-    // Fetch recent activities for the logged-in user
+
     $activitiesStmt = $db->prepare("
         SELECT activity, date, status, caseID
         FROM activities
