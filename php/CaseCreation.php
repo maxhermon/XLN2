@@ -16,7 +16,6 @@ while ($row = $cResult->fetchArray(SQLITE3_ASSOC)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
-
     if (!isset($_SESSION['userID'])) {
         header("Location: LoginPage.php");
         exit;
@@ -28,6 +27,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
     $customerID   = $_POST['customerID']     ?? null;
     $description  = $_POST['description']    ?? '';
 
+    // Check if we need to create a new customer
+    if ($customerID === 'addNew') {
+        $customerName = $_POST['newCustomerName'] ?? null;
+        $customerEmail = $_POST['newCustomerEmail'] ?? null;
+
+        if ($customerName && $customerEmail) {
+            // Insert new customer
+            $sql = "INSERT INTO customers (name, email) VALUES (:name, :email);";
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':name', $customerName, SQLITE3_TEXT);
+            $stmt->bindValue(':email', $customerEmail, SQLITE3_TEXT);
+            $stmt->execute();
+
+            // Get the newly created customer ID
+            $customerID = $db->lastInsertRowID();
+        } else {
+            // Handle error: customer details not provided
+            $_SESSION['error'] = "Customer name and email are required.";
+            header('Location: CaseCreation.php');
+            exit;
+        }
+    }
+
+    // Check for duplicate cases
     $sql = "SELECT cases.caseID
             FROM cases
             INNER JOIN reasons   ON cases.reasonID    = reasons.reasonID
@@ -87,6 +110,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
     />
+    <style>
+        #newCustomerFields {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -109,7 +138,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
     </header>
     <main>
         <h2>Create a Case</h2>
-        <form method="POST" action="CaseCreation.php">
+        <?php 
+        if (isset($_SESSION['error'])) {
+            echo "<p style='color: red;'>" . htmlspecialchars($_SESSION['error']) . "</p>";
+            unset($_SESSION['error']);
+        }
+        ?>
+        <form method="POST" action="CaseCreation.php" id="caseForm">
             
             <label for="departmentID">Department:</label>
             <select id="departmentID" name="departmentID" required>
@@ -134,7 +169,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
                         <?php echo $customer['name']; ?>
                     </option>
                 <?php endforeach; ?>
+                <option value="addNew">+ Add New Customer</option>
             </select>
+
+            <div id="newCustomerFields">
+                <label for="newCustomerName">Customer Full Name:</label>
+                <input type="text" id="newCustomerName" name="newCustomerName">
+
+                <label for="newCustomerEmail">Customer Email:</label>
+                <input type="email" id="newCustomerEmail" name="newCustomerEmail">
+            </div>
 
             <label for="description">Notes:</label>
             <textarea id="description" name="description" rows="4"></textarea>
@@ -152,6 +196,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
 
     const deptSelect = document.getElementById('departmentID');
     const reasonSelect = document.getElementById('reasonID');
+    const customerSelect = document.getElementById('customerID');
+    const newCustomerFields = document.getElementById('newCustomerFields');
+    const newCustomerName = document.getElementById('newCustomerName');
+    const newCustomerEmail = document.getElementById('newCustomerEmail');
+
 
     deptSelect.addEventListener('change', function() {
         const deptID = this.value;
@@ -174,6 +223,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
             .catch(err => {
                 console.error('Failed to load reasons:', err);
             });
+    });
+
+
+    customerSelect.addEventListener('change', function() {
+        if (this.value === 'addNew') {
+            newCustomerFields.style.display = 'block';
+            newCustomerName.required = true;
+            newCustomerEmail.required = true;
+        } else {
+            newCustomerFields.style.display = 'none';
+            newCustomerName.required = false;
+            newCustomerEmail.required = false;
+        }
+    });
+
+
+    document.getElementById('caseForm').addEventListener('submit', function(event) {
+        if (customerSelect.value === 'addNew') {
+            if (!newCustomerName.value || !newCustomerEmail.value) {
+                event.preventDefault();
+                alert('Please fill in the customer name and email.');
+            }
+        }
     });
     </script>
 </body>
