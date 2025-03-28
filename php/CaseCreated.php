@@ -40,7 +40,7 @@ unset($_SESSION['caseID']);
     <div class="container">
         <div class="message">No similar cases exist. Case successfully created.</div>
         <div class="buttons">
-            <button onclick="window.location.href='EditCase.php?uid=<?php echo $newCaseID; ?>'">Edit Case</button>
+            <button onclick="window.location.href='ViewCase.php?uid=<?php echo $newCaseID; ?>'">View Case</button>
             <button onclick="window.location.href='CaseCreation.php'">Create Another Case</button>
             <button onclick="window.location.href='ViewAllCases.php'">View All Cases</button>
         </div>

@@ -3,7 +3,7 @@
 session_start();
 require 'db_connection.php';
 
-if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 3) { // Ensure only managers can access
+if (!isset($_SESSION['userID']) || $_SESSION['jobID'] != 3) {
     header("Location: LoginPage.php");
     exit;
 }
