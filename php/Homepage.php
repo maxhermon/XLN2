@@ -103,9 +103,10 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                 <a href="../php/ViewAllCases.php" class="link-box">View All Cases</a>
                 <a href="ProfilePage.php" class="link-box">Profile</a>
                 <a href="../html/Contact.html" class="link-box">Contact Support</a>
+                <a href="ViewAllCustomers.php" class="link-box">View All Customers</a>
                 <?php if ($_SESSION['jobID'] == 2) { ?>
-                    <a href="UserCreation.php" class="link-box">Add Users</a>
                     <a href="UserManagement.php" class="link-box user-management">Manage Users</a>
+                    <a href="UserCreation.php" class="link-box add-users">Add Users</a>
                     <a href="JobRoleCreation.php" class="link-box job-role">Add Job Role</a>
                 <?php } ?>
                 <?php if ($_SESSION['jobID'] == 3) { ?>
