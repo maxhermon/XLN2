@@ -85,15 +85,29 @@ nav ul li select {
     margin-left: 10px;
 }
 
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex-grow: 1;
+}
+
 .container {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 50px auto;
     text-align: center;
+}
+
+.existing-cases {
+    margin-top: 50px; 
 }
 
 .case-details p {
@@ -120,7 +134,8 @@ th {
     background-color: #f4f4f4;
 }
 
-button#overrideButton {
+
+button {
     background-color: #003064;
     color: white;
     padding: 15px 20px;
@@ -128,10 +143,20 @@ button#overrideButton {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 70px;
+    transition: background-color 0.3s ease-in-out;  
 }
 
-button#overrideButton:hover {
+button {
+    margin-right: 20px; 
+}
+
+button:last-child {
+    margin-right: 0;  
+}
+
+
+button:hover {
     background-color: #00275d;
 }
 
