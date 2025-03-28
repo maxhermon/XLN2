@@ -76,12 +76,23 @@ function getCases($searchBy = '', $searchTerm = '', $page = 1, $casesPerPage = 1
 function getAllDropdownOptions() {
     $db = new SQLite3('../data/XLN_new_DBA.db');
     $options = [
+        'caseID' => [],
         'status_text' => ['Open', 'Closed'],
         'department_name' => [],
         'reason_name' => [],
         'customer_name' => [],
         'user_name' => []
     ];
+
+    $result = $db->query("SELECT DISTINCT caseID FROM cases ORDER BY caseID");
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $options['caseID'][] = $row['caseID'];
+    }
+
+    $result = $db->query("SELECT DISTINCT name FROM customers ORDER BY name");
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $options['customer_name'][] = $row['name'];
+    }
 
     $result = $db->query("SELECT DISTINCT deptName FROM departments ORDER BY deptName");
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
@@ -91,11 +102,6 @@ function getAllDropdownOptions() {
     $result = $db->query("SELECT DISTINCT reason FROM reasons ORDER BY reason");
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         $options['reason_name'][] = $row['reason'];
-    }
-
-    $result = $db->query("SELECT DISTINCT name FROM customers ORDER BY name");
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-        $options['customer_name'][] = $row['name'];
     }
 
     $result = $db->query("SELECT DISTINCT (fname || ' ' || lname) as full_name FROM users ORDER BY full_name");
@@ -155,10 +161,10 @@ $currentPage = $result['currentPage'];
         <label for="searchBy">Search By:</label>
         <select name="searchBy" id="searchBy">
             <option value="caseID" <?php echo ($searchBy == 'caseID') ? 'selected' : ''; ?>>Case ID</option>
+            <option value="customer_name" <?php echo ($searchBy == 'customer_name') ? 'selected' : ''; ?>>Customer Name</option>
             <option value="department_name" <?php echo ($searchBy == 'department_name') ? 'selected' : ''; ?>>Department</option>
             <option value="reason_name" <?php echo ($searchBy == 'reason_name') ? 'selected' : ''; ?>>Reason</option>
             <option value="status_text" <?php echo ($searchBy == 'status_text') ? 'selected' : ''; ?>>Status</option>
-            <option value="customer_name" <?php echo ($searchBy == 'customer_name') ? 'selected' : ''; ?>>Customer Name</option>
             <option value="user_name" <?php echo ($searchBy == 'user_name') ? 'selected' : ''; ?>>Case Handler</option>
         </select>
 
@@ -181,9 +187,9 @@ $currentPage = $result['currentPage'];
         <thead>
             <tr>
                 <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=caseID&sortOrder=<?php echo ($sortBy == 'caseID' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Case ID <?php if ($sortBy == 'caseID') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
+                <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=customer_name&sortOrder=<?php echo ($sortBy == 'customer_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Customer Name <?php if ($sortBy == 'customer_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
                 <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=department_name&sortOrder=<?php echo ($sortBy == 'department_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Department <?php if ($sortBy == 'department_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
                 <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=reason_name&sortOrder=<?php echo ($sortBy == 'reason_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Reason <?php if ($sortBy == 'reason_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
-                <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=customer_name&sortOrder=<?php echo ($sortBy == 'customer_name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Customer Name <?php if ($sortBy == 'customer_name') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
                 <th><a href="?searchBy=<?php echo urlencode($searchBy); ?>&searchTerm=<?php echo urlencode($searchTerm); ?>&sortBy=status_text&sortOrder=<?php echo ($sortBy == 'status_text' && $sortOrder == 'ASC') ? 'DESC' : 'ASC'; ?>">Status <?php if ($sortBy == 'status_text') echo $sortOrder == 'ASC' ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>'; ?></a></th>
                 <th>Action</th>
             </tr>
@@ -192,13 +198,13 @@ $currentPage = $result['currentPage'];
         <?php foreach ($cases as $case) : ?>
             <tr>
                 <td><?php echo $case['caseID']; ?></td>
+                <td><?php echo $case['customer_name']; ?></td>
                 <td><?php echo $case['department_name']; ?></td>
                 <td><?php echo $case['reason_name']; ?></td>
-                <td><?php echo $case['customer_name']; ?></td>
                 <td><?php echo $case['status_text']; ?></td>
                 <td>
-                    <?php if ($case['status'] == 1) : ?>
-                        <a href="EditCase.php?uid=<?php echo $case['caseID']; ?>">Edit</a>
+                    <?php if ($case['status'] == 1 or 0) : ?>
+                        <a href="ViewCase.php?uid=<?php echo $case['caseID']; ?>">View</a>
                     <?php else : ?>
                         <a href="ViewCase.php?uid=<?php echo $case['caseID']; ?>">View</a>
                     <?php endif; ?>

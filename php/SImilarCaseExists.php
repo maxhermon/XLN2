@@ -175,7 +175,7 @@ function managerReview($db) {
             <button onclick="window.location.href='CaseCreation.php'">Create Another Case</button>
         </div>
 
-        <div>
+        <div class="buttons">
             <h2>not a duplicate?</h2>
             <p>if this case is not a duplicate, you can create a temporary case and request a manager review.</p>
             <form method="post">
