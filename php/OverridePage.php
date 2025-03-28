@@ -102,19 +102,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conflictingCases = $db->query("
             SELECT 
                 c.caseID AS original_caseID, 
-                c.userID AS original_userID, 
-                c.customerID AS original_customerID, 
-                c.reasonID AS original_reasonID, 
+                u1.fname || ' ' || u1.lname AS original_user_name, 
+                cu1.name AS original_customer_name, 
+                d1.deptName AS original_department_name, 
+                r1.reason AS original_reason_name, 
                 c.description AS original_description,
                 t.tempCaseID AS duplicate_tempCaseID, 
-                t.userID AS duplicate_userID, 
-                t.customerID AS duplicate_customerID, 
-                t.reasonID AS duplicate_reasonID, 
+                u2.fname || ' ' || u2.lname AS duplicate_user_name, 
+                cu2.name AS duplicate_customer_name, 
+                d2.deptName AS duplicate_department_name, 
+                r2.reason AS duplicate_reason_name, 
                 t.description AS duplicate_description
             FROM temp_cases t
             INNER JOIN cases c 
                 ON t.customerID = c.customerID 
                 AND t.reasonID = c.reasonID
+            LEFT JOIN users u1 ON c.userID = u1.userID
+            LEFT JOIN customers cu1 ON c.customerID = cu1.customerID
+            LEFT JOIN reasons r1 ON c.reasonID = r1.reasonID
+            LEFT JOIN department_reasons dr1 ON r1.reasonID = dr1.reasonID
+            LEFT JOIN departments d1 ON dr1.departmentID = d1.departmentID
+            LEFT JOIN users u2 ON t.userID = u2.userID
+            LEFT JOIN customers cu2 ON t.customerID = cu2.customerID
+            LEFT JOIN reasons r2 ON t.reasonID = r2.reasonID
+            LEFT JOIN department_reasons dr2 ON r2.reasonID = dr2.reasonID
+            LEFT JOIN departments d2 ON dr2.departmentID = d2.departmentID
         ");
 
         if (!$conflictingCases) {
@@ -125,23 +137,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<div class='case-group'>";
             echo "<h3>Original Case</h3>";
             echo "<table class='styled-table'>";
-            echo "<tr><th>Case ID</th><th>User ID</th><th>Customer ID</th><th>Reason</th><th>Description</th></tr>";
+            echo "<tr><th>Case ID</th><th>User Name</th><th>Customer Name</th><th>Department</th><th>Reason</th><th>Description</th></tr>";
             echo "<tr>";
             echo "<td>{$row['original_caseID']}</td>";
-            echo "<td>{$row['original_userID']}</td>";
-            echo "<td>{$row['original_customerID']}</td>";
-            echo "<td>{$row['original_reasonID']}</td>";
+            echo "<td>{$row['original_user_name']}</td>";
+            echo "<td>{$row['original_customer_name']}</td>";
+            echo "<td>{$row['original_department_name']}</td>";
+            echo "<td>{$row['original_reason_name']}</td>";
             echo "<td>{$row['original_description']}</td>";
             echo "</tr></table>";
 
             echo "<h3>Duplicate Case</h3>";
             echo "<table class='styled-table'>";
-            echo "<tr><th>Temp Case ID</th><th>User ID</th><th>Customer ID</th><th>Reason</th><th>Description</th><th>Actions</th></tr>";
+            echo "<tr><th>Temp Case ID</th><th>User Name</th><th>Customer Name</th><th>Department</th><th>Reason</th><th>Description</th><th>Actions</th></tr>";
             echo "<tr>";
             echo "<td>{$row['duplicate_tempCaseID']}</td>";
-            echo "<td>{$row['duplicate_userID']}</td>";
-            echo "<td>{$row['duplicate_customerID']}</td>";
-            echo "<td>{$row['duplicate_reasonID']}</td>";
+            echo "<td>{$row['duplicate_user_name']}</td>";
+            echo "<td>{$row['duplicate_customer_name']}</td>";
+            echo "<td>{$row['duplicate_department_name']}</td>";
+            echo "<td>{$row['duplicate_reason_name']}</td>";
             echo "<td>{$row['duplicate_description']}</td>";
             echo "<td>
                 <form method='POST'>
