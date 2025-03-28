@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
     $stmt->bindValue(':customerID',  $customerID, SQLITE3_INTEGER);
     $result = $stmt->execute();
 
+
     $duplicateCases = [];
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         $duplicateCases[] = $row['caseID'];
@@ -95,6 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitCase'])) {
         exit;
     } else {
         $_SESSION['duplicateIDs'] = $duplicateCases;
+        $_SESSION['proposedCase'] = [
+            'userID'      => $userID,
+            'reasonID'    => $reasonID,
+            'description' => $description,
+            'customerID'  => $customerID,
+        ];
         header('Location: SimilarCaseExists.php');
         exit;
     }
