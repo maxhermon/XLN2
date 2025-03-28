@@ -105,7 +105,8 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                 <a href="../html/Contact.html" class="link-box">Contact Support</a>
                 <?php if ($_SESSION['jobID'] == 2) { ?>
                     <a href="UserCreation.php" class="link-box">Add Users</a>
-                    <a href="UserManagement.php" class="link-box">Manage Users</a>
+                    <a href="UserManagement.php" class="link-box user-management">Manage Users</a>
+                    <a href="OverridePage.php" class="link-box override">Review Cases</a>
                     <a href="JobRoleCreation.php" class="link-box job-role">Add Job Role</a>
                 <?php } ?>
                 <?php if ($_SESSION['jobID'] == 3) { ?>
@@ -130,7 +131,7 @@ while ($row = $activitiesResult->fetchArray(SQLITE3_ASSOC)) {
                 <tbody>
                     <?php if (empty($recentActivities)): ?>
                         <tr>
-                            <td colspan="<?php echo ($_SESSION['jobID'] == 3) ? '4' : '3'; ?>">No recent activities found.</td>
+                            <td colspan="<?php echo ($_SESSION['jobID'] == 3) ? '5' : '4'; ?>">No recent activities found.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($recentActivities as $activity): ?>

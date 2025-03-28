@@ -41,6 +41,33 @@ if (!empty($cases)) {
     $stmt->close();
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    managerReview($db);
+}
+
+function managerReview($db) {
+
+    $createdTime = date('Y-m-d H:i:s');
+    
+    $createdTime = date('Y-m-d H:i:s');
+    $sql = "INSERT INTO temp_cases 
+            (userID, reasonID, description, status, created, customerID)
+            VALUES 
+            (:userID, :reasonID, :description, :status, :created, :customerID)
+    ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':userID',      $_SESSION['userID'],       SQLITE3_INTEGER);
+    $stmt->bindValue(':reasonID',    $_SESSION['proposedCase']['reasonID'],     SQLITE3_INTEGER);
+    $stmt->bindValue(':description', $_SESSION['proposedCase']['description'],  SQLITE3_TEXT);
+    $stmt->bindValue(':status',      1,             SQLITE3_INTEGER);
+    $stmt->bindValue(':created',     $createdTime,  SQLITE3_TEXT);
+    $stmt->bindValue(':customerID',  $_SESSION['proposedCase']['customerID'],   SQLITE3_INTEGER);
+    $stmt->execute();
+    
+    header('Location: TempcaseCreated.php');
+        exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +75,7 @@ if (!empty($cases)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
+    <title>Similar Case</title>
     <link rel="stylesheet" href="../css/SimilarCaseExists.css">
     <link
     rel="stylesheet"
@@ -94,32 +121,68 @@ if (!empty($cases)) {
                 </tr>
             </thead>
             <tbody>
-        <?php if (!empty($cases)): ?>
-            <?php foreach ($caseDetails as $case): ?>
+                <?php if (!empty($cases)): ?>
+                    <?php foreach ($caseDetails as $case): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($case['caseID']) ?></td>
+                            <td><?= htmlspecialchars($case['created']) ?></td>
+                            <td><?= htmlspecialchars($case['deptName']) ?></td>
+                            <td><?= htmlspecialchars($case['reason']) ?></td>
+                            <td><?= htmlspecialchars($case['description']) ?></td>
+                            <td><?= $case['status'] == 1 ? 'Open' : 'Closed' ?></td>
+                            <td><?= htmlspecialchars($case['CaseHandler']) ?></td>
+                            <td><?= htmlspecialchars($case['job']) ?></td>
+                            <td><?= htmlspecialchars($case['customerName']) ?></td>
+                            <td><?= htmlspecialchars($case['customerEmail']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                        <tr>
+                            <td colspan="10">No cases found</td>
+                        </tr>
+                    <?php endif; ?>
+            </tbody>
+        </table>
+
+        <div>
+            <h1>proposed case</h1>
+            <table>
                 <tr>
-                    <td><?= htmlspecialchars($case['caseID']) ?></td>
-                    <td><?= htmlspecialchars($case['created']) ?></td>
-                    <td><?= htmlspecialchars($case['deptName']) ?></td>
+                    <th>Department</th>
+                    <th>Case Reason</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Handler</th>
+                    <th>Role</th>
+                    <th>Customer Name</th>
+                    <th>Customer Email</th>
+                </tr>
+                <tr>
+                    <td><?= htmlspecialchars($case['deptName']) ?></td> 
                     <td><?= htmlspecialchars($case['reason']) ?></td>
-                    <td><?= htmlspecialchars($case['description']) ?></td>
-                    <td><?= $case['status'] == 1 ? 'Open' : 'Closed' ?></td>
-                    <td><?= htmlspecialchars($case['CaseHandler']) ?></td>
+                    <td><?php echo isset($_SESSION['proposedCase']['description']) ? htmlspecialchars($_SESSION['proposedCase']['description']) : ''; ?></td>
+                    <td>Proposed</td>
+                    <td><?php echo $_SESSION['name'] ?></td>
                     <td><?= htmlspecialchars($case['job']) ?></td>
                     <td><?= htmlspecialchars($case['customerName']) ?></td>
                     <td><?= htmlspecialchars($case['customerEmail']) ?></td>
                 </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="10">No cases found</td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-        </table>
+
+            </table>
+        </div>
 
         <div class="buttons">
             <button onclick="window.location.href='CaseCreation.php'">Create Another Case</button>
         </div>
+
+        <div>
+            <h2>not a duplicate?</h2>
+            <p>if this case is not a duplicate, you can create a temporary case and request a manager review.</p>
+            <form method="post">
+                <button>manager review</button>
+            </form>
+        </div>
+
     </div>
     <footer>
         <p>&copy; <span id="year"></span> XLN</p>
