@@ -114,8 +114,6 @@ main {
     gap: 20px;
     justify-items: center;
     padding: 20px;
-    background-color: #f9f9f9; /* Optional: Add a light background color */
-    border-radius: 8px; /* Optional: Add rounded corners */
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
@@ -186,10 +184,19 @@ main {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
+    text-decoration: none;
 }
 
 .recent-activities th {
     background-color: #f4f4f4;
+}
+
+.recent-activities a {
+    text-decoration: none;
+    color: black;
+}
+.recent-activities a:hover {
+    text-decoration: underline;
 }
 
 footer {
