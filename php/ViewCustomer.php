@@ -80,7 +80,7 @@ if ($customerID) {
                 </div>
             <?php else: ?>
                 <p>No customer found or invalid customer ID.</p>
-                <a href="CustomerManagement.php">Back to All Customers</a>
+                <a href="ViewAllCustomers.php">Back to All Customers</a>
             <?php endif; ?>
         </div>
     </main>
