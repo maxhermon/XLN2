@@ -74,7 +74,7 @@ if ($customerID) {
                     </div>
                     
                     <div class="actions">
-                        <a href="CustomerManagement.php" class="button">Back to All Customers</a>
+                        <a href="ViewAllCustomers.php" class="button">Back to All Customers</a>
                         <a href="EditCustomer.php?cid=<?php echo $customerData['customerID']; ?>" class="button">Edit Customer</a>
                     </div>
                 </div>
